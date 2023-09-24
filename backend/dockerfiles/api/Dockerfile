@@ -17,6 +17,7 @@ ENTRYPOINT ["/var/task/bin/cli"]
 
 FROM golang:1.21
 WORKDIR /var/task
+ENV CGO_CFLAGS_ALLOW="-Xpreprocessor"
 
 COPY --from=builder /var/task/bin/cli /var/task/bin/cli
 ENTRYPOINT ["/var/task/bin/cli"]
