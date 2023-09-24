@@ -15,6 +15,7 @@ provider:
         path: ./
         file: ./dockerfiles/api/Dockerfile
   environment:
+    STAGE: ${self.provider.stage}
     # DynamoDB Table
     DYNAMODB_TABLE_LGTMS: ${env:DYNAMODB_TABLE_LGTMS}
 
