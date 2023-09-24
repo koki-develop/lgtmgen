@@ -1,0 +1,33 @@
+name: CD - backend (dev)
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  cd:
+    runs-on: ubuntu-latest
+    environment: dev
+    defaults:
+      run:
+        working-directory: backend
+    permissions:
+      id-token: write
+      contents: read
+    steps:
+      - uses: actions/checkout@v4
+      - uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-region: us-east-1
+          role-to-assume: ${{ vars.AWS_IAM_ROLE_ARN }}
+      - uses: actions/setup-node@v3
+        with:
+          node-version-file: backend/package.json
+          cache: yarn
+          cache-dependency-path: backend/yarn.lock
+      - name: Install dependencies
+        run: yarn install --frozen-lockfile
+
+      - name: Deploy
+        run: yarn run deploy --stage dev
