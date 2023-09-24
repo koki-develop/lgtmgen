@@ -12,6 +12,7 @@ require (
 	github.com/awslabs/aws-lambda-go-api-proxy v0.16.0
 	github.com/caarlos0/env/v9 v9.0.0
 	github.com/gin-gonic/gin v1.9.1
+	github.com/google/uuid v1.3.0
 	github.com/spf13/cobra v1.7.0
 	golang.org/x/net v0.10.0
 	gopkg.in/gographics/imagick.v3 v3.5.0
