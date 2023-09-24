@@ -1,4 +1,4 @@
-package lgtm
+package lgtmgen
 
 import (
 	"errors"
@@ -12,7 +12,7 @@ const (
 	font          string  = "assets/fonts/Archivo_Black/ArchivoBlack-Regular.ttf"
 )
 
-func Write(src []byte) ([]byte, error) {
+func Generate(src []byte) ([]byte, error) {
 	imagick.Initialize()
 	defer imagick.Terminate()
 
