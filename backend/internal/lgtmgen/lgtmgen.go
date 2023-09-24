@@ -1,9 +1,9 @@
 package lgtmgen
 
 import (
-	"errors"
 	"math"
 
+	"github.com/cockroachdb/errors"
 	"gopkg.in/gographics/imagick.v3/imagick"
 )
 
@@ -19,7 +19,7 @@ func Generate(src []byte) ([]byte, error) {
 	srcmw := imagick.NewMagickWand()
 	defer srcmw.Destroy()
 	if err := srcmw.ReadImageBlob(src); err != nil {
-		return nil, err
+		return nil, errors.Wrap(err, "failed to read image")
 	}
 	w := srcmw.GetImageWidth()
 	h := srcmw.GetImageHeight()
@@ -32,10 +32,10 @@ func Generate(src []byte) ([]byte, error) {
 	defer txtdw.Destroy()
 
 	if err := ttldw.SetFont(font); err != nil {
-		return nil, err
+		return nil, errors.Wrap(err, "failed to set font to title")
 	}
 	if err := txtdw.SetFont(font); err != nil {
-		return nil, err
+		return nil, errors.Wrap(err, "failed to set font to text")
 	}
 
 	fgpw := imagick.NewPixelWand()
@@ -76,16 +76,16 @@ func Generate(src []byte) ([]byte, error) {
 		defer img.Destroy()
 
 		if err := img.AdaptiveResizeImage(uint(dw), uint(dh)); err != nil {
-			return nil, err
+			return nil, errors.Wrap(err, "failed to resize image")
 		}
 		if err := img.DrawImage(ttldw); err != nil {
-			return nil, err
+			return nil, errors.Wrap(err, "failed to draw title")
 		}
 		if err := img.DrawImage(txtdw); err != nil {
-			return nil, err
+			return nil, errors.Wrap(err, "failed to draw text")
 		}
 		if err := mw.AddImage(img); err != nil {
-			return nil, err
+			return nil, errors.Wrap(err, "failed to add image")
 		}
 	}
 

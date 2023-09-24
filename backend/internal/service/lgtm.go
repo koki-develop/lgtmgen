@@ -2,11 +2,12 @@ package service
 
 import (
 	"encoding/base64"
-	"errors"
 	"net/http"
 	"strconv"
 
+	"github.com/cockroachdb/errors"
 	"github.com/gin-gonic/gin"
+	"github.com/koki-develop/lgtmgen/backend/internal/log"
 	"github.com/koki-develop/lgtmgen/backend/internal/repo"
 )
 
@@ -21,19 +22,18 @@ func newLGTMService(repo *repo.Repository) *lgtmService {
 }
 
 func (svc *lgtmService) ListLGTMs(ctx *gin.Context) {
-	limit, err := strconv.Atoi(ctx.DefaultQuery("limit", "20"))
+	qlimit := ctx.DefaultQuery("limit", "20")
+	limit, err := strconv.Atoi(qlimit)
 	if err != nil {
-		ctx.JSON(http.StatusBadRequest, gin.H{
-			"error": err.Error(),
-		})
+		log.Info(ctx, "failed to parse limit", "limit", qlimit, "error", err)
+		ctx.JSON(http.StatusBadRequest, gin.H{"code": ErrCodeBadRequest})
 		return
 	}
 
 	lgtms, err := svc.repo.ListLGTMs(ctx, repo.WithLGTMLimit(limit))
 	if err != nil {
-		ctx.JSON(http.StatusInternalServerError, gin.H{
-			"error": err.Error(),
-		})
+		log.Error(ctx, "failed to list lgtms", err)
+		ctx.JSON(http.StatusInternalServerError, gin.H{"code": ErrCodeInternalServerError})
 		return
 	}
 
@@ -55,32 +55,28 @@ func (ipt *CreateLGTMInput) Validate() error {
 func (svc *lgtmService) CreateLGTM(ctx *gin.Context) {
 	var ipt CreateLGTMInput
 	if err := ctx.ShouldBindJSON(&ipt); err != nil {
-		ctx.JSON(http.StatusBadRequest, gin.H{
-			"error": err.Error(),
-		})
+		log.Info(ctx, "failed to bind json", "error", err)
+		ctx.JSON(http.StatusBadRequest, gin.H{"code": ErrCodeBadRequest})
 		return
 	}
 
 	if err := ipt.Validate(); err != nil {
-		ctx.JSON(http.StatusBadRequest, gin.H{
-			"error": err.Error(),
-		})
+		log.Info(ctx, "failed to validate input", "error", err)
+		ctx.JSON(http.StatusBadRequest, gin.H{"code": ErrCodeBadRequest})
 		return
 	}
 
 	data, err := base64.StdEncoding.DecodeString(ipt.Base64)
 	if err != nil {
-		ctx.JSON(http.StatusBadRequest, gin.H{
-			"error": err.Error(),
-		})
+		log.Info(ctx, "failed to decode base64", "error", err)
+		ctx.JSON(http.StatusBadRequest, gin.H{"code": ErrCodeBadRequest})
 		return
 	}
 
 	lgtm, err := svc.repo.Create(ctx, data)
 	if err != nil {
-		ctx.JSON(http.StatusInternalServerError, gin.H{
-			"error": err.Error(),
-		})
+		log.Error(ctx, "failed to create lgtm", err)
+		ctx.JSON(http.StatusInternalServerError, gin.H{"code": ErrCodeInternalServerError})
 		return
 	}
 

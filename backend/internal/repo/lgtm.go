@@ -3,7 +3,6 @@ package repo
 import (
 	"bytes"
 	"context"
-	"errors"
 	"net/http"
 	"strings"
 	"time"
@@ -13,6 +12,7 @@ import (
 	"github.com/aws/aws-sdk-go-v2/feature/s3/manager"
 	"github.com/aws/aws-sdk-go-v2/service/dynamodb"
 	"github.com/aws/aws-sdk-go-v2/service/s3"
+	"github.com/cockroachdb/errors"
 	"github.com/koki-develop/lgtmgen/backend/internal/env"
 	"github.com/koki-develop/lgtmgen/backend/internal/lgtmgen"
 	"github.com/koki-develop/lgtmgen/backend/internal/models"
@@ -53,7 +53,7 @@ func (r *lgtmRepository) ListLGTMs(ctx context.Context, opts ...LGTMListOption) 
 		WithKeyCondition(expression.KeyEqual(expression.Key("status"), expression.Value("ok"))).
 		Build()
 	if err != nil {
-		return nil, err
+		return nil, errors.Wrap(err, "failed to build expression")
 	}
 
 	resp, err := r.dbClient.Query(
@@ -64,20 +64,19 @@ func (r *lgtmRepository) ListLGTMs(ctx context.Context, opts ...LGTMListOption) 
 			KeyConditionExpression:    expr.KeyCondition(),
 			ExpressionAttributeNames:  expr.Names(),
 			ExpressionAttributeValues: expr.Values(),
-
-			Limit:            util.Ptr(int32(o.Limit)),
-			ScanIndexForward: util.Ptr(false),
+			Limit:                     util.Ptr(int32(o.Limit)),
+			ScanIndexForward:          util.Ptr(false),
 		},
 	)
 	if err != nil {
-		return nil, err
+		return nil, errors.Wrap(err, "failed to query")
 	}
 
 	lgtms := make(models.LGTMs, len(resp.Items))
 	for i, item := range resp.Items {
 		var lgtm models.LGTM
 		if err := attributevalue.UnmarshalMap(item, &lgtm); err != nil {
-			return nil, err
+			return nil, errors.Wrap(err, "failed to unmarshal")
 		}
 		lgtms[i] = &lgtm
 	}
@@ -93,7 +92,7 @@ func (r *lgtmRepository) Create(ctx context.Context, data []byte) (*models.LGTM,
 
 	img, err := lgtmgen.Generate(data)
 	if err != nil {
-		return nil, err
+		return nil, errors.Wrap(err, "failed to generate lgtm")
 	}
 
 	lgtm := &models.LGTM{
@@ -104,7 +103,7 @@ func (r *lgtmRepository) Create(ctx context.Context, data []byte) (*models.LGTM,
 
 	item, err := attributevalue.MarshalMap(lgtm)
 	if err != nil {
-		return nil, err
+		return nil, errors.Wrap(err, "failed to marshal")
 	}
 
 	_, err = r.dbClient.PutItem(ctx, &dynamodb.PutItemInput{
@@ -112,7 +111,7 @@ func (r *lgtmRepository) Create(ctx context.Context, data []byte) (*models.LGTM,
 		Item:      item,
 	})
 	if err != nil {
-		return nil, err
+		return nil, errors.Wrap(err, "failed to put item")
 	}
 
 	uploader := manager.NewUploader(r.storageClient)
@@ -123,18 +122,18 @@ func (r *lgtmRepository) Create(ctx context.Context, data []byte) (*models.LGTM,
 		ContentType: util.Ptr(t),
 	})
 	if err != nil {
-		return nil, err
+		return nil, errors.Wrap(err, "failed to upload image")
 	}
 
 	k, err := attributevalue.MarshalMap(map[string]interface{}{"id": lgtm.ID, "created_at": lgtm.CreatedAt})
 	if err != nil {
-		return nil, err
+		return nil, errors.Wrap(err, "failed to marshal")
 	}
 	expr, err := expression.NewBuilder().
 		WithUpdate(expression.Set(expression.Name("status"), expression.Value(models.LGTMStatusOK))).
 		Build()
 	if err != nil {
-		return nil, err
+		return nil, errors.Wrap(err, "failed to build expression")
 	}
 
 	_, err = r.dbClient.UpdateItem(ctx, &dynamodb.UpdateItemInput{
@@ -145,7 +144,7 @@ func (r *lgtmRepository) Create(ctx context.Context, data []byte) (*models.LGTM,
 		ExpressionAttributeValues: expr.Values(),
 	})
 	if err != nil {
-		return nil, err
+		return nil, errors.Wrap(err, "failed to update item")
 	}
 
 	lgtm.Status = models.LGTMStatusOK

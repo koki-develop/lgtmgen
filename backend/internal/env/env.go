@@ -2,6 +2,7 @@ package env
 
 import (
 	"github.com/caarlos0/env/v9"
+	"github.com/cockroachdb/errors"
 )
 
 var (
@@ -18,7 +19,7 @@ type Env struct {
 
 func Load() error {
 	if err := env.Parse(&Vars); err != nil {
-		return err
+		return errors.Wrap(err, "failed to load env vars")
 	}
 	return nil
 }

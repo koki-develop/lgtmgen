@@ -1,6 +1,8 @@
 package service
 
-import "github.com/koki-develop/lgtmgen/backend/internal/repo"
+import (
+	"github.com/koki-develop/lgtmgen/backend/internal/repo"
+)
 
 type Service struct {
 	*lgtmService
