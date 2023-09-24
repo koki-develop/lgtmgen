@@ -11,6 +11,8 @@ var (
 type Env struct {
 	// DynamoDB Table
 	DynamoDBTableLGTMs string `env:"DYNAMODB_TABLE_LGTMS,required"`
+	// S3 Bucket
+	S3BucketImages string `env:"S3_BUCKET_IMAGES,required"`
 }
 
 func Load() error {
