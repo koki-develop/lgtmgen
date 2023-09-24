@@ -27,10 +27,13 @@ func Error(ctx context.Context, msg string, err error, args ...interface{}) {
 }
 
 func Middleware(ctx *gin.Context) {
+	ip := ctx.ClientIP()
+
 	apictx, ok := core.GetAPIGatewayContextFromContext(ctx.Request.Context())
 	if ok {
-		ip := apictx.Identity.SourceIP
-		ctx.Request.RemoteAddr = ip
+		ip = apictx.Identity.SourceIP
+	} else {
+		Info(ctx, "no api gateway context")
 	}
 
 	p := ctx.Request.URL.Path
@@ -38,7 +41,6 @@ func Middleware(ctx *gin.Context) {
 
 	ctx.Next()
 
-	ip := ctx.ClientIP()
 	method := ctx.Request.Method
 	statusCode := ctx.Writer.Status()
 
