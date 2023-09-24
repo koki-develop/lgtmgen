@@ -13,6 +13,7 @@ require (
 	github.com/gin-gonic/gin v1.9.1
 	github.com/spf13/cobra v1.7.0
 	golang.org/x/net v0.10.0
+	gopkg.in/gographics/imagick.v3 v3.5.0
 )
 
 require (
