@@ -31,7 +31,7 @@ resource "aws_iam_role" "main" {
   assume_role_policy = data.aws_iam_policy_document.main_assume_role_policy.json
 }
 
-resource "aws_iam_role_policy_attachment" "main_read_only_access" {
+resource "aws_iam_role_policy_attachment" "main_administrator_access" {
   role       = aws_iam_role.main.name
-  policy_arn = "arn:aws:iam::aws:policy/ReadOnlyAccess"
+  policy_arn = "arn:aws:iam::aws:policy/AdministratorAccess"
 }
