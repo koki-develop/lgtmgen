@@ -6,18 +6,21 @@ import (
 	"github.com/aws/aws-sdk-go-v2/feature/dynamodb/attributevalue"
 	"github.com/aws/aws-sdk-go-v2/feature/dynamodb/expression"
 	"github.com/aws/aws-sdk-go-v2/service/dynamodb"
+	"github.com/aws/aws-sdk-go-v2/service/s3"
 	"github.com/koki-develop/lgtmgen/backend/internal/env"
 	"github.com/koki-develop/lgtmgen/backend/internal/models"
 	"github.com/koki-develop/lgtmgen/backend/internal/util"
 )
 
 type lgtmRepository struct {
-	dbClient *dynamodb.Client
+	dbClient      *dynamodb.Client
+	storageClient *s3.Client
 }
 
-func newLGTMRepository(db *dynamodb.Client) *lgtmRepository {
+func newLGTMRepository(db *dynamodb.Client, storageClient *s3.Client) *lgtmRepository {
 	return &lgtmRepository{
-		dbClient: db,
+		dbClient:      db,
+		storageClient: storageClient,
 	}
 }
 

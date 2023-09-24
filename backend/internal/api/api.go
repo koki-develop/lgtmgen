@@ -5,6 +5,7 @@ import (
 
 	"github.com/aws/aws-sdk-go-v2/config"
 	"github.com/aws/aws-sdk-go-v2/service/dynamodb"
+	"github.com/aws/aws-sdk-go-v2/service/s3"
 	"github.com/gin-gonic/gin"
 	"github.com/koki-develop/lgtmgen/backend/internal/repo"
 	"github.com/koki-develop/lgtmgen/backend/internal/service"
@@ -17,7 +18,8 @@ func NewEngine(ctx context.Context) (*gin.Engine, error) {
 	}
 
 	dbClient := dynamodb.NewFromConfig(cfg)
-	r := repo.New(dbClient)
+	storageClient := s3.NewFromConfig(cfg)
+	r := repo.New(dbClient, storageClient)
 	svc := service.New(r)
 	e := gin.Default()
 
