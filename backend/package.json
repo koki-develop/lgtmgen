@@ -3,6 +3,9 @@
   "version": "0.0.0",
   "license": "MIT",
   "private": true,
+  "scripts": {
+    "deploy": "serverless deploy --verbose"
+  },
   "devDependencies": {
     "serverless": "^3.35.2"
   }
