@@ -30,7 +30,7 @@ func WithLGTMLimit(limit int) LGTMListOption {
 	}
 }
 
-func (r *lgtmRepository) List(ctx context.Context, opts ...LGTMListOption) (models.LGTMs, error) {
+func (r *lgtmRepository) ListLGTMs(ctx context.Context, opts ...LGTMListOption) (models.LGTMs, error) {
 	o := &lgtmListOptions{}
 	for _, opt := range opts {
 		opt(o)
