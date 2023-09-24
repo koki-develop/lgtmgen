@@ -1,7 +1,13 @@
 package main
 
-import "github.com/koki-develop/lgtmgen/backend/cmd"
+import (
+	"os"
+
+	"github.com/koki-develop/lgtmgen/backend/cmd"
+)
 
 func main() {
-	cmd.Execute()
+	if err := cmd.Execute(); err != nil {
+		os.Exit(1)
+	}
 }
