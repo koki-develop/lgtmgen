@@ -9,6 +9,7 @@ import (
 	"github.com/cockroachdb/errors"
 	"github.com/gin-gonic/gin"
 	"github.com/koki-develop/lgtmgen/backend/internal/env"
+	"github.com/koki-develop/lgtmgen/backend/internal/log"
 	"github.com/koki-develop/lgtmgen/backend/internal/repo"
 	"github.com/koki-develop/lgtmgen/backend/internal/service"
 	"github.com/koki-develop/lgtmgen/backend/internal/util"
@@ -36,7 +37,9 @@ func NewEngine(ctx context.Context) (*gin.Engine, error) {
 
 	r := repo.New(dbClient, storageClient)
 	svc := service.New(r)
-	e := gin.Default()
+	e := gin.New()
+	e.Use(log.Middleware)
+	e.Use(gin.Recovery())
 
 	e.GET("/h", svc.HealthCheck)
 
