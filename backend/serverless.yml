@@ -1,0 +1,30 @@
+service: lgtmgen-backend
+frameworkVersion: "3"
+
+custom:
+  prefix: ${self:service}-${self:provider.stage}
+
+provider:
+  name: aws
+  region: us-east-1
+  stage: ${opt:stage, "dev"}
+  apiName: ${self:custom.prefix}
+  ecr:
+    images:
+      api:
+        path: ./
+        file: ./dockerfiles/api/Dockerfile
+
+package:
+  individually: true
+
+functions:
+  api:
+    image:
+      name: api
+      command: [serve, --lambda]
+    timeout: 30 # s
+    events:
+      - http:
+          method: ANY
+          path: "/{any+}"
