@@ -9,3 +9,10 @@ services:
     volumes:
       - ./localstack/ready.d:/etc/localstack/init/ready.d
       - /var/run/docker.sock:/var/run/docker.sock
+
+  dynamodb-admin:
+    image: aaronshaf/dynamodb-admin:4.6.1
+    environment:
+      - DYNAMO_ENDPOINT=localstack:4566
+    ports:
+      - 8001:8001
