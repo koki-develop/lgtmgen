@@ -2,5 +2,8 @@
   "name": "lgtmgen-backend",
   "version": "0.0.0",
   "license": "MIT",
-  "private": true
+  "private": true,
+  "devDependencies": {
+    "serverless": "^3.35.2"
+  }
 }
