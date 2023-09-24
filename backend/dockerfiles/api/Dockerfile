@@ -5,6 +5,8 @@ ENV CGO_CFLAGS_ALLOW="-Xpreprocessor"
 ENV GOARCH=amd64
 ENV GOOS=linux
 
+RUN apt update
+
 # Install ImageMagick
 RUN wget https://imagemagick.org/archive/ImageMagick.tar.gz -O /tmp/ImageMagick.tar.gz \
   && tar -xzf /tmp/ImageMagick.tar.gz -C /tmp \
@@ -13,6 +15,8 @@ RUN wget https://imagemagick.org/archive/ImageMagick.tar.gz -O /tmp/ImageMagick.
   && make \
   && make install \
   && ldconfig /usr/local/lib
+
+RUN apt install -y libjpeg-dev
 
 # ----------------------------
 FROM base AS builder
