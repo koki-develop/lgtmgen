@@ -74,13 +74,12 @@ func (r *lgtmRepository) ListLGTMs(ctx context.Context, opts ...LGTMListOption) 
 	}
 
 	lgtms := make(models.LGTMs, len(resp.Items))
-	for _, item := range resp.Items {
+	for i, item := range resp.Items {
 		var lgtm models.LGTM
-		err := attributevalue.UnmarshalMap(item, &lgtm)
-		if err != nil {
+		if err := attributevalue.UnmarshalMap(item, &lgtm); err != nil {
 			return nil, err
 		}
-		lgtms = append(lgtms, &lgtm)
+		lgtms[i] = &lgtm
 	}
 
 	return lgtms, nil
