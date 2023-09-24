@@ -3,7 +3,10 @@ package repo
 import (
 	"context"
 
+	"github.com/aws/aws-sdk-go-v2/feature/dynamodb/attributevalue"
+	"github.com/aws/aws-sdk-go-v2/feature/dynamodb/expression"
 	"github.com/aws/aws-sdk-go-v2/service/dynamodb"
+	"github.com/koki-develop/lgtmgen/backend/internal/env"
 	"github.com/koki-develop/lgtmgen/backend/internal/models"
 	"github.com/koki-develop/lgtmgen/backend/internal/util"
 )
@@ -36,19 +39,39 @@ func (r *lgtmRepository) ListLGTMs(ctx context.Context, opts ...LGTMListOption) 
 		opt(o)
 	}
 
-	// FIXME: implement
-	resp, err := r.dbClient.ListTables(
+	expr, err := expression.NewBuilder().
+		WithKeyCondition(expression.KeyEqual(expression.Key("status"), expression.Value("ok"))).
+		Build()
+	if err != nil {
+		return nil, err
+	}
+
+	resp, err := r.dbClient.Query(
 		ctx,
-		&dynamodb.ListTablesInput{
-			Limit: util.Ptr(int32(o.Limit)),
+		&dynamodb.QueryInput{
+			TableName:                 util.Ptr(env.Vars.DynamoDBTableLGTMs),
+			IndexName:                 util.Ptr("index_by_status"),
+			KeyConditionExpression:    expr.KeyCondition(),
+			ExpressionAttributeNames:  expr.Names(),
+			ExpressionAttributeValues: expr.Values(),
+
+			Limit:            util.Ptr(int32(o.Limit)),
+			ScanIndexForward: util.Ptr(false),
 		},
 	)
 	if err != nil {
 		return nil, err
 	}
-	lgtms := make(models.LGTMs, len(resp.TableNames))
-	for i, tableName := range resp.TableNames {
-		lgtms[i] = &models.LGTM{ID: tableName}
+
+	lgtms := make(models.LGTMs, len(resp.Items))
+	for _, item := range resp.Items {
+		var lgtm models.LGTM
+		err := attributevalue.UnmarshalMap(item, &lgtm)
+		if err != nil {
+			return nil, err
+		}
+		lgtms = append(lgtms, &lgtm)
 	}
+
 	return lgtms, nil
 }
