@@ -46,7 +46,7 @@ provider:
                   - ${self:custom.prefix}-images
                   - /*
   environment:
-    STAGE: ${self.provider.stage}
+    STAGE: ${self:provider.stage}
     # DynamoDB Table
     DYNAMODB_TABLE_LGTMS: ${env:DYNAMODB_TABLE_LGTMS}
     S3_BUCKET_IMAGES: ${env:S3_BUCKET_IMAGES}
