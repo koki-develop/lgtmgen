@@ -17,7 +17,12 @@ var (
 var serveCmd = &cobra.Command{
 	Use: "serve",
 	RunE: func(cmd *cobra.Command, args []string) error {
-		r := api.NewEngine()
+		ctx := context.Background()
+
+		r, err := api.NewEngine(ctx)
+		if err != nil {
+			return err
+		}
 
 		if flagServeLambda {
 			lambda.Start(serveLambdaHandler(r))
