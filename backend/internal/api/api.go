@@ -27,6 +27,7 @@ func NewEngine(ctx context.Context) (*gin.Engine, error) {
 		})
 		storageOpts = append(storageOpts, func(o *s3.Options) {
 			o.BaseEndpoint = util.Ptr("http://localhost:4566")
+			o.UsePathStyle = true
 		})
 	}
 	dbClient := dynamodb.NewFromConfig(cfg, dbOpts...)
@@ -41,6 +42,7 @@ func NewEngine(ctx context.Context) (*gin.Engine, error) {
 	v1 := e.Group("/v1")
 	{
 		v1.GET("/lgtms", svc.ListLGTMs)
+		v1.POST("/lgtms", svc.CreateLGTM)
 	}
 
 	return e, nil

@@ -1,13 +1,20 @@
 package repo
 
 import (
+	"bytes"
 	"context"
+	"errors"
+	"net/http"
+	"strings"
+	"time"
 
 	"github.com/aws/aws-sdk-go-v2/feature/dynamodb/attributevalue"
 	"github.com/aws/aws-sdk-go-v2/feature/dynamodb/expression"
+	"github.com/aws/aws-sdk-go-v2/feature/s3/manager"
 	"github.com/aws/aws-sdk-go-v2/service/dynamodb"
 	"github.com/aws/aws-sdk-go-v2/service/s3"
 	"github.com/koki-develop/lgtmgen/backend/internal/env"
+	"github.com/koki-develop/lgtmgen/backend/internal/lgtmgen"
 	"github.com/koki-develop/lgtmgen/backend/internal/models"
 	"github.com/koki-develop/lgtmgen/backend/internal/util"
 )
@@ -77,4 +84,71 @@ func (r *lgtmRepository) ListLGTMs(ctx context.Context, opts ...LGTMListOption) 
 	}
 
 	return lgtms, nil
+}
+
+func (r *lgtmRepository) Create(ctx context.Context, data []byte) (*models.LGTM, error) {
+	t := http.DetectContentType(data)
+	if !strings.HasPrefix(t, "image/") {
+		return nil, errors.New("invalid image type")
+	}
+
+	img, err := lgtmgen.Generate(data)
+	if err != nil {
+		return nil, err
+	}
+
+	lgtm := &models.LGTM{
+		ID:        models.NewID(),
+		Status:    models.LGTMStatusPending,
+		CreatedAt: time.Now(),
+	}
+
+	item, err := attributevalue.MarshalMap(lgtm)
+	if err != nil {
+		return nil, err
+	}
+
+	_, err = r.dbClient.PutItem(ctx, &dynamodb.PutItemInput{
+		TableName: util.Ptr(env.Vars.DynamoDBTableLGTMs),
+		Item:      item,
+	})
+	if err != nil {
+		return nil, err
+	}
+
+	uploader := manager.NewUploader(r.storageClient)
+	_, err = uploader.Upload(ctx, &s3.PutObjectInput{
+		Bucket:      util.Ptr(env.Vars.S3BucketImages),
+		Key:         util.Ptr(lgtm.ID),
+		Body:        bytes.NewReader(img),
+		ContentType: util.Ptr(t),
+	})
+	if err != nil {
+		return nil, err
+	}
+
+	k, err := attributevalue.MarshalMap(map[string]interface{}{"id": lgtm.ID, "created_at": lgtm.CreatedAt})
+	if err != nil {
+		return nil, err
+	}
+	expr, err := expression.NewBuilder().
+		WithUpdate(expression.Set(expression.Name("status"), expression.Value(models.LGTMStatusOK))).
+		Build()
+	if err != nil {
+		return nil, err
+	}
+
+	_, err = r.dbClient.UpdateItem(ctx, &dynamodb.UpdateItemInput{
+		TableName:                 util.Ptr(env.Vars.DynamoDBTableLGTMs),
+		Key:                       k,
+		UpdateExpression:          expr.Update(),
+		ExpressionAttributeNames:  expr.Names(),
+		ExpressionAttributeValues: expr.Values(),
+	})
+	if err != nil {
+		return nil, err
+	}
+
+	lgtm.Status = models.LGTMStatusOK
+	return lgtm, nil
 }
