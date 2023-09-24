@@ -6,6 +6,7 @@ import (
 	"log/slog"
 	"os"
 
+	"github.com/awslabs/aws-lambda-go-api-proxy/core"
 	"github.com/gin-gonic/gin"
 )
 
@@ -26,6 +27,12 @@ func Error(ctx context.Context, msg string, err error, args ...interface{}) {
 }
 
 func Middleware(ctx *gin.Context) {
+	apictx, ok := core.GetAPIGatewayContextFromContext(ctx.Request.Context())
+	if ok {
+		ip := apictx.Identity.SourceIP
+		ctx.Request.RemoteAddr = ip
+	}
+
 	p := ctx.Request.URL.Path
 	q := ctx.Request.URL.RawQuery
 
