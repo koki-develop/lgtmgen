@@ -4,6 +4,7 @@ import (
 	"github.com/aws/aws-lambda-go/events"
 	"github.com/aws/aws-lambda-go/lambda"
 	ginadapter "github.com/awslabs/aws-lambda-go-api-proxy/gin"
+	"github.com/cockroachdb/errors"
 	"github.com/gin-gonic/gin"
 	"github.com/koki-develop/lgtmgen/backend/internal/api"
 	"github.com/spf13/cobra"
@@ -21,7 +22,7 @@ var serveCmd = &cobra.Command{
 
 		r, err := api.NewEngine(ctx)
 		if err != nil {
-			return err
+			return errors.Wrap(err, "failed to create engine")
 		}
 
 		if flagServeLambda {
@@ -30,7 +31,7 @@ var serveCmd = &cobra.Command{
 		}
 
 		if err := r.Run(":8080"); err != nil {
-			return err
+			return errors.Wrap(err, "failed to run server")
 		}
 
 		return nil

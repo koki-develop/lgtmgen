@@ -6,6 +6,7 @@ import (
 	"github.com/aws/aws-sdk-go-v2/config"
 	"github.com/aws/aws-sdk-go-v2/service/dynamodb"
 	"github.com/aws/aws-sdk-go-v2/service/s3"
+	"github.com/cockroachdb/errors"
 	"github.com/gin-gonic/gin"
 	"github.com/koki-develop/lgtmgen/backend/internal/env"
 	"github.com/koki-develop/lgtmgen/backend/internal/repo"
@@ -16,7 +17,7 @@ import (
 func NewEngine(ctx context.Context) (*gin.Engine, error) {
 	cfg, err := config.LoadDefaultConfig(ctx)
 	if err != nil {
-		return nil, err
+		return nil, errors.Wrap(err, "failed to load aws config")
 	}
 
 	dbOpts := []func(*dynamodb.Options){}
