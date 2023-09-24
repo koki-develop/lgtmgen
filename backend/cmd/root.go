@@ -6,7 +6,9 @@ import (
 )
 
 var rootCmd = &cobra.Command{
-	Use: "cli",
+	Use:           "cli",
+	SilenceUsage:  true,
+	SilenceErrors: true,
 }
 
 func Execute() error {
