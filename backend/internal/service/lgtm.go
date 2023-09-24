@@ -18,7 +18,7 @@ func newLGTMService(repo *repo.Repository) *lgtmService {
 }
 
 func (svc *lgtmService) ListLGTMs(ctx *gin.Context) {
-	lgtms, err := svc.repo.List()
+	lgtms, err := svc.repo.List(ctx)
 	if err != nil {
 		ctx.JSON(http.StatusInternalServerError, gin.H{
 			"error": err.Error(),
