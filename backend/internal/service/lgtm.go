@@ -29,6 +29,11 @@ func (svc *lgtmService) ListLGTMs(ctx *gin.Context) {
 		ctx.JSON(http.StatusBadRequest, gin.H{"code": ErrCodeBadRequest})
 		return
 	}
+	if limit < 1 || limit > 100 {
+		log.Info(ctx, "limit is out of range", "limit", limit)
+		ctx.JSON(http.StatusBadRequest, gin.H{"code": ErrCodeBadRequest})
+		return
+	}
 
 	lgtms, err := svc.repo.ListLGTMs(ctx, repo.WithLGTMLimit(limit))
 	if err != nil {
