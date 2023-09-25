@@ -90,7 +90,12 @@ func (r *lgtmRepository) Create(ctx context.Context, data []byte) (*models.LGTM,
 	log.Info(ctx, "detected content type", "type", t)
 
 	if !strings.HasPrefix(t, "image/") {
-		return nil, errors.Wrap(lgtmgen.ErrUnsupportImageFormat, "failed to detect content type")
+		// Allow SVG
+		if strings.HasPrefix(t, "text/xml") {
+			t = "image/svg+xml"
+		} else {
+			return nil, errors.Wrap(lgtmgen.ErrUnsupportImageFormat, "failed to detect content type")
+		}
 	}
 
 	img, err := lgtmgen.Generate(data)
