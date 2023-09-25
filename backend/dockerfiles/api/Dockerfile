@@ -33,4 +33,5 @@ RUN go build -ldflags="-s -w" -o /var/task/bin/cli .
 FROM base
 
 COPY --from=builder /var/task/bin/cli /var/task/bin/cli
+COPY --from=builder /var/task/assets/ /var/task/assets/
 ENTRYPOINT ["/var/task/bin/cli"]
