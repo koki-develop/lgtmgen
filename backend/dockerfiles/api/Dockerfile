@@ -18,7 +18,6 @@ RUN apt update \
 RUN wget https://imagemagick.org/archive/ImageMagick.tar.gz -O /tmp/ImageMagick.tar.gz \
   && tar -xzf /tmp/ImageMagick.tar.gz -C /tmp \
   && cd /tmp/ImageMagick-* \
-  # && ./configure --with-freetype=yes \
   && ./configure \
   && make \
   && make install \
