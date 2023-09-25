@@ -10,7 +10,6 @@ RUN apt update \
   && apt install -y \
   libjpeg-dev \
   libwebp-dev \
-  librsvg2-dev libcairo2-dev \
   ghostscript \
   build-essential \
   libfreetype6-dev
@@ -22,8 +21,6 @@ RUN wget https://imagemagick.org/archive/ImageMagick.tar.gz -O /tmp/ImageMagick.
   && ./configure \
   --with-freetype=yes \
   --with-webp=yes \
-  --with-rsvg=yes \
-  --with-cairo=yes \
   && make \
   && make install \
   && ldconfig /usr/local/lib
