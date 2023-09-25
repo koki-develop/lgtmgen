@@ -2,6 +2,7 @@ package lgtmgen
 
 import (
 	"math"
+	"strings"
 
 	"github.com/cockroachdb/errors"
 	"gopkg.in/gographics/imagick.v3/imagick"
@@ -19,6 +20,9 @@ func Generate(src []byte) ([]byte, error) {
 	srcmw := imagick.NewMagickWand()
 	defer srcmw.Destroy()
 	if err := srcmw.ReadImageBlob(src); err != nil {
+		if strings.HasPrefix(err.Error(), "ERROR_MISSING_DELEGATE") {
+			return nil, errors.Wrap(ErrUnsupportImageFormat, err.Error())
+		}
 		return nil, errors.Wrap(err, "failed to read image")
 	}
 	w := srcmw.GetImageWidth()
