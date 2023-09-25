@@ -7,6 +7,7 @@ import (
 
 	"github.com/cockroachdb/errors"
 	"github.com/gin-gonic/gin"
+	"github.com/koki-develop/lgtmgen/backend/internal/lgtmgen"
 	"github.com/koki-develop/lgtmgen/backend/internal/log"
 	"github.com/koki-develop/lgtmgen/backend/internal/repo"
 )
@@ -80,6 +81,12 @@ func (svc *lgtmService) CreateLGTM(ctx *gin.Context) {
 
 	lgtm, err := svc.repo.Create(ctx, data)
 	if err != nil {
+		if errors.Is(err, lgtmgen.ErrUnsupportImageFormat) {
+			log.Info(ctx, "unsupported image format", "error", err)
+			ctx.JSON(http.StatusBadRequest, gin.H{"code": ErrCodeUnsupportedImageFormat})
+			return
+		}
+
 		log.Error(ctx, "failed to create lgtm", err)
 		ctx.JSON(http.StatusInternalServerError, gin.H{"code": ErrCodeInternalServerError})
 		return
