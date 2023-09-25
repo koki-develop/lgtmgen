@@ -1,6 +1,7 @@
 package service
 
 import (
+	"bytes"
 	"encoding/base64"
 	"net/http"
 	"strconv"
@@ -13,12 +14,14 @@ import (
 )
 
 type lgtmService struct {
-	repo *repo.Repository
+	repo       *repo.Repository
+	httpClient *http.Client
 }
 
 func newLGTMService(repo *repo.Repository) *lgtmService {
 	return &lgtmService{
-		repo: repo,
+		repo:       repo,
+		httpClient: &http.Client{},
 	}
 }
 
@@ -47,12 +50,17 @@ func (svc *lgtmService) ListLGTMs(ctx *gin.Context) {
 }
 
 type CreateLGTMInput struct {
+	URL    string `json:"url"`
 	Base64 string `json:"base64"`
 }
 
 func (ipt *CreateLGTMInput) Validate() error {
-	if ipt.Base64 == "" {
-		return errors.New("base64 is required")
+	if ipt.URL == "" && ipt.Base64 == "" {
+		return errors.New("url or base64 is required")
+	}
+
+	if ipt.URL != "" && ipt.Base64 != "" {
+		return errors.New("url and base64 are exclusive")
 	}
 
 	return nil
@@ -72,11 +80,47 @@ func (svc *lgtmService) CreateLGTM(ctx *gin.Context) {
 		return
 	}
 
-	data, err := base64.StdEncoding.DecodeString(ipt.Base64)
-	if err != nil {
-		log.Info(ctx, "failed to decode base64", "error", err)
-		ctx.JSON(http.StatusBadRequest, gin.H{"code": ErrCodeBadRequest})
-		return
+	var data []byte
+
+	if ipt.Base64 != "" {
+		d, err := base64.StdEncoding.DecodeString(ipt.Base64)
+		if err != nil {
+			log.Info(ctx, "failed to decode base64", "error", err)
+			ctx.JSON(http.StatusBadRequest, gin.H{"code": ErrCodeBadRequest})
+			return
+		}
+		data = d
+	}
+
+	if ipt.URL != "" {
+		req, err := http.NewRequestWithContext(ctx, http.MethodGet, ipt.URL, nil)
+		if err != nil {
+			log.Info(ctx, "failed to create request", "error", err)
+			ctx.JSON(http.StatusBadRequest, gin.H{"code": ErrCodeFailedToGetImage})
+			return
+		}
+
+		resp, err := svc.httpClient.Do(req)
+		if err != nil {
+			log.Info(ctx, "failed to get image", "error", err)
+			ctx.JSON(http.StatusBadRequest, gin.H{"code": ErrCodeFailedToGetImage})
+			return
+		}
+		defer resp.Body.Close()
+
+		if resp.StatusCode != http.StatusOK {
+			log.Info(ctx, "failed to get image", "status", resp.StatusCode)
+			ctx.JSON(http.StatusBadRequest, gin.H{"code": ErrCodeFailedToGetImage})
+			return
+		}
+
+		buf := new(bytes.Buffer)
+		if _, err = buf.ReadFrom(resp.Body); err != nil {
+			log.Info(ctx, "failed to read image", "error", err)
+			ctx.JSON(http.StatusBadRequest, gin.H{"code": ErrCodeFailedToGetImage})
+			return
+		}
+		data = buf.Bytes()
 	}
 
 	lgtm, err := svc.repo.Create(ctx, data)
