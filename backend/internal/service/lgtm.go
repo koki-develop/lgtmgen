@@ -93,6 +93,7 @@ func (svc *lgtmService) CreateLGTM(ctx *gin.Context) {
 	}
 
 	if ipt.URL != "" {
+		log.Info(ctx, "request", "url", ipt.URL)
 		req, err := http.NewRequestWithContext(ctx, http.MethodGet, ipt.URL, nil)
 		if err != nil {
 			log.Info(ctx, "failed to create request", "error", err)
@@ -107,6 +108,7 @@ func (svc *lgtmService) CreateLGTM(ctx *gin.Context) {
 			return
 		}
 		defer resp.Body.Close()
+		log.Info(ctx, "response", "status", resp.StatusCode)
 
 		if resp.StatusCode != http.StatusOK {
 			log.Info(ctx, "failed to get image", "status", resp.StatusCode)
