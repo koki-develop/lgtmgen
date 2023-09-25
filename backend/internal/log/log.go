@@ -6,8 +6,8 @@ import (
 	"log/slog"
 	"os"
 
-	"github.com/awslabs/aws-lambda-go-api-proxy/core"
 	"github.com/gin-gonic/gin"
+	"github.com/koki-develop/lgtmgen/backend/internal/util"
 )
 
 var (
@@ -27,15 +27,6 @@ func Error(ctx context.Context, msg string, err error, args ...interface{}) {
 }
 
 func Middleware(ctx *gin.Context) {
-	ip := ctx.ClientIP()
-
-	apictx, ok := core.GetAPIGatewayContextFromContext(ctx.Request.Context())
-	if ok {
-		ip = apictx.Identity.SourceIP
-	} else {
-		Info(ctx, "no api gateway context")
-	}
-
 	p := ctx.Request.URL.Path
 	q := ctx.Request.URL.RawQuery
 
@@ -50,6 +41,6 @@ func Middleware(ctx *gin.Context) {
 		"method", method,
 		"path", p,
 		"query", q,
-		"ip", ip,
+		"ip", util.GetClientIPFromContext(ctx),
 	)
 }
