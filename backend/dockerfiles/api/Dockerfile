@@ -20,6 +20,10 @@ RUN wget https://imagemagick.org/archive/ImageMagick.tar.gz -O /tmp/ImageMagick.
   && tar -xzf /tmp/ImageMagick.tar.gz -C /tmp \
   && cd /tmp/ImageMagick-* \
   && ./configure \
+  --with-freetype=yes \
+  --with-webp=yes \
+  --with-rsvg=yes \
+  --with-cairo=yes \
   && make \
   && make install \
   && ldconfig /usr/local/lib
