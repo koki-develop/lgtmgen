@@ -9,6 +9,7 @@ ENV GOOS=linux
 RUN apt update \
   && apt install -y \
   libjpeg-dev \
+  libwebp-dev \
   ghostscript \
   build-essential \
   libfreetype6-dev
