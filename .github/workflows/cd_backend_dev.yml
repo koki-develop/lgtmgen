@@ -33,6 +33,7 @@ jobs:
       - name: Install dependencies
         run: yarn install --frozen-lockfile
 
+      - uses: aws-actions/amazon-ecr-login@v1
       - name: Deploy
         run: yarn run deploy --stage dev
         env:
