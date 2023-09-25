@@ -15,6 +15,7 @@ import (
 	"github.com/cockroachdb/errors"
 	"github.com/koki-develop/lgtmgen/backend/internal/env"
 	"github.com/koki-develop/lgtmgen/backend/internal/lgtmgen"
+	"github.com/koki-develop/lgtmgen/backend/internal/log"
 	"github.com/koki-develop/lgtmgen/backend/internal/models"
 	"github.com/koki-develop/lgtmgen/backend/internal/util"
 )
@@ -86,8 +87,10 @@ func (r *lgtmRepository) ListLGTMs(ctx context.Context, opts ...LGTMListOption) 
 
 func (r *lgtmRepository) Create(ctx context.Context, data []byte) (*models.LGTM, error) {
 	t := http.DetectContentType(data)
+	log.Info(ctx, "detected content type", "type", t)
+
 	if !strings.HasPrefix(t, "image/") {
-		return nil, errors.New("invalid image type")
+		return nil, errors.Wrap(lgtmgen.ErrUnsupportImageFormat, "failed to detect content type")
 	}
 
 	img, err := lgtmgen.Generate(data)
