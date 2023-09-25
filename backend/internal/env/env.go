@@ -9,8 +9,16 @@ var (
 	Vars Env
 )
 
+type Stage string
+
+const (
+	StageLocal      Stage = "local"
+	StageDev        Stage = "dev"
+	StageProduction Stage = "prd"
+)
+
 type Env struct {
-	Stage string `env:"STAGE,required"`
+	Stage Stage `env:"STAGE,required"`
 	// DynamoDB Table
 	DynamoDBTableLGTMs string `env:"DYNAMODB_TABLE_LGTMS,required"`
 	// S3 Bucket
