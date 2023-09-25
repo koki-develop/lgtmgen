@@ -10,6 +10,7 @@ RUN apt update \
   && apt install -y \
   libjpeg-dev \
   libwebp-dev \
+  librsvg2-dev libcairo2-dev \
   ghostscript \
   build-essential \
   libfreetype6-dev
