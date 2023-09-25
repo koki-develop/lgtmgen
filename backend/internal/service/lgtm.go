@@ -136,5 +136,5 @@ func (svc *lgtmService) CreateLGTM(ctx *gin.Context) {
 		return
 	}
 
-	ctx.JSON(http.StatusOK, lgtm)
+	ctx.JSON(http.StatusCreated, lgtm)
 }
