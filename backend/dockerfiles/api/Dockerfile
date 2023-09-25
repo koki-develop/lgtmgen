@@ -9,13 +9,15 @@ ENV GOOS=linux
 RUN apt update \
   && apt install -y \
   libjpeg-dev \
-  ghostscript
+  ghostscript \
+  build-essential \
+  libfreetype6-dev
 
 # Install ImageMagick
 RUN wget https://imagemagick.org/archive/ImageMagick.tar.gz -O /tmp/ImageMagick.tar.gz \
   && tar -xzf /tmp/ImageMagick.tar.gz -C /tmp \
   && cd /tmp/ImageMagick-* \
-  && ./configure \
+  && ./configure --with-freetype=yes \
   && make \
   && make install \
   && ldconfig /usr/local/lib
