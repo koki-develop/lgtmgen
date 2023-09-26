@@ -131,7 +131,7 @@ func (r *lgtmRepository) ListLGTMs(ctx context.Context, opts ...LGTMListOption) 
 	return lgtms, nil
 }
 
-func (r *lgtmRepository) Create(ctx context.Context, data []byte) (*models.LGTM, error) {
+func (r *lgtmRepository) CreateLGTM(ctx context.Context, data []byte) (*models.LGTM, error) {
 	t := http.DetectContentType(data)
 	log.Info(ctx, "detected content type", "type", t)
 

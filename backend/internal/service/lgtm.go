@@ -144,7 +144,7 @@ func (svc *lgtmService) CreateLGTM(ctx *gin.Context) {
 		data = buf.Bytes()
 	}
 
-	lgtm, err := svc.repo.Create(ctx, data)
+	lgtm, err := svc.repo.CreateLGTM(ctx, data)
 	if err != nil {
 		if errors.Is(err, lgtmgen.ErrUnsupportImageFormat) {
 			log.Info(ctx, "unsupported image format", "error", err)
