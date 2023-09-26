@@ -11,6 +11,7 @@ import (
 	"github.com/aws/aws-sdk-go-v2/feature/dynamodb/expression"
 	"github.com/aws/aws-sdk-go-v2/feature/s3/manager"
 	"github.com/aws/aws-sdk-go-v2/service/dynamodb"
+	"github.com/aws/aws-sdk-go-v2/service/dynamodb/types"
 	"github.com/aws/aws-sdk-go-v2/service/s3"
 	"github.com/cockroachdb/errors"
 	"github.com/koki-develop/lgtmgen/backend/internal/env"
@@ -32,8 +33,38 @@ func newLGTMRepository(db *dynamodb.Client, storageClient *s3.Client) *lgtmRepos
 	}
 }
 
+func (r *lgtmRepository) FindLGTM(ctx context.Context, id string) (*models.LGTM, error) {
+	expr, err := expression.NewBuilder().
+		WithKeyCondition(expression.KeyEqual(expression.Key("id"), expression.Value(id))).
+		Build()
+	resp, err := r.dbClient.Query(
+		ctx,
+		&dynamodb.QueryInput{
+			TableName:                 util.Ptr(env.Vars.DynamoDBTableLGTMs),
+			KeyConditionExpression:    expr.KeyCondition(),
+			ExpressionAttributeNames:  expr.Names(),
+			ExpressionAttributeValues: expr.Values(),
+		},
+	)
+	if err != nil {
+		return nil, errors.Wrap(err, "failed to query lgtm")
+	}
+
+	if len(resp.Items) == 0 {
+		return nil, nil
+	}
+
+	l := &models.LGTM{}
+	if err := attributevalue.UnmarshalMap(resp.Items[0], l); err != nil {
+		return nil, errors.Wrap(err, "failed to unmarshal lgtm")
+	}
+
+	return l, nil
+}
+
 type lgtmListOptions struct {
 	Limit int
+	After *models.LGTM
 }
 
 type LGTMListOption func(*lgtmListOptions)
@@ -41,6 +72,12 @@ type LGTMListOption func(*lgtmListOptions)
 func WithLGTMLimit(limit int) LGTMListOption {
 	return func(o *lgtmListOptions) {
 		o.Limit = limit
+	}
+}
+
+func WithLGTMAfter(l *models.LGTM) LGTMListOption {
+	return func(o *lgtmListOptions) {
+		o.After = l
 	}
 }
 
@@ -57,6 +94,14 @@ func (r *lgtmRepository) ListLGTMs(ctx context.Context, opts ...LGTMListOption) 
 		return nil, errors.Wrap(err, "failed to build expression")
 	}
 
+	var startKey map[string]types.AttributeValue
+	if o.After != nil {
+		startKey, err = attributevalue.MarshalMap(o.After)
+		if err != nil {
+			return nil, errors.Wrap(err, "failed to marshal")
+		}
+	}
+
 	resp, err := r.dbClient.Query(
 		ctx,
 		&dynamodb.QueryInput{
@@ -67,6 +112,7 @@ func (r *lgtmRepository) ListLGTMs(ctx context.Context, opts ...LGTMListOption) 
 			ExpressionAttributeValues: expr.Values(),
 			Limit:                     util.Ptr(int32(o.Limit)),
 			ScanIndexForward:          util.Ptr(false),
+			ExclusiveStartKey:         startKey,
 		},
 	)
 	if err != nil {
