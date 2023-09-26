@@ -38,4 +38,5 @@ jobs:
         run: yarn run deploy --stage dev
         env:
           DYNAMODB_TABLE_LGTMS: lgtmgen-dev-lgtms
+          DYNAMODB_TABLE_REPORTS: lgtmgen-dev-reports
           S3_BUCKET_IMAGES: lgtmgen-dev-images

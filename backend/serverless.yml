@@ -51,6 +51,8 @@ provider:
     STAGE: ${self:provider.stage}
     # DynamoDB Table
     DYNAMODB_TABLE_LGTMS: ${env:DYNAMODB_TABLE_LGTMS}
+    DYNAMODB_TABLE_REPORTS: ${env:DYNAMODB_TABLE_REPORTS}
+    # S3 Bucket
     S3_BUCKET_IMAGES: ${env:S3_BUCKET_IMAGES}
 
 package:
@@ -72,7 +74,7 @@ resources:
     LgtmsTable:
       Type: AWS::DynamoDB::Table
       Properties:
-        TableName: ${self:custom.prefix}-lgtms
+        TableName: ${env:DYNAMODB_TABLE_LGTMS}
         BillingMode: PAY_PER_REQUEST
         AttributeDefinitions:
           - AttributeName: id
@@ -98,7 +100,7 @@ resources:
     ReportsTable:
       Type: AWS::DynamoDB::Table
       Properties:
-        TableName: ${self:custom.prefix}-reports
+        TableName: ${env:DYNAMODB_TABLE_REPORTS}
         BillingMode: PAY_PER_REQUEST
         AttributeDefinitions:
           - AttributeName: id

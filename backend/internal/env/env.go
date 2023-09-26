@@ -20,7 +20,8 @@ const (
 type Env struct {
 	Stage Stage `env:"STAGE,required"`
 	// DynamoDB Table
-	DynamoDBTableLGTMs string `env:"DYNAMODB_TABLE_LGTMS,required"`
+	DynamoDBTableLGTMs   string `env:"DYNAMODB_TABLE_LGTMS,required"`
+	DynamoDBTableReports string `env:"DYNAMODB_TABLE_REPORTS,required"`
 	// S3 Bucket
 	S3BucketImages string `env:"S3_BUCKET_IMAGES,required"`
 }
