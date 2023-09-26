@@ -68,12 +68,12 @@ func (svc *lgtmService) ListLGTMs(ctx *gin.Context) {
 	ctx.JSON(http.StatusOK, lgtms)
 }
 
-type CreateLGTMInput struct {
+type createLGTMInput struct {
 	URL    string `json:"url"`
 	Base64 string `json:"base64"`
 }
 
-func (ipt *CreateLGTMInput) Validate() error {
+func (ipt *createLGTMInput) Validate() error {
 	if ipt.URL == "" && ipt.Base64 == "" {
 		return errors.New("url or base64 is required")
 	}
@@ -86,7 +86,7 @@ func (ipt *CreateLGTMInput) Validate() error {
 }
 
 func (svc *lgtmService) CreateLGTM(ctx *gin.Context) {
-	var ipt CreateLGTMInput
+	var ipt createLGTMInput
 	if err := ctx.ShouldBindJSON(&ipt); err != nil {
 		log.Info(ctx, "failed to bind json", "error", err)
 		ctx.JSON(http.StatusBadRequest, gin.H{"code": ErrCodeBadRequest})
