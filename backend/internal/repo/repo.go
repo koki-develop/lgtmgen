@@ -7,10 +7,12 @@ import (
 
 type Repository struct {
 	*lgtmRepository
+	*reportRepository
 }
 
 func New(dbClient *dynamodb.Client, storageClient *s3.Client) *Repository {
 	return &Repository{
-		lgtmRepository: newLGTMRepository(dbClient, storageClient),
+		lgtmRepository:   newLGTMRepository(dbClient, storageClient),
+		reportRepository: newReportRepository(dbClient),
 	}
 }
