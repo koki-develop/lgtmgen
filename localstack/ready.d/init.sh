@@ -22,3 +22,11 @@ awslocal dynamodb create-table \
   --global-secondary-indexes \
     IndexName=index_by_status,KeySchema=["{AttributeName=status,KeyType=HASH}","{AttributeName=created_at,KeyType=RANGE}"],Projection="{ProjectionType=ALL}" \
   --billing-mode PAY_PER_REQUEST
+
+awslocal dynamodb create-table \
+  --table-name ${RESOURCE_PREFIX}-reports \
+  --key-schema \
+    AttributeName=id,KeyType=HASH \
+  --attribute-definitions \
+    AttributeName=id,AttributeType=S \
+  --billing-mode PAY_PER_REQUEST
