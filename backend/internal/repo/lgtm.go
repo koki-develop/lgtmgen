@@ -3,7 +3,6 @@ package repo
 import (
 	"bytes"
 	"context"
-	"encoding/json"
 	"net/http"
 	"strings"
 	"time"
@@ -14,7 +13,6 @@ import (
 	"github.com/aws/aws-sdk-go-v2/service/dynamodb"
 	"github.com/aws/aws-sdk-go-v2/service/dynamodb/types"
 	"github.com/aws/aws-sdk-go-v2/service/s3"
-	"github.com/aws/aws-sdk-go-v2/service/sqs"
 	"github.com/cockroachdb/errors"
 	"github.com/koki-develop/lgtmgen/backend/internal/env"
 	"github.com/koki-develop/lgtmgen/backend/internal/lgtmgen"
@@ -26,14 +24,12 @@ import (
 type lgtmRepository struct {
 	dbClient      *dynamodb.Client
 	storageClient *s3.Client
-	queueClient   *sqs.Client
 }
 
-func newLGTMRepository(db *dynamodb.Client, storageClient *s3.Client, queueClient *sqs.Client) *lgtmRepository {
+func newLGTMRepository(db *dynamodb.Client, storageClient *s3.Client) *lgtmRepository {
 	return &lgtmRepository{
 		dbClient:      db,
 		storageClient: storageClient,
-		queueClient:   queueClient,
 	}
 }
 
@@ -200,29 +196,6 @@ func (r *lgtmRepository) CreateLGTM(ctx context.Context, data []byte) (*models.L
 		return nil, errors.Wrap(err, "failed to update item")
 	}
 
-	if err := r.sendCreatedMessage(ctx, lgtm); err != nil {
-		log.Error(ctx, "failed to send created message", err)
-	}
-
 	lgtm.Status = models.LGTMStatusOK
 	return lgtm, nil
-}
-
-func (r *lgtmRepository) sendCreatedMessage(ctx context.Context, lgtm *models.LGTM) error {
-	msg, err := json.Marshal(map[string]interface{}{
-		"lgtm": lgtm,
-	})
-	if err != nil {
-		return errors.Wrap(err, "failed to marshal")
-	}
-
-	_, err = r.queueClient.SendMessage(ctx, &sqs.SendMessageInput{
-		QueueUrl:    util.Ptr(env.Vars.SQSQueueURLNotifications),
-		MessageBody: util.Ptr(string(msg)),
-	})
-	if err != nil {
-		return errors.Wrap(err, "failed to send message")
-	}
-
-	return nil
 }

@@ -157,5 +157,9 @@ func (svc *lgtmService) CreateLGTM(ctx *gin.Context) {
 		return
 	}
 
+	if err := svc.repo.SendLGTMCreatedMessage(ctx, lgtm); err != nil {
+		log.Error(ctx, "failed to send lgtm created message", err)
+	}
+
 	ctx.JSON(http.StatusCreated, lgtm)
 }
