@@ -54,9 +54,9 @@ provider:
             Fn::Join:
               - ":"
               - - arn:aws:sqs
-              - Ref: AWS::Region
-              - Ref: AWS::AccountId
-              - ${self:custom.prefix}-*
+                - Ref: AWS::Region
+                - Ref: AWS::AccountId
+                - ${self:custom.prefix}-*
 
   environment:
     STAGE: ${self:provider.stage}
