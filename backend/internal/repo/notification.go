@@ -9,14 +9,17 @@ import (
 	"github.com/koki-develop/lgtmgen/backend/internal/env"
 	"github.com/koki-develop/lgtmgen/backend/internal/models"
 	"github.com/koki-develop/lgtmgen/backend/internal/util"
+	"github.com/slack-go/slack"
 )
 
 type notificationsRepository struct {
+	slackClient *slack.Client
 	queueClient *sqs.Client
 }
 
-func newNotificationsRepository(queueClient *sqs.Client) *notificationsRepository {
+func newNotificationsRepository(queueClient *sqs.Client, slackClient *slack.Client) *notificationsRepository {
 	return &notificationsRepository{
+		slackClient: slackClient,
 		queueClient: queueClient,
 	}
 }

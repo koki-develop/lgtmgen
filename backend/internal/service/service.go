@@ -11,6 +11,7 @@ import (
 	"github.com/koki-develop/lgtmgen/backend/internal/repo"
 	"github.com/koki-develop/lgtmgen/backend/internal/util"
 	"github.com/pkg/errors"
+	"github.com/slack-go/slack"
 )
 
 type Service struct {
@@ -45,12 +46,14 @@ func New(ctx context.Context) (*Service, error) {
 	storageClient := s3.NewFromConfig(cfg, storageOpts...)
 	queueClient := sqs.NewFromConfig(cfg, queueOpts...)
 
-	r := repo.New(dbClient, storageClient, queueClient)
+	slackClient := slack.New(env.Vars.SlackOAuthToken)
+
+	r := repo.New(dbClient, storageClient, queueClient, slackClient)
 
 	return &Service{
 		lgtmService:         newLGTMService(r),
 		reportService:       newReportService(r),
-		notificationService: newNotificationService(),
+		notificationService: newNotificationService(r),
 		healthService:       newHealthService(),
 	}, nil
 }

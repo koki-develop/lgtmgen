@@ -7,12 +7,18 @@ import (
 	"github.com/aws/aws-lambda-go/events"
 	"github.com/koki-develop/lgtmgen/backend/internal/log"
 	"github.com/koki-develop/lgtmgen/backend/internal/models"
+	"github.com/koki-develop/lgtmgen/backend/internal/repo"
+	"github.com/pkg/errors"
 )
 
-type notificationService struct{}
+type notificationService struct {
+	repo *repo.Repository
+}
 
-func newNotificationService() *notificationService {
-	return &notificationService{}
+func newNotificationService(repo *repo.Repository) *notificationService {
+	return &notificationService{
+		repo: repo,
+	}
 }
 
 type lgtmMessageBody struct {
