@@ -27,7 +27,7 @@ var notifyCmd = &cobra.Command{
 			if err != nil {
 				return errors.Wrap(err, "failed to create service")
 			}
-			if err := svc.NotifyLGTMCreated(ctx, event); err != nil {
+			if err := svc.Notify(ctx, event); err != nil {
 				return errors.Wrap(err, "failed to notify lgtm created")
 			}
 			return nil

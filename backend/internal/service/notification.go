@@ -19,7 +19,7 @@ type lgtmMessageBody struct {
 	LGTM *models.LGTM `json:"lgtm"`
 }
 
-func (s *notificationService) NotifyLGTMCreated(ctx context.Context, event *events.SQSEvent) error {
+func (s *notificationService) Notify(ctx context.Context, event *events.SQSEvent) error {
 	var lgtms models.LGTMs
 	for _, record := range event.Records {
 		var msg lgtmMessageBody
