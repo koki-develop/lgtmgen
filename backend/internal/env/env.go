@@ -19,6 +19,8 @@ const (
 
 type Env struct {
 	Stage Stage `env:"STAGE,required"`
+	// Slack
+	SlackOAuthToken string `env:"SLACK_OAUTH_TOKEN,required"`
 	// DynamoDB Table
 	DynamoDBTableLGTMs   string `env:"DYNAMODB_TABLE_LGTMS,required"`
 	DynamoDBTableReports string `env:"DYNAMODB_TABLE_REPORTS,required"`

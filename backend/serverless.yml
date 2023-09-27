@@ -60,6 +60,8 @@ provider:
 
   environment:
     STAGE: ${self:provider.stage}
+    # Slack
+    SLACK_OAUTH_TOKEN: ${env:SLACK_OAUTH_TOKEN}
     # DynamoDB Table
     DYNAMODB_TABLE_LGTMS: ${env:DYNAMODB_TABLE_LGTMS}
     DYNAMODB_TABLE_REPORTS: ${env:DYNAMODB_TABLE_REPORTS}

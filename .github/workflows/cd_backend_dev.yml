@@ -37,6 +37,8 @@ jobs:
       - name: Deploy
         run: yarn run deploy --stage dev
         env:
+          # Slack
+          SLACK_OAUTH_TOKEN: ${{ secrets.SLACK_OAUTH_TOKEN }}
           # DynamoDB Table
           DYNAMODB_TABLE_LGTMS: lgtmgen-dev-lgtms
           DYNAMODB_TABLE_REPORTS: lgtmgen-dev-reports
