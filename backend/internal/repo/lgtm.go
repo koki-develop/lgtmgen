@@ -199,6 +199,14 @@ func (r *lgtmRepository) CreateLGTM(ctx context.Context, data []byte) (*models.L
 		return nil, errors.Wrap(err, "failed to update item")
 	}
 
+	_, err = r.queueClient.SendMessage(ctx, &sqs.SendMessageInput{
+		QueueUrl:    util.Ptr(env.Vars.SQSQueueURLNotifications),
+		MessageBody: util.Ptr(lgtm.ID),
+	})
+	if err != nil {
+		log.Error(ctx, "failed to send message", err)
+	}
+
 	lgtm.Status = models.LGTMStatusOK
 	return lgtm, nil
 }
