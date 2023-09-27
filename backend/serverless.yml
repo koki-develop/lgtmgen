@@ -62,8 +62,6 @@ provider:
     STAGE: ${self:provider.stage}
     # Slack
     SLACK_OAUTH_TOKEN: ${env:SLACK_OAUTH_TOKEN}
-    # S3 Bucket
-    S3_BUCKET_IMAGES: ${env:S3_BUCKET_IMAGES}
     # SQS Queue
     SQS_QUEUE_NOTIFICATIONS: ${env:SQS_QUEUE_NOTIFICATIONS}
     SQS_QUEUE_URL_NOTIFICATIONS: https://sqs.${aws:region}.amazonaws.com/${aws:accountId}/${env:SQS_QUEUE_NOTIFICATIONS}

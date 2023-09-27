@@ -39,7 +39,5 @@ jobs:
         env:
           # Slack
           SLACK_OAUTH_TOKEN: ${{ secrets.SLACK_OAUTH_TOKEN }}
-          # S3 Bucket
-          S3_BUCKET_IMAGES: lgtmgen-dev-images
           # SQS Queue
           SQS_QUEUE_NOTIFICATIONS: lgtmgen-dev-notifications

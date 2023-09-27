@@ -166,7 +166,7 @@ func (r *lgtmRepository) CreateLGTM(ctx context.Context, data []byte) (*models.L
 
 	uploader := manager.NewUploader(r.storageClient)
 	_, err = uploader.Upload(ctx, &s3.PutObjectInput{
-		Bucket:      util.Ptr(env.Vars.S3BucketImages),
+		Bucket:      util.Ptr(r.bucket()),
 		Key:         util.Ptr(lgtm.ID),
 		Body:        bytes.NewReader(img),
 		ContentType: util.Ptr(t),
@@ -203,4 +203,8 @@ func (r *lgtmRepository) CreateLGTM(ctx context.Context, data []byte) (*models.L
 
 func (*lgtmRepository) table() string {
 	return fmt.Sprintf("lgtmgen-%s-lgtms", env.Vars.Stage)
+}
+
+func (*lgtmRepository) bucket() string {
+	return fmt.Sprintf("lgtmgen-%s-images", env.Vars.Stage)
 }

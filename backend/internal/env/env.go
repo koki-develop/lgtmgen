@@ -21,8 +21,6 @@ type Env struct {
 	Stage Stage `env:"STAGE,required"`
 	// Slack
 	SlackOAuthToken string `env:"SLACK_OAUTH_TOKEN,required"`
-	// S3 Bucket
-	S3BucketImages string `env:"S3_BUCKET_IMAGES,required"`
 	// SQS Queue
 	SQSQueueNotifications    string `env:"SQS_QUEUE_NOTIFICATIONS,required"`
 	SQSQueueURLNotifications string `env:"SQS_QUEUE_URL_NOTIFICATIONS,required"`
