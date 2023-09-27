@@ -72,7 +72,7 @@ functions:
     image:
       name: api
       command: [notify, --lambda]
-    timeout: 60 # s
+    timeout: 30 # s
     events:
       - sqs:
           arn:
