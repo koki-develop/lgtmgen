@@ -22,7 +22,6 @@ type Env struct {
 	// Slack
 	SlackOAuthToken string `env:"SLACK_OAUTH_TOKEN,required"`
 	// DynamoDB Table
-	DynamoDBTableLGTMs   string `env:"DYNAMODB_TABLE_LGTMS,required"`
 	DynamoDBTableReports string `env:"DYNAMODB_TABLE_REPORTS,required"`
 	// S3 Bucket
 	S3BucketImages string `env:"S3_BUCKET_IMAGES,required"`

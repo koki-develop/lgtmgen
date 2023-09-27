@@ -63,7 +63,6 @@ provider:
     # Slack
     SLACK_OAUTH_TOKEN: ${env:SLACK_OAUTH_TOKEN}
     # DynamoDB Table
-    DYNAMODB_TABLE_LGTMS: ${env:DYNAMODB_TABLE_LGTMS}
     DYNAMODB_TABLE_REPORTS: ${env:DYNAMODB_TABLE_REPORTS}
     # S3 Bucket
     S3_BUCKET_IMAGES: ${env:S3_BUCKET_IMAGES}
@@ -101,7 +100,7 @@ resources:
     LgtmsTable:
       Type: AWS::DynamoDB::Table
       Properties:
-        TableName: ${env:DYNAMODB_TABLE_LGTMS}
+        TableName: ${self:custom.prefix}-lgtms
         BillingMode: PAY_PER_REQUEST
         AttributeDefinitions:
           - AttributeName: id

@@ -3,6 +3,7 @@ package repo
 import (
 	"bytes"
 	"context"
+	"fmt"
 	"net/http"
 	"strings"
 	"time"
@@ -40,7 +41,7 @@ func (r *lgtmRepository) FindLGTM(ctx context.Context, id string) (*models.LGTM,
 	resp, err := r.dbClient.Query(
 		ctx,
 		&dynamodb.QueryInput{
-			TableName:                 util.Ptr(env.Vars.DynamoDBTableLGTMs),
+			TableName:                 util.Ptr(r.table()),
 			KeyConditionExpression:    expr.KeyCondition(),
 			ExpressionAttributeNames:  expr.Names(),
 			ExpressionAttributeValues: expr.Values(),
@@ -105,7 +106,7 @@ func (r *lgtmRepository) ListLGTMs(ctx context.Context, opts ...LGTMListOption) 
 	resp, err := r.dbClient.Query(
 		ctx,
 		&dynamodb.QueryInput{
-			TableName:                 util.Ptr(env.Vars.DynamoDBTableLGTMs),
+			TableName:                 util.Ptr(r.table()),
 			IndexName:                 util.Ptr("index_by_status"),
 			KeyConditionExpression:    expr.KeyCondition(),
 			ExpressionAttributeNames:  expr.Names(),
@@ -156,7 +157,7 @@ func (r *lgtmRepository) CreateLGTM(ctx context.Context, data []byte) (*models.L
 	}
 
 	_, err = r.dbClient.PutItem(ctx, &dynamodb.PutItemInput{
-		TableName: util.Ptr(env.Vars.DynamoDBTableLGTMs),
+		TableName: util.Ptr(r.table()),
 		Item:      item,
 	})
 	if err != nil {
@@ -186,7 +187,7 @@ func (r *lgtmRepository) CreateLGTM(ctx context.Context, data []byte) (*models.L
 	}
 
 	_, err = r.dbClient.UpdateItem(ctx, &dynamodb.UpdateItemInput{
-		TableName:                 util.Ptr(env.Vars.DynamoDBTableLGTMs),
+		TableName:                 util.Ptr(r.table()),
 		Key:                       k,
 		UpdateExpression:          expr.Update(),
 		ExpressionAttributeNames:  expr.Names(),
@@ -198,4 +199,8 @@ func (r *lgtmRepository) CreateLGTM(ctx context.Context, data []byte) (*models.L
 
 	lgtm.Status = models.LGTMStatusOK
 	return lgtm, nil
+}
+
+func (*lgtmRepository) table() string {
+	return fmt.Sprintf("lgtmgen-%s-lgtms", env.Vars.Stage)
 }

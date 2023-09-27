@@ -40,7 +40,6 @@ jobs:
           # Slack
           SLACK_OAUTH_TOKEN: ${{ secrets.SLACK_OAUTH_TOKEN }}
           # DynamoDB Table
-          DYNAMODB_TABLE_LGTMS: lgtmgen-dev-lgtms
           DYNAMODB_TABLE_REPORTS: lgtmgen-dev-reports
           # S3 Bucket
           S3_BUCKET_IMAGES: lgtmgen-dev-images
