@@ -54,6 +54,8 @@ provider:
     DYNAMODB_TABLE_REPORTS: ${env:DYNAMODB_TABLE_REPORTS}
     # S3 Bucket
     S3_BUCKET_IMAGES: ${env:S3_BUCKET_IMAGES}
+    # SQS Queue
+    SQS_QUEUE_NOTIFICATIONS: ${env:SQS_QUEUE_NOTIFICATIONS}
 
 package:
   individually: true
@@ -121,4 +123,5 @@ resources:
             KeyType: HASH
     NotificationsQueue:
       Type: AWS::SQS::Queue
-      Properties: {}
+      Properties:
+        QueueName: ${env:SQS_QUEUE_NOTIFICATIONS}
