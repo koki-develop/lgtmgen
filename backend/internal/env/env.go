@@ -22,7 +22,6 @@ type Env struct {
 	// Slack
 	SlackOAuthToken string `env:"SLACK_OAUTH_TOKEN,required"`
 	// SQS Queue
-	SQSQueueNotifications    string `env:"SQS_QUEUE_NOTIFICATIONS,required"`
 	SQSQueueURLNotifications string `env:"SQS_QUEUE_URL_NOTIFICATIONS,required"`
 }
 

@@ -63,8 +63,7 @@ provider:
     # Slack
     SLACK_OAUTH_TOKEN: ${env:SLACK_OAUTH_TOKEN}
     # SQS Queue
-    SQS_QUEUE_NOTIFICATIONS: ${env:SQS_QUEUE_NOTIFICATIONS}
-    SQS_QUEUE_URL_NOTIFICATIONS: https://sqs.${aws:region}.amazonaws.com/${aws:accountId}/${env:SQS_QUEUE_NOTIFICATIONS}
+    SQS_QUEUE_URL_NOTIFICATIONS: https://sqs.${aws:region}.amazonaws.com/${aws:accountId}/${self:custom.prefix}-notifications
 
 package:
   individually: true
@@ -133,4 +132,4 @@ resources:
     NotificationsQueue:
       Type: AWS::SQS::Queue
       Properties:
-        QueueName: ${env:SQS_QUEUE_NOTIFICATIONS}
+        QueueName: ${self:custom.prefix}-notifications

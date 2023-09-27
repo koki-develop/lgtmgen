@@ -7,5 +7,4 @@ export CGO_CFLAGS_ALLOW="-Xpreprocessor"
 export SLACK_OAUTH_TOKEN=""
 
 # SQS Queue
-export SQS_QUEUE_NOTIFICATIONS="lgtmgen-${STAGE}-notifications"
-export SQS_QUEUE_URL_NOTIFICATIONS="http://localhost:4566/000000000000/${SQS_QUEUE_NOTIFICATIONS}"
+export SQS_QUEUE_URL_NOTIFICATIONS="http://localhost:4566/000000000000/lgtmgen-${STAGE}-notifications"

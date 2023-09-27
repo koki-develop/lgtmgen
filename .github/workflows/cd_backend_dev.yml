@@ -39,5 +39,3 @@ jobs:
         env:
           # Slack
           SLACK_OAUTH_TOKEN: ${{ secrets.SLACK_OAUTH_TOKEN }}
-          # SQS Queue
-          SQS_QUEUE_NOTIFICATIONS: lgtmgen-dev-notifications
