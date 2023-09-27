@@ -2,8 +2,11 @@ package service
 
 import (
 	"context"
+	"encoding/json"
 
+	"github.com/aws/aws-lambda-go/events"
 	"github.com/koki-develop/lgtmgen/backend/internal/log"
+	"github.com/koki-develop/lgtmgen/backend/internal/models"
 )
 
 type notificationService struct{}
@@ -12,8 +15,22 @@ func newNotificationService() *notificationService {
 	return &notificationService{}
 }
 
-func (s *notificationService) NotifyLGTMCreated(ctx context.Context, ipt interface{}) error {
-	// TODO: implement
-	log.Info(ctx, "notify", "ipt", ipt)
+type lgtmMessageBody struct {
+	LGTM *models.LGTM `json:"lgtm"`
+}
+
+func (s *notificationService) NotifyLGTMCreated(ctx context.Context, event *events.SQSEvent) error {
+	var lgtms models.LGTMs
+	for _, record := range event.Records {
+		var msg lgtmMessageBody
+		if err := json.Unmarshal([]byte(record.Body), &msg); err != nil {
+			return err
+		}
+		lgtms = append(lgtms, msg.LGTM)
+	}
+
+	// TODO: notify to slack
+	log.Info(ctx, "created lgtms", "lgtms", lgtms)
+
 	return nil
 }

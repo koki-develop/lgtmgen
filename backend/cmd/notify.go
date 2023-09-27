@@ -1,6 +1,7 @@
 package cmd
 
 import (
+	"github.com/aws/aws-lambda-go/events"
 	"github.com/aws/aws-lambda-go/lambda"
 	"github.com/cockroachdb/errors"
 	"github.com/koki-develop/lgtmgen/backend/internal/log"
@@ -21,12 +22,12 @@ var notifyCmd = &cobra.Command{
 			return nil
 		}
 
-		lambda.Start(func(ctx context.Context, ipt interface{}) error {
+		lambda.Start(func(ctx context.Context, event *events.SQSEvent) error {
 			svc, err := service.New(ctx)
 			if err != nil {
 				return errors.Wrap(err, "failed to create service")
 			}
-			if err := svc.NotifyLGTMCreated(ctx, ipt); err != nil {
+			if err := svc.NotifyLGTMCreated(ctx, event); err != nil {
 				return errors.Wrap(err, "failed to notify lgtm created")
 			}
 			return nil

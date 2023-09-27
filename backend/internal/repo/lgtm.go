@@ -3,6 +3,7 @@ package repo
 import (
 	"bytes"
 	"context"
+	"encoding/json"
 	"net/http"
 	"strings"
 	"time"
@@ -199,14 +200,29 @@ func (r *lgtmRepository) CreateLGTM(ctx context.Context, data []byte) (*models.L
 		return nil, errors.Wrap(err, "failed to update item")
 	}
 
-	_, err = r.queueClient.SendMessage(ctx, &sqs.SendMessageInput{
-		QueueUrl:    util.Ptr(env.Vars.SQSQueueURLNotifications),
-		MessageBody: util.Ptr(lgtm.ID),
-	})
-	if err != nil {
-		log.Error(ctx, "failed to send message", err)
+	if err := r.sendCreatedMessage(ctx, lgtm); err != nil {
+		log.Error(ctx, "failed to send created message", err)
 	}
 
 	lgtm.Status = models.LGTMStatusOK
 	return lgtm, nil
+}
+
+func (r *lgtmRepository) sendCreatedMessage(ctx context.Context, lgtm *models.LGTM) error {
+	msg, err := json.Marshal(map[string]interface{}{
+		"lgtm": lgtm,
+	})
+	if err != nil {
+		return errors.Wrap(err, "failed to marshal")
+	}
+
+	_, err = r.queueClient.SendMessage(ctx, &sqs.SendMessageInput{
+		QueueUrl:    util.Ptr(env.Vars.SQSQueueURLNotifications),
+		MessageBody: util.Ptr(string(msg)),
+	})
+	if err != nil {
+		return errors.Wrap(err, "failed to send message")
+	}
+
+	return nil
 }
