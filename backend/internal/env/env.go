@@ -25,7 +25,8 @@ type Env struct {
 	// S3 Bucket
 	S3BucketImages string `env:"S3_BUCKET_IMAGES,required"`
 	// SQS Queue
-	SQSQueueNotifications string `env:"SQS_QUEUE_NOTIFICATIONS,required"`
+	SQSQueueNotifications    string `env:"SQS_QUEUE_NOTIFICATIONS,required"`
+	SQSQueueURLNotifications string `env:"SQS_QUEUE_URL_NOTIFICATIONS,required"`
 }
 
 func Load() error {
