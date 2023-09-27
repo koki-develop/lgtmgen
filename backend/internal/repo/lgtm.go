@@ -13,6 +13,7 @@ import (
 	"github.com/aws/aws-sdk-go-v2/service/dynamodb"
 	"github.com/aws/aws-sdk-go-v2/service/dynamodb/types"
 	"github.com/aws/aws-sdk-go-v2/service/s3"
+	"github.com/aws/aws-sdk-go-v2/service/sqs"
 	"github.com/cockroachdb/errors"
 	"github.com/koki-develop/lgtmgen/backend/internal/env"
 	"github.com/koki-develop/lgtmgen/backend/internal/lgtmgen"
@@ -24,12 +25,14 @@ import (
 type lgtmRepository struct {
 	dbClient      *dynamodb.Client
 	storageClient *s3.Client
+	queueClient   *sqs.Client
 }
 
-func newLGTMRepository(db *dynamodb.Client, storageClient *s3.Client) *lgtmRepository {
+func newLGTMRepository(db *dynamodb.Client, storageClient *s3.Client, queueClient *sqs.Client) *lgtmRepository {
 	return &lgtmRepository{
 		dbClient:      db,
 		storageClient: storageClient,
+		queueClient:   queueClient,
 	}
 }
 
