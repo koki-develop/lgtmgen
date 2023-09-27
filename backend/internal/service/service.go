@@ -1,19 +1,50 @@
 package service
 
 import (
+	"context"
+
+	"github.com/aws/aws-sdk-go-v2/config"
+	"github.com/aws/aws-sdk-go-v2/service/dynamodb"
+	"github.com/aws/aws-sdk-go-v2/service/s3"
+	"github.com/koki-develop/lgtmgen/backend/internal/env"
 	"github.com/koki-develop/lgtmgen/backend/internal/repo"
+	"github.com/koki-develop/lgtmgen/backend/internal/util"
+	"github.com/pkg/errors"
 )
 
 type Service struct {
 	*lgtmService
 	*reportService
+	*notificationService
 	*healthService
 }
 
-func New(repo *repo.Repository) *Service {
-	return &Service{
-		lgtmService:   newLGTMService(repo),
-		reportService: newReportService(repo),
-		healthService: newHealthService(),
+func New(ctx context.Context) (*Service, error) {
+	cfg, err := config.LoadDefaultConfig(ctx)
+	if err != nil {
+		return nil, errors.Wrap(err, "failed to load aws config")
 	}
+
+	dbOpts := []func(*dynamodb.Options){}
+	storageOpts := []func(*s3.Options){}
+	if env.Vars.Stage == "local" {
+		dbOpts = append(dbOpts, func(o *dynamodb.Options) {
+			o.BaseEndpoint = util.Ptr("http://localhost:4566")
+		})
+		storageOpts = append(storageOpts, func(o *s3.Options) {
+			o.BaseEndpoint = util.Ptr("http://localhost:4566")
+			o.UsePathStyle = true
+		})
+	}
+	dbClient := dynamodb.NewFromConfig(cfg, dbOpts...)
+	storageClient := s3.NewFromConfig(cfg, storageOpts...)
+
+	r := repo.New(dbClient, storageClient)
+
+	return &Service{
+		lgtmService:         newLGTMService(r),
+		reportService:       newReportService(r),
+		notificationService: newNotificationService(),
+		healthService:       newHealthService(),
+	}, nil
 }
