@@ -13,7 +13,7 @@ type Repository struct {
 
 func New(dbClient *dynamodb.Client, storageClient *s3.Client, queueClient *sqs.Client) *Repository {
 	return &Repository{
-		lgtmRepository:   newLGTMRepository(dbClient, storageClient),
-		reportRepository: newReportRepository(dbClient),
+		lgtmRepository:   newLGTMRepository(dbClient, storageClient, queueClient),
+		reportRepository: newReportRepository(dbClient, queueClient),
 	}
 }
