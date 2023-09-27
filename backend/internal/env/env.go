@@ -24,6 +24,8 @@ type Env struct {
 	DynamoDBTableReports string `env:"DYNAMODB_TABLE_REPORTS,required"`
 	// S3 Bucket
 	S3BucketImages string `env:"S3_BUCKET_IMAGES,required"`
+	// SQS Queue
+	SQSQueueNotifications string `env:"SQS_QUEUE_NOTIFICATIONS,required"`
 }
 
 func Load() error {
