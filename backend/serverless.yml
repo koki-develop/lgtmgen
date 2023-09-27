@@ -119,3 +119,6 @@ resources:
         KeySchema:
           - AttributeName: id
             KeyType: HASH
+    NotificationsQueue:
+      Type: AWS::SQS::Queue
+      Properties: {}
