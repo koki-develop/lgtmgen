@@ -5,8 +5,6 @@ import (
 	"encoding/json"
 
 	"github.com/aws/aws-lambda-go/events"
-	"github.com/koki-develop/lgtmgen/backend/internal/log"
-	"github.com/koki-develop/lgtmgen/backend/internal/models"
 	"github.com/koki-develop/lgtmgen/backend/internal/repo"
 	"github.com/pkg/errors"
 )
@@ -21,22 +19,41 @@ func newNotificationService(repo *repo.Repository) *notificationService {
 	}
 }
 
-type lgtmMessageBody struct {
-	LGTM *models.LGTM `json:"lgtm"`
+type notificationType string
+
+const (
+	notificationTypeLGTMCreated notificationType = "lgtm_created"
+)
+
+type notificationMessage struct {
+	Type        notificationType         `json:"type"`
+	LGTMCreated *repo.LGTMCreatedMessage `json:"lgtm_created"`
 }
 
 func (s *notificationService) Notify(ctx context.Context, event *events.SQSEvent) error {
-	var lgtms models.LGTMs
 	for _, record := range event.Records {
-		var msg lgtmMessageBody
+		var msg notificationMessage
 		if err := json.Unmarshal([]byte(record.Body), &msg); err != nil {
-			return err
+			return errors.Wrap(err, "failed to unmarshal")
 		}
-		lgtms = append(lgtms, msg.LGTM)
+
+		var err error
+		switch msg.Type {
+		case notificationTypeLGTMCreated:
+			err = s.notifyLGTMCreated(ctx, msg.LGTMCreated)
+		}
+		if err != nil {
+			return errors.Wrap(err, "failed to notify")
+		}
 	}
 
-	// TODO: notify to slack
-	log.Info(ctx, "created lgtms", "lgtms", lgtms)
+	return nil
+}
+
+func (s *notificationService) notifyLGTMCreated(ctx context.Context, msg *repo.LGTMCreatedMessage) error {
+	if err := s.repo.NotifyLGTMCreated(ctx, msg); err != nil {
+		return errors.Wrap(err, "failed to notify lgtm created")
+	}
 
 	return nil
 }
