@@ -30,3 +30,7 @@ awslocal dynamodb create-table \
   --attribute-definitions \
     AttributeName=id,AttributeType=S \
   --billing-mode PAY_PER_REQUEST
+
+# Create SQS Queues
+awslocal sqs create-queue \
+  --queue-name ${RESOURCE_PREFIX}-notifications
