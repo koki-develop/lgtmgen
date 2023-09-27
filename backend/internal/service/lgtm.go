@@ -2,6 +2,7 @@ package service
 
 import (
 	"bytes"
+	"context"
 	"encoding/base64"
 	"net/http"
 	"strconv"
@@ -11,6 +12,7 @@ import (
 	"github.com/koki-develop/lgtmgen/backend/internal/lgtmgen"
 	"github.com/koki-develop/lgtmgen/backend/internal/log"
 	"github.com/koki-develop/lgtmgen/backend/internal/repo"
+	"github.com/koki-develop/lgtmgen/backend/internal/util"
 )
 
 type lgtmService struct {
@@ -99,49 +101,28 @@ func (svc *lgtmService) CreateLGTM(ctx *gin.Context) {
 		return
 	}
 
+	var src string
 	var data []byte
 
-	if ipt.Base64 != "" {
-		d, err := base64.StdEncoding.DecodeString(ipt.Base64)
+	switch {
+	case ipt.Base64 != "":
+		d, err := svc.readFromBase64(ctx, ipt.Base64)
 		if err != nil {
-			log.Info(ctx, "failed to decode base64", "error", err)
+			log.Info(ctx, "failed to read from base64", "error", err)
 			ctx.JSON(http.StatusBadRequest, gin.H{"code": ErrCodeBadRequest})
 			return
 		}
 		data = d
-	}
-
-	if ipt.URL != "" {
-		log.Info(ctx, "request", "url", ipt.URL)
-		req, err := http.NewRequestWithContext(ctx, http.MethodGet, ipt.URL, nil)
+		src = "Base64"
+	case ipt.URL != "":
+		d, err := svc.readFromURL(ctx, ipt.URL)
 		if err != nil {
-			log.Info(ctx, "failed to create request", "error", err)
+			log.Info(ctx, "failed to read from url", "error", err)
 			ctx.JSON(http.StatusBadRequest, gin.H{"code": ErrCodeFailedToGetImage})
 			return
 		}
-
-		resp, err := svc.httpClient.Do(req)
-		if err != nil {
-			log.Info(ctx, "failed to get image", "error", err)
-			ctx.JSON(http.StatusBadRequest, gin.H{"code": ErrCodeFailedToGetImage})
-			return
-		}
-		defer resp.Body.Close()
-		log.Info(ctx, "response", "status", resp.StatusCode)
-
-		if resp.StatusCode != http.StatusOK {
-			log.Info(ctx, "failed to get image", "status", resp.StatusCode)
-			ctx.JSON(http.StatusBadRequest, gin.H{"code": ErrCodeFailedToGetImage})
-			return
-		}
-
-		buf := new(bytes.Buffer)
-		if _, err = buf.ReadFrom(resp.Body); err != nil {
-			log.Info(ctx, "failed to read image", "error", err)
-			ctx.JSON(http.StatusBadRequest, gin.H{"code": ErrCodeFailedToGetImage})
-			return
-		}
-		data = buf.Bytes()
+		data = d
+		src = ipt.URL
 	}
 
 	lgtm, err := svc.repo.CreateLGTM(ctx, data)
@@ -157,9 +138,43 @@ func (svc *lgtmService) CreateLGTM(ctx *gin.Context) {
 		return
 	}
 
-	if err := svc.repo.SendLGTMCreatedMessage(ctx, lgtm); err != nil {
+	if err := svc.repo.SendLGTMCreatedMessage(ctx, &repo.LGTMCreatedMessage{LGTM: lgtm, Source: src, ClientIP: util.GetClientIPFromContext(ctx)}); err != nil {
 		log.Error(ctx, "failed to send lgtm created message", err)
 	}
 
 	ctx.JSON(http.StatusCreated, lgtm)
+}
+
+func (svc *lgtmService) readFromBase64(ctx context.Context, b string) ([]byte, error) {
+	d, err := base64.StdEncoding.DecodeString(b)
+	if err != nil {
+		return nil, errors.Wrap(err, "failed to decode base64")
+	}
+	return d, nil
+}
+
+func (svc *lgtmService) readFromURL(ctx context.Context, u string) ([]byte, error) {
+	log.Info(ctx, "request", "url", u)
+	req, err := http.NewRequestWithContext(ctx, http.MethodGet, u, nil)
+	if err != nil {
+		return nil, errors.Wrap(err, "failed to create request")
+	}
+
+	resp, err := svc.httpClient.Do(req)
+	if err != nil {
+		return nil, errors.Wrap(err, "failed to get image")
+	}
+	defer resp.Body.Close()
+	log.Info(ctx, "response", "status", resp.StatusCode)
+
+	if resp.StatusCode != http.StatusOK {
+		return nil, errors.Wrap(err, "failed to get image")
+	}
+
+	buf := new(bytes.Buffer)
+	if _, err = buf.ReadFrom(resp.Body); err != nil {
+		return nil, errors.Wrap(err, "failed to read image")
+	}
+
+	return buf.Bytes(), nil
 }
