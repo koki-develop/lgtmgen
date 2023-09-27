@@ -62,8 +62,6 @@ provider:
     STAGE: ${self:provider.stage}
     # Slack
     SLACK_OAUTH_TOKEN: ${env:SLACK_OAUTH_TOKEN}
-    # DynamoDB Table
-    DYNAMODB_TABLE_REPORTS: ${env:DYNAMODB_TABLE_REPORTS}
     # S3 Bucket
     S3_BUCKET_IMAGES: ${env:S3_BUCKET_IMAGES}
     # SQS Queue
@@ -126,7 +124,7 @@ resources:
     ReportsTable:
       Type: AWS::DynamoDB::Table
       Properties:
-        TableName: ${env:DYNAMODB_TABLE_REPORTS}
+        TableName: ${self:custom.prefix}-reports
         BillingMode: PAY_PER_REQUEST
         AttributeDefinitions:
           - AttributeName: id

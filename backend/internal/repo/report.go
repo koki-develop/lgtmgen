@@ -2,6 +2,7 @@ package repo
 
 import (
 	"context"
+	"fmt"
 	"time"
 
 	"github.com/aws/aws-sdk-go-v2/feature/dynamodb/attributevalue"
@@ -39,7 +40,7 @@ func (r *reportRepository) CreateReport(ctx context.Context, lgtmID string, t mo
 	}
 
 	_, err = r.dbClient.PutItem(ctx, &dynamodb.PutItemInput{
-		TableName: util.Ptr(env.Vars.DynamoDBTableReports),
+		TableName: util.Ptr(r.table()),
 		Item:      item,
 	})
 	if err != nil {
@@ -47,4 +48,8 @@ func (r *reportRepository) CreateReport(ctx context.Context, lgtmID string, t mo
 	}
 
 	return rp, nil
+}
+
+func (*reportRepository) table() string {
+	return fmt.Sprintf("lgtmgen-%s-reports", env.Vars.Stage)
 }
