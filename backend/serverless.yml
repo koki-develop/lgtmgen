@@ -68,6 +68,17 @@ functions:
       - http:
           method: ANY
           path: "/{any+}"
+  notify:
+    image:
+      name: api
+      command: [notify, --lambda]
+    timeout: 60 # s
+    events:
+      - sqs:
+          arn:
+            Fn::GetAtt:
+              - NotificationsQueue
+              - Arn
 
 resources:
   Resources:
