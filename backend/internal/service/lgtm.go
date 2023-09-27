@@ -52,7 +52,7 @@ func (svc *lgtmService) ListLGTMs(ctx *gin.Context) {
 		}
 		if lgtm == nil {
 			log.Info(ctx, "lgtm not found", "id", after)
-			ctx.JSON(http.StatusNotFound, gin.H{"code": ErrCodeNotFound})
+			ctx.JSON(http.StatusBadRequest, gin.H{"code": ErrCodeBadRequest})
 			return
 		}
 		opts = append(opts, repo.WithLGTMAfter(lgtm))
