@@ -18,6 +18,7 @@ require (
 	github.com/gin-gonic/gin v1.9.1
 	github.com/google/uuid v1.3.0
 	github.com/pkg/errors v0.9.1
+	github.com/slack-go/slack v0.12.3
 	github.com/spf13/cobra v1.7.0
 	golang.org/x/net v0.10.0
 	gopkg.in/gographics/imagick.v3 v3.5.0
@@ -62,6 +63,7 @@ require (
 	github.com/goccy/go-json v0.10.2 // indirect
 	github.com/gogo/protobuf v1.3.2 // indirect
 	github.com/gohugoio/hugo v0.111.3 // indirect
+	github.com/gorilla/websocket v1.5.0 // indirect
 	github.com/inconshreveable/mousetrap v1.1.0 // indirect
 	github.com/jmespath/go-jmespath v0.4.0 // indirect
 	github.com/json-iterator/go v1.1.12 // indirect
