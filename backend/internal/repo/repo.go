@@ -11,6 +11,7 @@ type Repository struct {
 	*lgtmRepository
 	*reportRepository
 	*notificationsRepository
+	*imageRepository
 }
 
 func New(dbClient *dynamodb.Client, storageClient *s3.Client, queueClient *sqs.Client, slackClient *slack.Client) *Repository {
@@ -18,5 +19,6 @@ func New(dbClient *dynamodb.Client, storageClient *s3.Client, queueClient *sqs.C
 		lgtmRepository:          newLGTMRepository(dbClient, storageClient),
 		reportRepository:        newReportRepository(dbClient, queueClient),
 		notificationsRepository: newNotificationsRepository(queueClient, slackClient),
+		imageRepository:         newImageRepository(),
 	}
 }
