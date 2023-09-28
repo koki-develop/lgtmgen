@@ -1,0 +1,55 @@
+definitions:
+  models.LGTM:
+    properties:
+      created_at:
+        type: string
+      id:
+        type: string
+    type: object
+  service.ErrCode:
+    enum:
+    - BAD_REQUEST
+    - UNSUPPORTED_IMAGE_FORMAT
+    - FAILED_TO_GET_IMAGE
+    - NOT_FOUND
+    - RATE_LIMIT_REACHED
+    - INTERNAL_SERVER_ERROR
+    type: string
+    x-enum-varnames:
+    - ErrCodeBadRequest
+    - ErrCodeUnsupportedImageFormat
+    - ErrCodeFailedToGetImage
+    - ErrCodeNotFound
+    - ErrCodeRateLimitReached
+    - ErrCodeInternalServerError
+  service.ErrorResponse:
+    properties:
+      code:
+        $ref: '#/definitions/service.ErrCode'
+    type: object
+info:
+  contact: {}
+paths:
+  /v1/lgtms:
+    get:
+      parameters:
+      - description: limit
+        in: query
+        name: limit
+        type: integer
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/models.LGTM'
+            type: array
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/service.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/service.ErrorResponse'
+swagger: "2.0"
