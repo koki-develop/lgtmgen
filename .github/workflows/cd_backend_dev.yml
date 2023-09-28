@@ -37,6 +37,9 @@ jobs:
       - name: Deploy
         run: yarn run deploy --stage dev
         env:
+          # Google
+          GOOGLE_API_KEY: ${{ secrets.GOOGLE_API_KEY }}
+          SEARCH_ENGINE_ID: ${{ vars.SEARCH_ENGINE_ID }}
           # Slack
           SLACK_OAUTH_TOKEN: ${{ secrets.SLACK_OAUTH_TOKEN }}
           IMAGES_BASE_URL: ${{ vars.IMAGES_BASE_URL }}

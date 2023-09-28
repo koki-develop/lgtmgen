@@ -61,6 +61,9 @@ provider:
   environment:
     STAGE: ${self:provider.stage}
     IMAGES_BASE_URL: ${env:IMAGES_BASE_URL}
+    # Google
+    GOOGLE_API_KEY: ${env:GOOGLE_API_KEY}
+    SEARCH_ENGINE_ID: ${env:SEARCH_ENGINE_ID}
     # Slack
     SLACK_OAUTH_TOKEN: ${env:SLACK_OAUTH_TOKEN}
     # SQS Queue
