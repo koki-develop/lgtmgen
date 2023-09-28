@@ -35,11 +35,13 @@ jobs:
         run: |
           yarn run vercel pull --yes --token=${{ secrets.vercel-token }}
           yarn run vercel build --token=${{ secrets.vercel-token }}
-          yarn run vercel deploy --prebuilt --token=${{ secrets.vercel-token }}
+          yarn run vercel deploy --prebuilt --token=${{ secrets.vercel-token }} \
+            --env NEXT_PUBLIC_API_BASE_URL=${{ vars.API_BASE_URL }}
 
       - name: Deploy (prd)
         if: ${{ inputs.environment == 'prd' }}
         run: |
           yarn run vercel pull --yes --environment=production --token=${{ secrets.vercel-token }}
           yarn run vercel build --prod --token=${{ secrets.vercel-token }}
-          yarn run vercel deploy --prebuilt --prod --token=${{ secrets.vercel-token }}
+          yarn run vercel deploy --prebuilt --prod --token=${{ secrets.vercel-token }} \
+            --env NEXT_PUBLIC_API_BASE_URL=${{ vars.API_BASE_URL }}
