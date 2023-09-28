@@ -18,6 +18,7 @@ type Service struct {
 	*lgtmService
 	*reportService
 	*notificationService
+	*imageService
 	*healthService
 }
 
@@ -54,6 +55,7 @@ func New(ctx context.Context) (*Service, error) {
 		lgtmService:         newLGTMService(r),
 		reportService:       newReportService(r),
 		notificationService: newNotificationService(r),
+		imageService:        newImageService(),
 		healthService:       newHealthService(),
 	}, nil
 }
