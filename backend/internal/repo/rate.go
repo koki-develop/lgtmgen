@@ -87,7 +87,6 @@ func (r *rateRepository) IncrementRate(ctx context.Context, ip string) error {
 	} else {
 		expr, err := expression.NewBuilder().
 			WithUpdate(expression.Add(expression.Name("count"), expression.Value(1))).
-			WithCondition(expression.GreaterThanEqual(expression.Name("reset_at"), expression.Value(time.Now()))).
 			Build()
 		if err != nil {
 			return errors.Wrap(err, "failed to build expression")
@@ -97,6 +96,7 @@ func (r *rateRepository) IncrementRate(ctx context.Context, ip string) error {
 			TableName:                 util.Ptr(r.table()),
 			Key:                       key,
 			UpdateExpression:          expr.Update(),
+			ExpressionAttributeNames:  expr.Names(),
 			ExpressionAttributeValues: expr.Values(),
 		})
 		if err != nil {
