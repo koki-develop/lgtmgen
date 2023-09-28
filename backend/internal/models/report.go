@@ -22,9 +22,9 @@ func (t ReportType) Valid() bool {
 }
 
 type Report struct {
-	ID        string     `json:"id" dynamodbav:"id"`
-	LGTMID    string     `json:"-"  dynamodbav:"lgtm_id"`
-	Type      ReportType `json:"-"  dynamodbav:"type"`
-	Text      string     `json:"-"  dynamodbav:"text"`
-	CreatedAt time.Time  `json:"-"  dynamodbav:"created_at"`
+	ID        string     `json:"id"         dynamodbav:"id"`
+	LGTMID    string     `json:"lgtm_id"    dynamodbav:"lgtm_id"`
+	Type      ReportType `json:"type"       dynamodbav:"type"`
+	Text      string     `json:"text"       dynamodbav:"text"`
+	CreatedAt time.Time  `json:"created_at" dynamodbav:"created_at"`
 }
