@@ -3,7 +3,7 @@ name: CD - frontend (prd)
 on:
   push:
     tags:
-      - "frontend-v*"
+      - "frontend/v*"
 
 env:
   VERCEL_ORG_ID: ${{ vars.VERCEL_ORG_ID }}
