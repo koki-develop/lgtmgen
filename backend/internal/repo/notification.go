@@ -26,6 +26,17 @@ func newNotificationsRepository(queueClient *sqs.Client, slackClient *slack.Clie
 	}
 }
 
+type NotificationType string
+
+const (
+	NotificationTypeLGTMCreated NotificationType = "lgtm_created"
+)
+
+type NotificationMessage struct {
+	Type        NotificationType    `json:"type"`
+	LGTMCreated *LGTMCreatedMessage `json:"lgtm_created"`
+}
+
 type LGTMCreatedMessage struct {
 	LGTM     *models.LGTM `json:"lgtm"`
 	Source   string       `json:"source"`
@@ -33,7 +44,10 @@ type LGTMCreatedMessage struct {
 }
 
 func (r *notificationsRepository) SendLGTMCreatedMessage(ctx context.Context, msg *LGTMCreatedMessage) error {
-	b, err := json.Marshal(msg)
+	b, err := json.Marshal(&NotificationMessage{
+		Type:        NotificationTypeLGTMCreated,
+		LGTMCreated: msg,
+	})
 	if err != nil {
 		return errors.Wrap(err, "failed to marshal")
 	}

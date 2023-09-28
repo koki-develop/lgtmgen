@@ -19,28 +19,19 @@ func newNotificationService(repo *repo.Repository) *notificationService {
 	}
 }
 
-type notificationType string
-
-const (
-	notificationTypeLGTMCreated notificationType = "lgtm_created"
-)
-
-type notificationMessage struct {
-	Type        notificationType         `json:"type"`
-	LGTMCreated *repo.LGTMCreatedMessage `json:"lgtm_created"`
-}
-
 func (s *notificationService) Notify(ctx context.Context, event *events.SQSEvent) error {
 	for _, record := range event.Records {
-		var msg notificationMessage
+		var msg repo.NotificationMessage
 		if err := json.Unmarshal([]byte(record.Body), &msg); err != nil {
 			return errors.Wrap(err, "failed to unmarshal")
 		}
 
 		var err error
 		switch msg.Type {
-		case notificationTypeLGTMCreated:
+		case repo.NotificationTypeLGTMCreated:
 			err = s.notifyLGTMCreated(ctx, msg.LGTMCreated)
+		default:
+			err = errors.Errorf("unknown notification type: %s", msg.Type)
 		}
 		if err != nil {
 			return errors.Wrap(err, "failed to notify")
