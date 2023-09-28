@@ -17,7 +17,7 @@ const (
 )
 
 type ErrorResponse struct {
-	Code ErrCode `json:"code"`
+	Code ErrCode `json:"code" validate:"required"`
 }
 
 func renderError(ctx *gin.Context, status int, code ErrCode) {

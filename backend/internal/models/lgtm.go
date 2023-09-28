@@ -8,9 +8,9 @@ import (
 )
 
 type LGTM struct {
-	ID        string     `json:"id"         dynamodbav:"id"`
-	Status    LGTMStatus `json:"-"          dynamodbav:"status"`
-	CreatedAt time.Time  `json:"created_at" dynamodbav:"created_at"`
+	ID        string     `json:"id"         dynamodbav:"id"         validate:"required"`
+	Status    LGTMStatus `json:"-"          dynamodbav:"status"     validate:"required"`
+	CreatedAt time.Time  `json:"created_at" dynamodbav:"created_at" validate:"required"`
 }
 
 type LGTMs []*LGTM
