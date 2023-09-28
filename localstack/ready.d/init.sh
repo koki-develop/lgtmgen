@@ -35,8 +35,10 @@ awslocal dynamodb create-table \
   --table-name ${RESOURCE_PREFIX}-rates \
   --key-schema \
     AttributeName=ip,KeyType=HASH \
+    AttributeName=tier,KeyType=RANGE \
   --attribute-definitions \
     AttributeName=ip,AttributeType=S \
+    AttributeName=tier,AttributeType=S \
   --billing-mode PAY_PER_REQUEST
 
 # Create SQS Queues

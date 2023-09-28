@@ -4,6 +4,7 @@ import "time"
 
 type Rate struct {
 	IP      string    `json:"ip"       dynamodbav:"ip"`
+	Tier    string    `json:"tier"     dynamodbav:"tier"`
 	Count   int       `json:"count"    dynamodbav:"count"`
 	ResetAt time.Time `json:"reset_at" dynamodbav:"reset_at"`
 }

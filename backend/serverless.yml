@@ -142,9 +142,13 @@ resources:
         AttributeDefinitions:
           - AttributeName: ip
             AttributeType: S
+          - AttributeName: tier
+            AttributeType: S
         KeySchema:
           - AttributeName: ip
             KeyType: HASH
+          - AttributeName: tier
+            KeyType: RANGE
     NotificationsQueue:
       Type: AWS::SQS::Queue
       Properties:
