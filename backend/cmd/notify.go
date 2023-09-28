@@ -86,7 +86,12 @@ var notifyCmd = &cobra.Command{
 		lambda.Start(func(ctx context.Context, event *events.SQSEvent) error {
 			log.Info(ctx, "received event", "event", event)
 
-			svc, err := service.New(ctx)
+			r, err := repo.New(ctx)
+			if err != nil {
+				return errors.Wrap(err, "failed to create repo")
+			}
+
+			svc, err := service.New(ctx, r)
 			if err != nil {
 				return errors.Wrap(err, "failed to create service")
 			}
