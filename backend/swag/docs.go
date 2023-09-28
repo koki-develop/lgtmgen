@@ -54,6 +54,10 @@ const docTemplate = `{
     "definitions": {
         "models.LGTM": {
             "type": "object",
+            "required": [
+                "created_at",
+                "id"
+            ],
             "properties": {
                 "created_at": {
                     "type": "string"
@@ -84,6 +88,9 @@ const docTemplate = `{
         },
         "service.ErrorResponse": {
             "type": "object",
+            "required": [
+                "code"
+            ],
             "properties": {
                 "code": {
                     "$ref": "#/definitions/service.ErrCode"

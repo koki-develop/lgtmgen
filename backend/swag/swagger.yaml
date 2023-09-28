@@ -5,6 +5,9 @@ definitions:
         type: string
       id:
         type: string
+    required:
+    - created_at
+    - id
     type: object
   service.ErrCode:
     enum:
@@ -26,6 +29,8 @@ definitions:
     properties:
       code:
         $ref: '#/definitions/service.ErrCode'
+    required:
+    - code
     type: object
 info:
   contact: {}
