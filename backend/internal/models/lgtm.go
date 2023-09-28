@@ -1,6 +1,11 @@
 package models
 
-import "time"
+import (
+	"net/url"
+	"time"
+
+	"github.com/pkg/errors"
+)
 
 type LGTM struct {
 	ID        string     `json:"id"         dynamodbav:"id"`
@@ -9,6 +14,14 @@ type LGTM struct {
 }
 
 type LGTMs []*LGTM
+
+func (l *LGTM) URL(base string) (string, error) {
+	u, err := url.JoinPath(base, l.ID)
+	if err != nil {
+		return "", errors.Wrap(err, "failed to join path")
+	}
+	return u, nil
+}
 
 type LGTMStatus string
 
