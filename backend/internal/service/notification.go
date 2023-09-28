@@ -5,8 +5,8 @@ import (
 	"encoding/json"
 
 	"github.com/aws/aws-lambda-go/events"
+	"github.com/cockroachdb/errors"
 	"github.com/koki-develop/lgtmgen/backend/internal/repo"
-	"github.com/pkg/errors"
 )
 
 type notificationService struct {

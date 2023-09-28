@@ -3,12 +3,12 @@ package api
 import (
 	"context"
 
+	"github.com/cockroachdb/errors"
 	"github.com/gin-gonic/gin"
 	"github.com/koki-develop/lgtmgen/backend/internal/log"
 	"github.com/koki-develop/lgtmgen/backend/internal/middleware"
 	"github.com/koki-develop/lgtmgen/backend/internal/repo"
 	"github.com/koki-develop/lgtmgen/backend/internal/service"
-	"github.com/pkg/errors"
 )
 
 func NewEngine(ctx context.Context) (*gin.Engine, error) {

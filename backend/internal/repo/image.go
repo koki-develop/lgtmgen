@@ -3,9 +3,9 @@ package repo
 import (
 	"context"
 
+	"github.com/cockroachdb/errors"
 	"github.com/koki-develop/lgtmgen/backend/internal/models"
 	"github.com/koki-develop/lgtmgen/backend/internal/util"
-	"github.com/pkg/errors"
 	"google.golang.org/api/customsearch/v1"
 )
 
