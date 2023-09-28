@@ -13,6 +13,7 @@ type Repository struct {
 	*reportRepository
 	*notificationsRepository
 	*imageRepository
+	*rateRepository
 }
 
 type Config struct {
@@ -30,5 +31,6 @@ func New(cfg *Config) *Repository {
 		reportRepository:        newReportRepository(cfg.DBClient, cfg.QueueClient),
 		notificationsRepository: newNotificationsRepository(cfg.QueueClient, cfg.SlackClient),
 		imageRepository:         newImageRepository(cfg.SearchEngineID, cfg.SearchEngine),
+		rateRepository:          newRateRepository(cfg.DBClient),
 	}
 }
