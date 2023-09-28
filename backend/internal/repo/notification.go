@@ -4,6 +4,7 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
+	"net/url"
 
 	"github.com/aws/aws-sdk-go-v2/service/sqs"
 	"github.com/cockroachdb/errors"
@@ -64,6 +65,11 @@ func (r *notificationsRepository) SendLGTMCreatedMessage(ctx context.Context, ms
 }
 
 func (r *notificationsRepository) NotifyLGTMCreated(ctx context.Context, msg *LGTMCreatedMessage) error {
+	imgURL, err := url.JoinPath(env.Vars.ImagesBaseURL, msg.LGTM.ID)
+	if err != nil {
+		return errors.Wrap(err, "failed to join url")
+	}
+
 	channel := r.channel()
 	blocks := []slack.Block{
 		slack.NewHeaderBlock(
@@ -77,13 +83,13 @@ func (r *notificationsRepository) NotifyLGTMCreated(ctx context.Context, msg *LG
 				slack.NewTextBlockObject(slack.MarkdownType, fmt.Sprintf("*Client IP*\n%s", msg.ClientIP), false, false),
 			},
 			slack.NewAccessory(
-				slack.NewImageBlockElement("https://koki.me/images/profile.png", "LGTM"), // TODO: set lgtm image url
+				slack.NewImageBlockElement(imgURL, "LGTM"),
 			),
 		),
 	}
 	log.Info(ctx, "notify lgtm created", "channel", channel, "blocks", blocks)
 
-	_, _, err := r.slackClient.PostMessage(channel, slack.MsgOptionBlocks(blocks...))
+	_, _, err = r.slackClient.PostMessage(channel, slack.MsgOptionBlocks(blocks...))
 	if err != nil {
 		return errors.Wrap(err, "failed to post message")
 	}

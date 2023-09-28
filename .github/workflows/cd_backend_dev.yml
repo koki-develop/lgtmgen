@@ -39,3 +39,4 @@ jobs:
         env:
           # Slack
           SLACK_OAUTH_TOKEN: ${{ secrets.SLACK_OAUTH_TOKEN }}
+          IMAGES_BASE_URL: ${{ vars.IMAGES_BASE_URL }}

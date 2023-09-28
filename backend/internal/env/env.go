@@ -18,7 +18,8 @@ const (
 )
 
 type Env struct {
-	Stage Stage `env:"STAGE,required"`
+	Stage         Stage  `env:"STAGE,required"`
+	ImagesBaseURL string `env:"IMAGES_BASE_URL,required"`
 	// Slack
 	SlackOAuthToken string `env:"SLACK_OAUTH_TOKEN,required"`
 	// SQS Queue

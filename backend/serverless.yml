@@ -60,6 +60,7 @@ provider:
 
   environment:
     STAGE: ${self:provider.stage}
+    IMAGES_BASE_URL: ${env:IMAGES_BASE_URL}
     # Slack
     SLACK_OAUTH_TOKEN: ${env:SLACK_OAUTH_TOKEN}
     # SQS Queue
