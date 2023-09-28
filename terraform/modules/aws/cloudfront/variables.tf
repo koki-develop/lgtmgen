@@ -6,6 +6,6 @@ variable "tier" {
   type = string
 }
 
-variable "distribution_arn" {
+variable "origin_bucket_domain_name" {
   type = string
 }
