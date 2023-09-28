@@ -4,7 +4,6 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
-	"net/url"
 
 	"github.com/aws/aws-sdk-go-v2/service/sqs"
 	"github.com/cockroachdb/errors"
@@ -91,7 +90,7 @@ func (r *notificationsRepository) SendReportCreatedMessage(ctx context.Context, 
 }
 
 func (r *notificationsRepository) NotifyLGTMCreated(ctx context.Context, msg *LGTMCreatedMessage) error {
-	imgURL, err := url.JoinPath(env.Vars.ImagesBaseURL, msg.LGTM.ID)
+	imgURL, err := msg.LGTM.URL(env.Vars.ImagesBaseURL)
 	if err != nil {
 		return errors.Wrap(err, "failed to join url")
 	}
@@ -122,7 +121,7 @@ func (r *notificationsRepository) NotifyLGTMCreated(ctx context.Context, msg *LG
 }
 
 func (r *notificationsRepository) NotifyReportCreated(ctx context.Context, msg *ReportCreatedMessage) error {
-	imgURL, err := url.JoinPath(env.Vars.ImagesBaseURL, msg.Report.LGTMID)
+	imgURL, err := (&models.LGTM{ID: msg.Report.LGTMID}).URL(env.Vars.ImagesBaseURL)
 	if err != nil {
 		return errors.Wrap(err, "failed to join url")
 	}
