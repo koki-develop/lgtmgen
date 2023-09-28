@@ -11,7 +11,7 @@
     "start": "next start",
     "lint": "next lint",
     "fmt": "prettier --write .",
-    "generate": "sta -p ../backend/swag/swagger.yaml -o lib/generated -n api.ts"
+    "generate": "sta --path ../backend/swag/swagger.yaml --output lib/generated --name api.ts --disable-throw-on-error"
   },
   "dependencies": {
     "next": "latest",
