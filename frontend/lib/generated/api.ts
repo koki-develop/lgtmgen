@@ -10,8 +10,8 @@
  */
 
 export interface ModelsLGTM {
-  created_at?: string;
-  id?: string;
+  created_at: string;
+  id: string;
 }
 
 export enum ServiceErrCode {
@@ -24,7 +24,7 @@ export enum ServiceErrCode {
 }
 
 export interface ServiceErrorResponse {
-  code?: ServiceErrCode;
+  code: ServiceErrCode;
 }
 
 export type QueryParamsType = Record<string | number, any>;
