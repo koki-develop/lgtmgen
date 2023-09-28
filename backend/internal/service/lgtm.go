@@ -27,6 +27,11 @@ func newLGTMService(repo *repo.Repository) *lgtmService {
 	}
 }
 
+// @Router		/v1/lgtms [get]
+// @Param		limit	query		int	false	"limit"
+// @Success	200		{array}		models.LGTM
+// @Failure	400		{object}	ErrorResponse
+// @Failure	500		{object}	ErrorResponse
 func (svc *lgtmService) ListLGTMs(ctx *gin.Context) {
 	opts := []repo.LGTMListOption{}
 
@@ -34,12 +39,12 @@ func (svc *lgtmService) ListLGTMs(ctx *gin.Context) {
 	limit, err := strconv.Atoi(qlimit)
 	if err != nil {
 		log.Info(ctx, "failed to parse limit", "limit", qlimit, "error", err)
-		ctx.JSON(http.StatusBadRequest, gin.H{"code": ErrCodeBadRequest})
+		renderError(ctx, http.StatusBadRequest, ErrCodeBadRequest)
 		return
 	}
 	if limit < 1 || limit > 100 {
 		log.Info(ctx, "limit is out of range", "limit", limit)
-		ctx.JSON(http.StatusBadRequest, gin.H{"code": ErrCodeBadRequest})
+		renderError(ctx, http.StatusBadRequest, ErrCodeBadRequest)
 		return
 	}
 	opts = append(opts, repo.WithLGTMLimit(limit))
@@ -49,12 +54,12 @@ func (svc *lgtmService) ListLGTMs(ctx *gin.Context) {
 		lgtm, err := svc.repo.FindLGTM(ctx, after)
 		if err != nil {
 			log.Error(ctx, "failed to find lgtm", err, "id", after)
-			ctx.JSON(http.StatusInternalServerError, gin.H{"code": ErrCodeInternalServerError})
+			renderError(ctx, http.StatusInternalServerError, ErrCodeInternalServerError)
 			return
 		}
 		if lgtm == nil {
 			log.Info(ctx, "lgtm not found", "id", after)
-			ctx.JSON(http.StatusBadRequest, gin.H{"code": ErrCodeBadRequest})
+			renderError(ctx, http.StatusBadRequest, ErrCodeBadRequest)
 			return
 		}
 		opts = append(opts, repo.WithLGTMAfter(lgtm))
@@ -63,7 +68,7 @@ func (svc *lgtmService) ListLGTMs(ctx *gin.Context) {
 	lgtms, err := svc.repo.ListLGTMs(ctx, opts...)
 	if err != nil {
 		log.Error(ctx, "failed to list lgtms", err)
-		ctx.JSON(http.StatusInternalServerError, gin.H{"code": ErrCodeInternalServerError})
+		renderError(ctx, http.StatusInternalServerError, ErrCodeInternalServerError)
 		return
 	}
 

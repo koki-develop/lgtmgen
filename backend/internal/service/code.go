@@ -1,5 +1,7 @@
 package service
 
+import "github.com/gin-gonic/gin"
+
 type ErrCode string
 
 const (
@@ -13,3 +15,11 @@ const (
 	// 5xx
 	ErrCodeInternalServerError ErrCode = "INTERNAL_SERVER_ERROR"
 )
+
+type ErrorResponse struct {
+	Code ErrCode `json:"code"`
+}
+
+func renderError(ctx *gin.Context, status int, code ErrCode) {
+	ctx.JSON(status, ErrorResponse{Code: code})
+}
