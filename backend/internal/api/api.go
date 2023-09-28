@@ -26,6 +26,8 @@ func NewEngine(ctx context.Context) (*gin.Engine, error) {
 		v1.POST("/lgtms", svc.CreateLGTM)
 
 		v1.POST("/reports", svc.CreateReport)
+
+		v1.GET("/images", svc.SearchImages)
 	}
 
 	return e, nil
