@@ -1,3 +1,6 @@
+//go:generate go run github.com/swaggo/swag/cmd/swag fmt
+//go:generate go run github.com/swaggo/swag/cmd/swag init --output ./swag
+
 package main
 
 import (
