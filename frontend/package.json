@@ -9,7 +9,8 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "generate": "sta -p ../backend/swag/swagger.yaml -o lib/generated -n api.ts"
   },
   "dependencies": {
     "next": "latest",
