@@ -5,7 +5,6 @@ import (
 
 	"github.com/cockroachdb/errors"
 	"github.com/gin-gonic/gin"
-	"github.com/koki-develop/lgtmgen/backend/internal/log"
 	"github.com/koki-develop/lgtmgen/backend/internal/middleware"
 	"github.com/koki-develop/lgtmgen/backend/internal/repo"
 	"github.com/koki-develop/lgtmgen/backend/internal/service"
@@ -23,7 +22,7 @@ func NewEngine(ctx context.Context) (*gin.Engine, error) {
 	}
 
 	e := gin.New()
-	e.Use(log.Middleware)
+	e.Use(middleware.NewLogger().Apply())
 	e.Use(gin.Recovery())
 	rl := middleware.NewRateLimitter(r)
 
