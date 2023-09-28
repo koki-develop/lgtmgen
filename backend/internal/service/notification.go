@@ -29,21 +29,15 @@ func (s *notificationService) Notify(ctx context.Context, event *events.SQSEvent
 		var err error
 		switch msg.Type {
 		case repo.NotificationTypeLGTMCreated:
-			err = s.notifyLGTMCreated(ctx, msg.LGTMCreated)
+			err = s.repo.NotifyLGTMCreated(ctx, msg.LGTMCreated)
+		case repo.NotificationTypeReportCreated:
+			err = s.repo.NotifyReportCreated(ctx, msg.ReportCreated)
 		default:
 			err = errors.Errorf("unknown notification type: %s", msg.Type)
 		}
 		if err != nil {
 			return errors.Wrap(err, "failed to notify")
 		}
-	}
-
-	return nil
-}
-
-func (s *notificationService) notifyLGTMCreated(ctx context.Context, msg *repo.LGTMCreatedMessage) error {
-	if err := s.repo.NotifyLGTMCreated(ctx, msg); err != nil {
-		return errors.Wrap(err, "failed to notify lgtm created")
 	}
 
 	return nil

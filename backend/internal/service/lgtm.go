@@ -138,7 +138,12 @@ func (svc *lgtmService) CreateLGTM(ctx *gin.Context) {
 		return
 	}
 
-	if err := svc.repo.SendLGTMCreatedMessage(ctx, &repo.LGTMCreatedMessage{LGTM: lgtm, Source: src, ClientIP: util.GetClientIPFromContext(ctx)}); err != nil {
+	err = svc.repo.SendLGTMCreatedMessage(ctx, &repo.LGTMCreatedMessage{
+		LGTM:     lgtm,
+		Source:   src,
+		ClientIP: util.GetClientIPFromContext(ctx),
+	})
+	if err != nil {
 		log.Error(ctx, "failed to send lgtm created message", err)
 	}
 

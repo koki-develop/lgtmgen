@@ -83,5 +83,12 @@ func (s *reportService) CreateReport(ctx *gin.Context) {
 		return
 	}
 
+	err = s.repo.SendReportCreatedMessage(ctx, &repo.ReportCreatedMessage{
+		Report: rp,
+	})
+	if err != nil {
+		log.Error(ctx, "failed to send report created message", err)
+	}
+
 	ctx.JSON(http.StatusCreated, rp)
 }
