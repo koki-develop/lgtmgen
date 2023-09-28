@@ -5,6 +5,7 @@ import (
 	"github.com/aws/aws-sdk-go-v2/service/s3"
 	"github.com/aws/aws-sdk-go-v2/service/sqs"
 	"github.com/slack-go/slack"
+	"google.golang.org/api/customsearch/v1"
 )
 
 type Repository struct {
@@ -14,11 +15,20 @@ type Repository struct {
 	*imageRepository
 }
 
-func New(dbClient *dynamodb.Client, storageClient *s3.Client, queueClient *sqs.Client, slackClient *slack.Client) *Repository {
+type Config struct {
+	DBClient       *dynamodb.Client
+	StorageClient  *s3.Client
+	QueueClient    *sqs.Client
+	SlackClient    *slack.Client
+	SearchEngine   *customsearch.Service
+	SearchEngineID string
+}
+
+func New(cfg *Config) *Repository {
 	return &Repository{
-		lgtmRepository:          newLGTMRepository(dbClient, storageClient),
-		reportRepository:        newReportRepository(dbClient, queueClient),
-		notificationsRepository: newNotificationsRepository(queueClient, slackClient),
-		imageRepository:         newImageRepository(),
+		lgtmRepository:          newLGTMRepository(cfg.DBClient, cfg.StorageClient),
+		reportRepository:        newReportRepository(cfg.DBClient, cfg.QueueClient),
+		notificationsRepository: newNotificationsRepository(cfg.QueueClient, cfg.SlackClient),
+		imageRepository:         newImageRepository(cfg.SearchEngineID, cfg.SearchEngine),
 	}
 }

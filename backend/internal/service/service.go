@@ -12,6 +12,8 @@ import (
 	"github.com/koki-develop/lgtmgen/backend/internal/util"
 	"github.com/pkg/errors"
 	"github.com/slack-go/slack"
+	"google.golang.org/api/customsearch/v1"
+	"google.golang.org/api/option"
 )
 
 type Service struct {
@@ -49,7 +51,19 @@ func New(ctx context.Context) (*Service, error) {
 
 	slackClient := slack.New(env.Vars.SlackOAuthToken)
 
-	r := repo.New(dbClient, storageClient, queueClient, slackClient)
+	search, err := customsearch.NewService(ctx, option.WithAPIKey(env.Vars.GoogleAPIKey))
+	if err != nil {
+		return nil, errors.Wrap(err, "failed to create search service")
+	}
+
+	r := repo.New(&repo.Config{
+		DBClient:       dbClient,
+		StorageClient:  storageClient,
+		QueueClient:    queueClient,
+		SlackClient:    slackClient,
+		SearchEngine:   search,
+		SearchEngineID: env.Vars.SearchEngineID,
+	})
 
 	return &Service{
 		lgtmService:         newLGTMService(r),
