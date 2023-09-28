@@ -31,6 +31,14 @@ awslocal dynamodb create-table \
     AttributeName=id,AttributeType=S \
   --billing-mode PAY_PER_REQUEST
 
+awslocal dynamodb create-table \
+  --table-name ${RESOURCE_PREFIX}-rates \
+  --key-schema \
+    AttributeName=ip,KeyType=HASH \
+  --attribute-definitions \
+    AttributeName=ip,AttributeType=S \
+  --billing-mode PAY_PER_REQUEST
+
 # Create SQS Queues
 awslocal sqs create-queue \
   --queue-name ${RESOURCE_PREFIX}-notifications

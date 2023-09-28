@@ -133,6 +133,17 @@ resources:
         KeySchema:
           - AttributeName: id
             KeyType: HASH
+    RatesTable:
+      Type: AWS::DynamoDB::Table
+      Properties:
+        TableName: ${self:custom.prefix}-rates
+        BillingMode: PAY_PER_REQUEST
+        AttributeDefinitions:
+          - AttributeName: ip
+            AttributeType: S
+        KeySchema:
+          - AttributeName: ip
+            KeyType: HASH
     NotificationsQueue:
       Type: AWS::SQS::Queue
       Properties:
