@@ -20,10 +20,10 @@ func NewRateLimitter(r *repo.Repository) *RateLimitter {
 	}
 }
 
-func (m *RateLimitter) Apply(limit int) gin.HandlerFunc {
+func (m *RateLimitter) Apply(tier string, limit int) gin.HandlerFunc {
 	return func(ctx *gin.Context) {
 		ip := util.GetClientIPFromContext(ctx)
-		rate, err := m.repo.FindRate(ctx, ip)
+		rate, err := m.repo.FindRate(ctx, ip, tier)
 		if err != nil {
 			log.Error(ctx, "failed to find rate", err)
 		} else {
@@ -33,7 +33,7 @@ func (m *RateLimitter) Apply(limit int) gin.HandlerFunc {
 				ctx.Abort()
 				return
 			}
-			if err := m.repo.IncrementRate(ctx, ip); err != nil {
+			if err := m.repo.IncrementRate(ctx, ip, tier); err != nil {
 				log.Error(ctx, "failed to increment rate", err)
 			}
 		}

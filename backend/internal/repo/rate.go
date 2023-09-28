@@ -22,9 +22,10 @@ func newRateRepository(dbClient *dynamodb.Client) *rateRepository {
 	return &rateRepository{dbClient: dbClient}
 }
 
-func (r *rateRepository) FindRate(ctx context.Context, ip string) (*models.Rate, error) {
+func (r *rateRepository) FindRate(ctx context.Context, ip, tier string) (*models.Rate, error) {
 	key, err := attributevalue.MarshalMap(map[string]string{
-		"ip": ip,
+		"ip":   ip,
+		"tier": tier,
 	})
 	if err != nil {
 		return nil, errors.Wrap(err, "failed to marshal map")
@@ -54,22 +55,16 @@ func (r *rateRepository) FindRate(ctx context.Context, ip string) (*models.Rate,
 	return &rate, nil
 }
 
-func (r *rateRepository) IncrementRate(ctx context.Context, ip string) error {
-	rate, err := r.FindRate(ctx, ip)
+func (r *rateRepository) IncrementRate(ctx context.Context, ip, tier string) error {
+	rate, err := r.FindRate(ctx, ip, tier)
 	if err != nil {
 		return errors.Wrap(err, "failed to find rate")
-	}
-
-	key, err := attributevalue.MarshalMap(map[string]string{
-		"ip": ip,
-	})
-	if err != nil {
-		return errors.Wrap(err, "failed to marshal map")
 	}
 
 	if rate == nil {
 		rate = &models.Rate{
 			IP:      ip,
+			Tier:    tier,
 			Count:   1,
 			ResetAt: time.Now().Add(1 * time.Hour),
 		}
@@ -90,6 +85,14 @@ func (r *rateRepository) IncrementRate(ctx context.Context, ip string) error {
 			Build()
 		if err != nil {
 			return errors.Wrap(err, "failed to build expression")
+		}
+
+		key, err := attributevalue.MarshalMap(map[string]string{
+			"ip":   ip,
+			"tier": tier,
+		})
+		if err != nil {
+			return errors.Wrap(err, "failed to marshal map")
 		}
 
 		_, err = r.dbClient.UpdateItem(ctx, &dynamodb.UpdateItemInput{
