@@ -7,6 +7,7 @@ import (
 	"github.com/aws/aws-lambda-go/lambda"
 	"github.com/cockroachdb/errors"
 	"github.com/koki-develop/lgtmgen/backend/internal/log"
+	"github.com/koki-develop/lgtmgen/backend/internal/repo"
 	"github.com/koki-develop/lgtmgen/backend/internal/service"
 	"github.com/spf13/cobra"
 	"golang.org/x/net/context"
@@ -30,7 +31,12 @@ var notifyCmd = &cobra.Command{
 			ctx := context.Background()
 			log.Info(ctx, "Debug mode")
 
-			svc, err := service.New(ctx)
+			r, err := repo.New(ctx)
+			if err != nil {
+				return errors.Wrap(err, "failed to create repo")
+			}
+
+			svc, err := service.New(ctx, r)
 			if err != nil {
 				return errors.Wrap(err, "failed to create service")
 			}
