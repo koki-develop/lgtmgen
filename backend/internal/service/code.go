@@ -8,6 +8,7 @@ const (
 	ErrCodeUnsupportedImageFormat ErrCode = "UNSUPPORTED_IMAGE_FORMAT"
 	ErrCodeFailedToGetImage       ErrCode = "FAILED_TO_GET_IMAGE"
 	ErrCodeNotFound               ErrCode = "NOT_FOUND"
+	ErrCodeRateLimitReached       ErrCode = "RATE_LIMIT_REACHED"
 
 	// 5xx
 	ErrCodeInternalServerError ErrCode = "INTERNAL_SERVER_ERROR"
