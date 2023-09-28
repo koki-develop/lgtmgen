@@ -30,12 +30,14 @@ func newNotificationsRepository(queueClient *sqs.Client, slackClient *slack.Clie
 type NotificationType string
 
 const (
-	NotificationTypeLGTMCreated NotificationType = "lgtm_created"
+	NotificationTypeLGTMCreated   NotificationType = "lgtm_created"
+	NotificationTypeReportCreated NotificationType = "report_created"
 )
 
 type NotificationMessage struct {
-	Type        NotificationType    `json:"type"`
-	LGTMCreated *LGTMCreatedMessage `json:"lgtm_created"`
+	Type          NotificationType      `json:"type"`
+	LGTMCreated   *LGTMCreatedMessage   `json:"lgtm_created"`
+	ReportCreated *ReportCreatedMessage `json:"report_created"`
 }
 
 type LGTMCreatedMessage struct {
@@ -44,10 +46,34 @@ type LGTMCreatedMessage struct {
 	ClientIP string       `json:"client_ip"`
 }
 
+type ReportCreatedMessage struct {
+	Report *models.Report `json:"report"`
+}
+
 func (r *notificationsRepository) SendLGTMCreatedMessage(ctx context.Context, msg *LGTMCreatedMessage) error {
 	b, err := json.Marshal(&NotificationMessage{
 		Type:        NotificationTypeLGTMCreated,
 		LGTMCreated: msg,
+	})
+	if err != nil {
+		return errors.Wrap(err, "failed to marshal")
+	}
+
+	_, err = r.queueClient.SendMessage(ctx, &sqs.SendMessageInput{
+		QueueUrl:    util.Ptr(env.Vars.SQSQueueURLNotifications),
+		MessageBody: util.Ptr(string(b)),
+	})
+	if err != nil {
+		return errors.Wrap(err, "failed to send message")
+	}
+
+	return nil
+}
+
+func (r *notificationsRepository) SendReportCreatedMessage(ctx context.Context, msg *ReportCreatedMessage) error {
+	b, err := json.Marshal(&NotificationMessage{
+		Type:          NotificationTypeReportCreated,
+		ReportCreated: msg,
 	})
 	if err != nil {
 		return errors.Wrap(err, "failed to marshal")
@@ -82,9 +108,42 @@ func (r *notificationsRepository) NotifyLGTMCreated(ctx context.Context, msg *LG
 				slack.NewTextBlockObject(slack.MarkdownType, fmt.Sprintf("*Source*\n%s", msg.Source), false, false),
 				slack.NewTextBlockObject(slack.MarkdownType, fmt.Sprintf("*Client IP*\n%s", msg.ClientIP), false, false),
 			},
-			slack.NewAccessory(
-				slack.NewImageBlockElement(imgURL, "LGTM"),
-			),
+			slack.NewAccessory(slack.NewImageBlockElement(imgURL, "LGTM")),
+		),
+	}
+	log.Info(ctx, "notify lgtm created", "channel", channel, "blocks", blocks)
+
+	_, _, err = r.slackClient.PostMessage(channel, slack.MsgOptionBlocks(blocks...))
+	if err != nil {
+		return errors.Wrap(err, "failed to post message")
+	}
+
+	return nil
+}
+
+func (r *notificationsRepository) NotifyReportCreated(ctx context.Context, msg *ReportCreatedMessage) error {
+	imgURL, err := url.JoinPath(env.Vars.ImagesBaseURL, msg.Report.LGTMID)
+	if err != nil {
+		return errors.Wrap(err, "failed to join url")
+	}
+
+	channel := r.channel()
+	blocks := []slack.Block{
+		slack.NewHeaderBlock(
+			slack.NewTextBlockObject(slack.PlainTextType, "Reported", false, false),
+		),
+		slack.NewSectionBlock(
+			nil,
+			[]*slack.TextBlockObject{
+				slack.NewTextBlockObject(slack.MarkdownType, fmt.Sprintf("*ID*\n%s", msg.Report.ID), false, false),
+				slack.NewTextBlockObject(slack.MarkdownType, fmt.Sprintf("*Type*\n%s", msg.Report.Type), false, false),
+			},
+			slack.NewAccessory(slack.NewImageBlockElement(imgURL, "LGTM")),
+		),
+		slack.NewSectionBlock(
+			slack.NewTextBlockObject(slack.PlainTextType, msg.Report.Text, false, false),
+			nil,
+			nil,
 		),
 	}
 	log.Info(ctx, "notify lgtm created", "channel", channel, "blocks", blocks)
