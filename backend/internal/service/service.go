@@ -55,7 +55,7 @@ func New(ctx context.Context) (*Service, error) {
 		lgtmService:         newLGTMService(r),
 		reportService:       newReportService(r),
 		notificationService: newNotificationService(r),
-		imageService:        newImageService(),
+		imageService:        newImageService(r),
 		healthService:       newHealthService(),
 	}, nil
 }
