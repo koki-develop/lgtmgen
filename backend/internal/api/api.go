@@ -32,7 +32,7 @@ func NewEngine(ctx context.Context) (*gin.Engine, error) {
 	v1 := e.Group("/v1")
 	{
 		v1.GET("/lgtms", svc.ListLGTMs)
-		v1.POST("/lgtms", rl.Apply(100), svc.CreateLGTM)
+		v1.POST("/lgtms", rl.Apply(5), svc.CreateLGTM) // TODO: 5 -> 100
 
 		v1.POST("/reports", svc.CreateReport)
 
