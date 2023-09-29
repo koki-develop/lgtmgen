@@ -22,7 +22,6 @@ export function middleware(request: NextRequest) {
   };
   const locale = extractLocale(headers);
 
-  if (locale === defaultLocale) return;
   request.nextUrl.pathname = `/${locale}${pathname}`;
   return NextResponse.redirect(request.nextUrl);
 }
