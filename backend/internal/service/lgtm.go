@@ -28,7 +28,8 @@ func newLGTMService(repo *repo.Repository) *lgtmService {
 }
 
 // @Router		/v1/lgtms [get]
-// @Param		limit	query		int	false	"limit"
+// @Param		limit	query		int		false	"limit"
+// @Param		after	query		string	false	"after"
 // @Success	200		{array}		models.LGTM
 // @Failure	400		{object}	ErrorResponse
 // @Failure	500		{object}	ErrorResponse
@@ -92,17 +93,23 @@ func (ipt *createLGTMInput) Validate() error {
 	return nil
 }
 
+// @Router		/v1/lgtms [post]
+// @Accept		json
+// @Param		body	body		createLGTMInput	true	"body"
+// @Success	201		{object}	models.LGTM
+// @Failure	400		{object}	ErrorResponse
+// @Failure	500		{object}	ErrorResponse
 func (svc *lgtmService) CreateLGTM(ctx *gin.Context) {
 	var ipt createLGTMInput
 	if err := ctx.ShouldBindJSON(&ipt); err != nil {
 		log.Info(ctx, "failed to bind json", "error", err)
-		ctx.JSON(http.StatusBadRequest, gin.H{"code": ErrCodeBadRequest})
+		renderError(ctx, http.StatusBadRequest, ErrCodeBadRequest)
 		return
 	}
 
 	if err := ipt.Validate(); err != nil {
 		log.Info(ctx, "failed to validate input", "error", err)
-		ctx.JSON(http.StatusBadRequest, gin.H{"code": ErrCodeBadRequest})
+		renderError(ctx, http.StatusBadRequest, ErrCodeBadRequest)
 		return
 	}
 
@@ -114,7 +121,7 @@ func (svc *lgtmService) CreateLGTM(ctx *gin.Context) {
 		d, err := svc.readFromBase64(ctx, ipt.Base64)
 		if err != nil {
 			log.Info(ctx, "failed to read from base64", "error", err)
-			ctx.JSON(http.StatusBadRequest, gin.H{"code": ErrCodeBadRequest})
+			renderError(ctx, http.StatusBadRequest, ErrCodeBadRequest)
 			return
 		}
 		data = d
@@ -123,7 +130,7 @@ func (svc *lgtmService) CreateLGTM(ctx *gin.Context) {
 		d, err := svc.readFromURL(ctx, ipt.URL)
 		if err != nil {
 			log.Info(ctx, "failed to read from url", "error", err)
-			ctx.JSON(http.StatusBadRequest, gin.H{"code": ErrCodeFailedToGetImage})
+			renderError(ctx, http.StatusBadRequest, ErrCodeFailedToGetImage)
 			return
 		}
 		data = d
@@ -134,12 +141,12 @@ func (svc *lgtmService) CreateLGTM(ctx *gin.Context) {
 	if err != nil {
 		if errors.Is(err, lgtmgen.ErrUnsupportImageFormat) {
 			log.Info(ctx, "unsupported image format", "error", err)
-			ctx.JSON(http.StatusBadRequest, gin.H{"code": ErrCodeUnsupportedImageFormat})
+			renderError(ctx, http.StatusBadRequest, ErrCodeUnsupportedImageFormat)
 			return
 		}
 
 		log.Error(ctx, "failed to create lgtm", err)
-		ctx.JSON(http.StatusInternalServerError, gin.H{"code": ErrCodeInternalServerError})
+		renderError(ctx, http.StatusInternalServerError, ErrCodeInternalServerError)
 		return
 	}
 
