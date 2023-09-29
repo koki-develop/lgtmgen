@@ -24,6 +24,7 @@ func NewEngine(ctx context.Context) (*gin.Engine, error) {
 	e := gin.New()
 	e.Use(middleware.NewLogger().Apply())
 	e.Use(gin.Recovery())
+	e.Use(middleware.NewCORS().Apply("http://localhost:3000")) // TODO: from env
 	rl := middleware.NewRateLimitter(r)
 
 	e.GET("/h", svc.HealthCheck)
