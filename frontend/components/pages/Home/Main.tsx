@@ -2,8 +2,9 @@
 
 import React, { useCallback, useState } from "react";
 import { api } from "@/lib/api";
-import { ModelsLGTM } from "@/lib/generated/api";
+import { ModelsImage, ModelsLGTM } from "@/lib/generated/api";
 import LgtmPanel from "./LgtmPanel";
+import SearchImagePanel from "./SearchImagePanel";
 
 export type MainProps = {
   initialData: ModelsLGTM[];
@@ -12,6 +13,10 @@ export type MainProps = {
 const perPage = 2; // TODO: -> 40
 
 export default function Main({ initialData }: MainProps) {
+  /*
+   * LGTM
+   */
+
   const [lgtms, setLgtms] = useState<ModelsLGTM[]>(initialData);
   const [hasNextPage, setHasNextPage] = useState<boolean>(
     initialData.length === perPage,
@@ -25,18 +30,41 @@ export default function Main({ initialData }: MainProps) {
     setHasNextPage(resp.data.length === perPage);
   }, [lgtms]);
 
-  const handleUploaded = useCallback((lgtm: ModelsLGTM) => {
+  const handleGenerated = useCallback((lgtm: ModelsLGTM) => {
     setLgtms((prev) => [lgtm, ...prev]);
   }, []);
 
+  /*
+   * SearchImage
+   */
+
+  const [images, setImages] = useState<ModelsImage[]>([]);
+
+  const handleSearch = useCallback(async (query: string) => {
+    const resp = await api.v1.imagesList({ q: query });
+    if (!resp.ok) throw resp.error;
+    setImages(resp.data);
+  }, []);
+
+  // Render
   return (
     <div>
-      <LgtmPanel
-        lgtms={lgtms}
-        hasNextPage={hasNextPage}
-        onLoadMore={handleLoadMore}
-        onUploaded={handleUploaded}
-      />
+      <div>
+        <LgtmPanel
+          lgtms={lgtms}
+          hasNextPage={hasNextPage}
+          onLoadMore={handleLoadMore}
+          onUploaded={handleGenerated}
+        />
+      </div>
+
+      <div>
+        <SearchImagePanel
+          images={images}
+          onSearch={handleSearch}
+          onGenerated={handleGenerated}
+        />
+      </div>
     </div>
   );
 }
