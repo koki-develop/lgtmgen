@@ -17,7 +17,7 @@ export default function RootLayout({
 }) {
   return (
     <html lang={locale}>
-      <body>
+      <body className="bg-secondary">
         <header className="shadow bg-primary py-2 px-4">
           <h1
             className="text-3xl text-white"
