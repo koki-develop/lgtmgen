@@ -1,6 +1,7 @@
 import "./global.css";
 import "@fontsource/archivo-black";
 import type { Metadata } from "next";
+import Link from "next/link";
 
 export const metadata: Metadata = {
   title: "Create Next App",
@@ -16,7 +17,22 @@ export default function RootLayout({
 }) {
   return (
     <html lang={locale}>
-      <body>{children}</body>
+      <body>
+        <header className="shadow bg-primary py-2 px-4">
+          <h1
+            className="text-3xl text-white"
+            style={{ fontFamily: "Archivo Black" }}
+          >
+            <Link href={`/${locale}`}>LGTM Generator</Link>
+          </h1>
+        </header>
+
+        <main className="container mx-auto px-4">{children}</main>
+
+        <footer className="flex flex-col items-center">
+          <small>&copy; 2023 Koki Sato</small>
+        </footer>
+      </body>
     </html>
   );
 }
