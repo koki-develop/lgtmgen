@@ -23,6 +23,12 @@ const docTemplate = `{
                         "description": "limit",
                         "name": "limit",
                         "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "after",
+                        "name": "after",
+                        "in": "query"
                     }
                 ],
                 "responses": {
@@ -33,6 +39,42 @@ const docTemplate = `{
                             "items": {
                                 "$ref": "#/definitions/models.LGTM"
                             }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/service.ErrorResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/service.ErrorResponse"
+                        }
+                    }
+                }
+            },
+            "post": {
+                "consumes": [
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "description": "body",
+                        "name": "body",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/service.createLGTMInput"
+                        }
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "Created",
+                        "schema": {
+                            "$ref": "#/definitions/models.LGTM"
                         }
                     },
                     "400": {
@@ -94,6 +136,17 @@ const docTemplate = `{
             "properties": {
                 "code": {
                     "$ref": "#/definitions/service.ErrCode"
+                }
+            }
+        },
+        "service.createLGTMInput": {
+            "type": "object",
+            "properties": {
+                "base64": {
+                    "type": "string"
+                },
+                "url": {
+                    "type": "string"
                 }
             }
         }

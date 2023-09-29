@@ -32,6 +32,13 @@ definitions:
     required:
     - code
     type: object
+  service.createLGTMInput:
+    properties:
+      base64:
+        type: string
+      url:
+        type: string
+    type: object
 info:
   contact: {}
 paths:
@@ -42,6 +49,10 @@ paths:
         in: query
         name: limit
         type: integer
+      - description: after
+        in: query
+        name: after
+        type: string
       responses:
         "200":
           description: OK
@@ -49,6 +60,29 @@ paths:
             items:
               $ref: '#/definitions/models.LGTM'
             type: array
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/service.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/service.ErrorResponse'
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: body
+        in: body
+        name: body
+        required: true
+        schema:
+          $ref: '#/definitions/service.createLGTMInput'
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/models.LGTM'
         "400":
           description: Bad Request
           schema:

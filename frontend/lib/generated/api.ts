@@ -27,6 +27,11 @@ export interface ServiceErrorResponse {
   code: ServiceErrCode;
 }
 
+export interface ServiceCreateLGTMInput {
+  base64?: string;
+  url?: string;
+}
+
 export type QueryParamsType = Record<string | number, any>;
 export type ResponseFormat = keyof Omit<Body, "body" | "bodyUsed">;
 
@@ -252,6 +257,8 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
       query?: {
         /** limit */
         limit?: number;
+        /** after */
+        after?: string;
       },
       params: RequestParams = {},
     ) =>
@@ -259,6 +266,21 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
         path: `/v1/lgtms`,
         method: "GET",
         query: query,
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @name LgtmsCreate
+     * @request POST:/v1/lgtms
+     */
+    lgtmsCreate: (body: ServiceCreateLGTMInput, params: RequestParams = {}) =>
+      this.request<ModelsLGTM, ServiceErrorResponse>({
+        path: `/v1/lgtms`,
+        method: "POST",
+        body: body,
+        type: ContentType.Json,
         ...params,
       }),
   };
