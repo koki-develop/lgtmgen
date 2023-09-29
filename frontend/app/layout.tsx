@@ -1,4 +1,5 @@
 import "./global.css";
+import "@fontsource/archivo-black";
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
