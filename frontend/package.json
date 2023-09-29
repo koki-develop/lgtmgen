@@ -21,6 +21,7 @@
     "react-dom": "latest"
   },
   "devDependencies": {
+    "@types/negotiator": "^0.6.1",
     "@types/node": "latest",
     "@types/react": "latest",
     "@types/react-dom": "latest",
