@@ -19,11 +19,11 @@ func newImageService(repo *repo.Repository) *imageService {
 	}
 }
 
-//	@Router		/v1/images [get]
-//	@Param		q	query		string	true	"query"
-//	@Success	200	{array}		models.Images
-//	@Failure	400	{object}	ErrorResponse
-//	@Failure	500	{object}	ErrorResponse
+// @Router		/v1/images [get]
+// @Param		q	query		string	true	"query"
+// @Success	200	{array}		models.Image
+// @Failure	400	{object}	ErrorResponse
+// @Failure	500	{object}	ErrorResponse
 func (s *imageService) SearchImages(ctx *gin.Context) {
 	q := ctx.Query("q")
 	if strings.TrimSpace(q) == "" {

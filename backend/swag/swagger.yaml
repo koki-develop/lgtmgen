@@ -65,9 +65,7 @@ paths:
           description: OK
           schema:
             items:
-              items:
-                $ref: '#/definitions/models.Image'
-              type: array
+              $ref: '#/definitions/models.Image'
             type: array
         "400":
           description: Bad Request

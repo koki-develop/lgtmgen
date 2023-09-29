@@ -265,7 +265,7 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
       },
       params: RequestParams = {},
     ) =>
-      this.request<ModelsImage[][], ServiceErrorResponse>({
+      this.request<ModelsImage[], ServiceErrorResponse>({
         path: `/v1/images`,
         method: "GET",
         query: query,
