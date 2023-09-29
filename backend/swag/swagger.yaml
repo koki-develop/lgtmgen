@@ -1,4 +1,14 @@
 definitions:
+  models.Image:
+    properties:
+      title:
+        type: string
+      url:
+        type: string
+    required:
+    - title
+    - url
+    type: object
   models.LGTM:
     properties:
       created_at:
@@ -42,6 +52,31 @@ definitions:
 info:
   contact: {}
 paths:
+  /v1/images:
+    get:
+      parameters:
+      - description: query
+        in: query
+        name: q
+        required: true
+        type: string
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              items:
+                $ref: '#/definitions/models.Image'
+              type: array
+            type: array
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/service.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/service.ErrorResponse'
   /v1/lgtms:
     get:
       parameters:

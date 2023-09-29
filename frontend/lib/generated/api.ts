@@ -9,6 +9,11 @@
  * ---------------------------------------------------------------
  */
 
+export interface ModelsImage {
+  title: string;
+  url: string;
+}
+
 export interface ModelsLGTM {
   created_at: string;
   id: string;
@@ -247,6 +252,26 @@ export class HttpClient<SecurityDataType = unknown> {
  */
 export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDataType> {
   v1 = {
+    /**
+     * No description
+     *
+     * @name ImagesList
+     * @request GET:/v1/images
+     */
+    imagesList: (
+      query: {
+        /** query */
+        q: string;
+      },
+      params: RequestParams = {},
+    ) =>
+      this.request<ModelsImage[][], ServiceErrorResponse>({
+        path: `/v1/images`,
+        method: "GET",
+        query: query,
+        ...params,
+      }),
+
     /**
      * No description
      *
