@@ -8,11 +8,10 @@ import SearchImagePanel from "./SearchImagePanel";
 
 export type MainProps = {
   initialData: ModelsLGTM[];
+  perPage: number;
 };
 
-const perPage = 2; // TODO: -> 40
-
-export default function Main({ initialData }: MainProps) {
+export default function Main({ initialData, perPage }: MainProps) {
   /*
    * LGTM
    */
