@@ -114,6 +114,11 @@
   resolved "https://registry.yarnpkg.com/@exodus/schemasafe/-/schemasafe-1.3.0.tgz#731656abe21e8e769a7f70a4d833e6312fe59b7f"
   integrity sha512-5Aap/GaRupgNx/feGBwLLTVv8OQFfv3pq2lPRzPg9R+IOBnDgghTGW7l7EuVXOvg5cc/xSAlRW8rBrjIC3Nvqw==
 
+"@fontsource/archivo-black@^5.0.12":
+  version "5.0.12"
+  resolved "https://registry.yarnpkg.com/@fontsource/archivo-black/-/archivo-black-5.0.12.tgz#596a88cc8cf1e04b0b9640fd3b3633a292eb0201"
+  integrity sha512-zHsdUkz1ax+OEGAJadV5Jglzd7qhCZevOGjWPeuYo8Oh1JhHwKPocPXYU32rVBRWu1rRuvHNYg82+1tYJYZXbA==
+
 "@humanwhocodes/config-array@^0.11.11":
   version "0.11.11"
   resolved "https://registry.yarnpkg.com/@humanwhocodes/config-array/-/config-array-0.11.11.tgz#88a04c570dbbc7dd943e4712429c3df09bc32844"
