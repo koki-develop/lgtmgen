@@ -17,8 +17,8 @@ export default function RootLayout({
 }) {
   return (
     <html lang={locale}>
-      <body className="bg-secondary">
-        <header className="shadow bg-primary py-2 px-4">
+      <body className="bg-primary-light">
+        <header className="shadow bg-primary-main py-2 px-4">
           <h1
             className="text-3xl text-white"
             style={{ fontFamily: "Archivo Black" }}
