@@ -19,6 +19,7 @@
     "@headlessui/tailwindcss": "^0.2.0",
     "@heroicons/react": "^2.0.18",
     "clsx": "^2.0.0",
+    "copy-to-clipboard": "^3.3.3",
     "negotiator": "^0.6.3",
     "next": "latest",
     "react": "latest",
