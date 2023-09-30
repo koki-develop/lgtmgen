@@ -6,6 +6,8 @@ export type I18n = {
   lgtm: string;
   searchImage: string;
   favorite: string;
+
+  upload: string;
 };
 
 export const i18n = (locale: string): I18n => {
