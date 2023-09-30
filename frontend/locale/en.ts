@@ -13,10 +13,12 @@ const en: I18n = {
   generate: "Generate",
   cancel: "Cancel",
 
-  successToGenerate: "Successfully generated LGTM",
-  failedToGenerate: "Failed to generate LGTM",
-  unsupportedImageFormat: "Unsupported image format",
-  copiedToClipboard: "Copied to clipboard",
+  successToGenerate: "Successfully generated LGTM.",
+  failedToGenerate: "Failed to generate LGTM.",
+  unsupportedImageFormat: "Unsupported image format.",
+  copiedToClipboard: "Copied to clipboard.",
+  rateLimitReached:
+    "The request limit has been reached.\nPlease try again later.",
 } as const;
 
 export default en;

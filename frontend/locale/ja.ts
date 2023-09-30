@@ -16,6 +16,8 @@ const ja: I18n = {
   failedToGenerate: "LGTM の生成に失敗しました",
   unsupportedImageFormat: "サポートされていない画像形式です",
   copiedToClipboard: "クリップボードにコピーしました",
+  rateLimitReached:
+    "リクエストの上限に達しました。\nしばらく待ってから再度お試しください。",
 } as const;
 
 export default ja;
