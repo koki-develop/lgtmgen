@@ -36,7 +36,7 @@ export default function ImageCard({ className, src, alt }: ImageCardProps) {
             >
               <DocumentDuplicateIcon className="h-6 w-6" />
             </Menu.Button>
-            <Menu.Items className="absolute -top-16 left-6 flex flex-col divide-y rounded bg-white text-gray-500 shadow-md">
+            <Menu.Items className="absolute -top-16 left-6 flex flex-col divide-y rounded bg-white text-gray-600 shadow-md">
               <Menu.Item>
                 {({ active }) => (
                   <button
