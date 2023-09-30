@@ -16,6 +16,7 @@ export type I18n = {
   successToGenerate: string;
   failedToGenerate: string;
   unsupportedImageFormat: string;
+  copiedToClipboard: string;
 };
 
 export const i18n = (locale: string): I18n => {

@@ -16,6 +16,7 @@ const en: I18n = {
   successToGenerate: "Successfully generated LGTM",
   failedToGenerate: "Failed to generate LGTM",
   unsupportedImageFormat: "Unsupported image format",
+  copiedToClipboard: "Copied to clipboard",
 } as const;
 
 export default en;
