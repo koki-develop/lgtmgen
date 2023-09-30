@@ -75,10 +75,10 @@ export const LgtmUploader = ({ onUploaded }: LgtmUploaderProps) => {
         onChange={handleChangeFile}
       />
       <button
-        className="flex gap-2 fixed bottom-4 right-4 bg-primary-main hover:bg-primary-dark transition text-white py-4 px-4 rounded-full shadow-md"
+        className="fixed bottom-4 right-4 flex gap-2 rounded-full bg-primary-main px-4 py-4 text-white shadow-md transition hover:bg-primary-dark"
         onClick={handleClickUpload}
       >
-        <PlusCircleIcon className="w-6 h-6" />
+        <PlusCircleIcon className="h-6 w-6" />
         {t.upload}
       </button>
 

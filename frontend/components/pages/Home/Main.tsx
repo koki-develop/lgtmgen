@@ -55,14 +55,14 @@ export default function Main({ locale, initialData, perPage }: MainProps) {
   return (
     <div>
       <Tab.Group>
-        <Tab.List className="bg-white rounded overflow-hidden flex shadow-md">
+        <Tab.List className="flex overflow-hidden rounded bg-white shadow-md">
           {[t.lgtm, t.searchImage, t.favorite].map((label) => (
             <Tab
               key={label}
               className={clsx(
-                "transition text-md py-2 flex-grow outline-none border-b-2 border-b-white",
-                "hover:bg-gray-100 hover:border-b-gray-100",
-                "ui-not-selected:text-gray-400 ui-selected:font-semibold ui-selected:border-b-primary-main ui-selected:text-primary-main",
+                "text-md flex-grow border-b-2 border-b-white py-2 outline-none transition",
+                "hover:border-b-gray-100 hover:bg-gray-100",
+                "ui-selected:border-b-primary-main ui-selected:font-semibold ui-selected:text-primary-main ui-not-selected:text-gray-400",
               )}
             >
               {label}

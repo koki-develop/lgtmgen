@@ -22,21 +22,21 @@ export default function LgtmPreview({
 
   return (
     <Dialog open onClose={onCancel}>
-      <div className="fixed h-full w-full top-0 left-0 flex justify-center items-center bg-black bg-opacity-25">
-        <Dialog.Panel className="bg-white rounded flex flex-col gap-4 items-center px-8 py-4">
+      <div className="fixed left-0 top-0 flex h-full w-full items-center justify-center bg-black bg-opacity-25">
+        <Dialog.Panel className="flex flex-col items-center gap-4 rounded bg-white px-8 py-4">
           <Dialog.Description>{t.confirmGeneration}</Dialog.Description>
 
-          <img className="max-w-full max-h-72 border" src={dataUrl} alt="" />
+          <img className="max-h-72 max-w-full border" src={dataUrl} alt="" />
 
-          <div className="flex gap-2 w-full">
+          <div className="flex w-full gap-2">
             <button
-              className="flex-grow shadow-md w-64 rounded bg-gray-200 hover:bg-gray-400 transition py-2"
+              className="w-64 flex-grow rounded bg-gray-200 py-2 shadow-md transition hover:bg-gray-400"
               onClick={onCancel}
             >
               {t.cancel}
             </button>
             <button
-              className="flex-grow shadow-md w-64 rounded text-white bg-primary-main hover:bg-primary-dark transition py-2"
+              className="w-64 flex-grow rounded bg-primary-main py-2 text-white shadow-md transition hover:bg-primary-dark"
               onClick={onGenerate}
             >
               {t.generate}

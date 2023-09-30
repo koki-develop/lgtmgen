@@ -4,6 +4,6 @@
 
 @layer components {
   .button-primary {
-    @apply transition bg-primary-main hover:bg-primary-dark;
+    @apply bg-primary-main transition hover:bg-primary-dark;
   }
 }
