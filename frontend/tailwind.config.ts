@@ -5,7 +5,7 @@ const config: Config = {
     "./components/**/*.{js,ts,jsx,tsx,mdx}",
     "./app/**/*.{js,ts,jsx,tsx,mdx}",
   ],
-  plugins: [],
+  plugins: [require("@headlessui/tailwindcss")],
   theme: {
     extend: {
       colors: {
