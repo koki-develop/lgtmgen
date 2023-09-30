@@ -10,6 +10,9 @@ const ja: I18n = {
   confirmGeneration: "この画像で LGTM を生成しますか？",
   generate: "生成",
   cancel: "キャンセル",
+
+  failedToGenerate: "LGTM の生成に失敗しました",
+  unsupportedImageFormat: "サポートされていない画像形式です",
 } as const;
 
 export default ja;

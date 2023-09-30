@@ -11,6 +11,9 @@ export type I18n = {
   confirmGeneration: string;
   generate: string;
   cancel: string;
+
+  failedToGenerate: string;
+  unsupportedImageFormat: string;
 };
 
 export const i18n = (locale: string): I18n => {

@@ -11,6 +11,9 @@ const en: I18n = {
   confirmGeneration: "Would you like to generate an LGTM with this image?",
   generate: "Generate",
   cancel: "Cancel",
+
+  failedToGenerate: "Failed to generate LGTM",
+  unsupportedImageFormat: "Unsupported image format",
 } as const;
 
 export default en;
