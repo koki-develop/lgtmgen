@@ -4,7 +4,9 @@ const keys = {
 
 export const useStorage = () => {
   const loadFavorites = (): string[] => {
-    const value = localStorage.getItem(keys.favoriteIds);
+    if (typeof window === "undefined") return [];
+
+    const value = window.localStorage.getItem(keys.favoriteIds);
     if (value) {
       return JSON.parse(value);
     }
@@ -12,7 +14,9 @@ export const useStorage = () => {
   };
 
   const saveFavorites = (ids: string[]) => {
-    localStorage.setItem(keys.favoriteIds, JSON.stringify(ids));
+    if (typeof window === "undefined") return;
+
+    window.localStorage.setItem(keys.favoriteIds, JSON.stringify(ids));
   };
 
   return {
