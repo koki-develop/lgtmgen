@@ -19,14 +19,14 @@ export default function LgtmPreview({
 }: LgtmPreviewProps) {
   const { t } = useI18n();
 
-  if (dataUrl == null) {
-    return null;
-  }
-
   const handleClose = useCallback(() => {
     if (generating) return;
     onCancel();
   }, [generating, onCancel]);
+
+  if (dataUrl == null) {
+    return null;
+  }
 
   return (
     <Dialog open onClose={handleClose}>
