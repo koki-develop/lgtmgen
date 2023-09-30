@@ -15,9 +15,5 @@ export default async function Home({ params: { locale } }: HomeProps) {
   if (!resp.ok) throw resp.error;
   const lgtms = resp.data;
 
-  return (
-    <div>
-      <Main locale={locale} initialData={lgtms} perPage={perPage} />
-    </div>
-  );
+  return <Main locale={locale} initialData={lgtms} perPage={perPage} />;
 }

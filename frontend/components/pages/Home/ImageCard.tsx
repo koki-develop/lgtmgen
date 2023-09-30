@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useMemo } from "react";
 import clsx from "clsx";
 import {
   DocumentDuplicateIcon,
@@ -14,6 +14,34 @@ export type ImageCardProps = {
 };
 
 export default function ImageCard({ className, src, alt }: ImageCardProps) {
+  const buttons = useMemo(
+    () => [
+      {
+        icon: <DocumentDuplicateIcon className="h-6 w-6" />,
+        additionalClass: clsx(
+          "button-primary",
+          "border-t-primary-main hover:border-t-primary-dark",
+        ),
+      },
+      {
+        icon: <HeartIcon className="h-6 w-6" />,
+        additionalClass: clsx(
+          "bg-white hover:bg-favorite-light",
+          "hover:border-t-favorite-light",
+          "text-favorite-dark",
+        ),
+      },
+      {
+        icon: <FlagIcon className="h-6 w-6" />,
+        additionalClass: clsx(
+          "border-t-report-main hover:border-t-report-dark",
+          "bg-report-main hover:bg-report-dark",
+        ),
+      },
+    ],
+    [],
+  );
+
   return (
     <div
       className={clsx(
@@ -25,25 +53,18 @@ export default function ImageCard({ className, src, alt }: ImageCardProps) {
         <img className="max-w-100 max-h-36 border" src={src} alt={alt} />
       </div>
       <div className="flex overflow-hidden rounded-b text-white">
-        <button
-          className={clsx(
-            "button-primary",
-            "border-t border-t-primary-main hover:border-t-primary-dark",
-            "flex flex-grow justify-center py-2",
-          )}
-        >
-          <DocumentDuplicateIcon className="h-6 w-6" />
-        </button>
-        <button
-          className={clsx(
-            "flex flex-grow justify-center border-t bg-white py-2 text-favorite-dark transition hover:border-t-favorite-light hover:bg-favorite-light",
-          )}
-        >
-          <HeartIcon className="h-6 w-6" />
-        </button>
-        <button className="flex flex-grow justify-center border-t border-t-report-main bg-report-main py-2 transition hover:border-t-report-dark hover:bg-report-dark">
-          <FlagIcon className="h-6 w-6" />
-        </button>
+        {buttons.map(({ icon, additionalClass }, index) => (
+          <button
+            key={index}
+            className={clsx(
+              additionalClass,
+              "flex flex-grow justify-center",
+              "border-t py-2 transition",
+            )}
+          >
+            {icon}
+          </button>
+        ))}
       </div>
     </div>
   );
