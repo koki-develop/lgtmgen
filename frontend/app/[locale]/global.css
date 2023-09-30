@@ -4,6 +4,16 @@
 
 @layer components {
   .button-primary {
-    @apply bg-primary-main transition hover:bg-primary-dark;
+    @apply
+      transition text-white
+      enabled:bg-primary-main enabled:hover:bg-primary-dark
+      disabled:bg-gray-400 disabled:cursor-not-allowed;
+  }
+
+  .button-secondary {
+    @apply
+      transition
+      bg-gray-200 enabled:hover:bg-gray-300
+      disabled:opacity-50 disabled:cursor-not-allowed;
   }
 }
