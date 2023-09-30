@@ -1,3 +1,4 @@
+import { i18n } from "@/lib/i18n";
 import "./global.css";
 import "@fontsource/archivo-black";
 import type { Metadata } from "next";
@@ -15,6 +16,8 @@ export default function RootLayout({
   params: { locale: string };
   children: React.ReactNode;
 }) {
+  const t = i18n(locale);
+
   return (
     <html lang={locale}>
       <body className="bg-primary-light">
@@ -23,7 +26,7 @@ export default function RootLayout({
             className="text-3xl text-white"
             style={{ fontFamily: "Archivo Black" }}
           >
-            <Link href={`/${locale}`}>LGTM Generator</Link>
+            <Link href={`/${locale}`}>{t.app}</Link>
           </h1>
         </header>
 
