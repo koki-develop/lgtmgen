@@ -5,6 +5,8 @@ import { useI18n } from "@/providers/I18nProvider";
 import { PlusCircleIcon } from "@heroicons/react/24/solid";
 import React, { useCallback, useRef } from "react";
 import LgtmPreview from "./LgtmPreview";
+import clsx from "clsx";
+import { useGenerateLgtm } from "@/lib/models/hooks/lgtmHooks";
 
 export type LgtmUploaderProps = {
   onUploaded: (lgtm: ModelsLGTM) => void;
@@ -18,6 +20,8 @@ export const LgtmUploader = ({ onUploaded }: LgtmUploaderProps) => {
   const inputRef = useRef<HTMLInputElement>(null);
   const [inputKey, setInputKey] = React.useState(0);
 
+  const { generateLgtm, generating } = useGenerateLgtm();
+
   const handleClickUpload = useCallback(() => {
     inputRef.current?.click();
   }, []);
@@ -28,8 +32,8 @@ export const LgtmUploader = ({ onUploaded }: LgtmUploaderProps) => {
       if (!e.target.files) return;
 
       const file = e.target.files[0];
-      setFile(file);
       const dataUrl = await fileToDataUrl(file);
+      setFile(file);
       setImageDataUrl(dataUrl);
     },
     [],
@@ -44,25 +48,13 @@ export const LgtmUploader = ({ onUploaded }: LgtmUploaderProps) => {
     if (!file || !imageDataUrl) return;
 
     const base64 = dataUrlToBase64(imageDataUrl);
-    const response = await api.v1.lgtmsCreate({ base64 });
-    if (response.ok) {
-      onUploaded(response.data);
+    const lgtm = await generateLgtm({ base64 });
+    if (lgtm) {
+      onUploaded(lgtm);
       setFile(null);
       setImageDataUrl(null);
-      return;
     }
-
-    switch (response.error.code) {
-      case ServiceErrCode.ErrCodeUnsupportedImageFormat:
-        alert("Unsupported image format");
-        break;
-      case ServiceErrCode.ErrCodeInternalServerError:
-        alert("Internal server error");
-        break;
-      default:
-        throw response.error;
-    }
-  }, [file, imageDataUrl, onUploaded]);
+  }, [file, imageDataUrl, generateLgtm, onUploaded]);
 
   return (
     <>
@@ -75,7 +67,11 @@ export const LgtmUploader = ({ onUploaded }: LgtmUploaderProps) => {
         onChange={handleChangeFile}
       />
       <button
-        className="fixed bottom-4 right-4 flex gap-2 rounded-full bg-primary-main px-4 py-4 text-white shadow-md transition hover:bg-primary-dark"
+        className={clsx(
+          "button-primary rounded-full text-white shadow-md",
+          "fixed bottom-4 right-4",
+          "flex gap-2 px-4 py-4",
+        )}
         onClick={handleClickUpload}
       >
         <PlusCircleIcon className="h-6 w-6" />
@@ -83,6 +79,7 @@ export const LgtmUploader = ({ onUploaded }: LgtmUploaderProps) => {
       </button>
 
       <LgtmPreview
+        generating={generating}
         dataUrl={imageDataUrl}
         onCancel={handleClosePreview}
         onGenerate={handleGenerate}
