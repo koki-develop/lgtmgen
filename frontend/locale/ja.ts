@@ -6,6 +6,7 @@ const ja: I18n = {
   searchImage: "画像検索",
   favorite: "お気に入り",
 
+  loadMore: "もっと見る",
   upload: "アップロード",
   confirmGeneration: "この画像で LGTM を生成しますか？",
   generate: "生成",

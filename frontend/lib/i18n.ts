@@ -7,6 +7,7 @@ export type I18n = {
   searchImage: string;
   favorite: string;
 
+  loadMore: string;
   upload: string;
   confirmGeneration: string;
   generate: string;

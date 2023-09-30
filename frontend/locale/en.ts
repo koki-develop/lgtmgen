@@ -7,6 +7,7 @@ const en: I18n = {
   searchImage: "Search Image",
   favorite: "Favorite",
 
+  loadMore: "More",
   upload: "Upload",
   confirmGeneration: "Would you like to generate an LGTM with this image?",
   generate: "Generate",
