@@ -8,6 +8,9 @@ export type I18n = {
   favorite: string;
 
   upload: string;
+  confirmGeneration: string;
+  generate: string;
+  cancel: string;
 };
 
 export const i18n = (locale: string): I18n => {
