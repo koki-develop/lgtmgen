@@ -1,106 +1,20 @@
-import React, { useCallback, useMemo } from "react";
+import React from "react";
 import clsx from "clsx";
-import {
-  DocumentDuplicateIcon,
-  HeartIcon,
-  FlagIcon,
-} from "@heroicons/react/24/outline";
-import { Menu } from "@headlessui/react";
-import copy from "copy-to-clipboard";
-import { useToast } from "@/lib/toast";
-import { useI18n } from "@/providers/I18nProvider";
 
 export type ImageCardProps = {
   className?: string;
+  children?: React.ReactNode;
 
   src: string;
   alt: string;
 };
 
-// TODO: Refactor
-export default function ImageCard({ className, src, alt }: ImageCardProps) {
-  const { t } = useI18n();
-  const { enqueueToast } = useToast();
-
-  const baseClass = clsx(
-    "flex flex-grow justify-center",
-    "border-t py-2 transition",
-  );
-
-  const handleClickMarkdown = useCallback(() => {
-    copy(`![${alt}](${src})`);
-    enqueueToast(t.copiedToClipboard);
-  }, [alt, src, enqueueToast, t]);
-
-  const handleClickHTML = useCallback(() => {
-    copy(`<img src="${src}" alt="${alt}" />`);
-    enqueueToast(t.copiedToClipboard);
-  }, [alt, src, enqueueToast, t]);
-
-  const buttons = useMemo(
-    () => [
-      {
-        button: (
-          <Menu>
-            <Menu.Button
-              className={clsx(
-                baseClass,
-                "rounded-bl",
-                "button-primary",
-                "border-t-primary-main hover:border-t-primary-dark",
-              )}
-            >
-              <DocumentDuplicateIcon className="h-6 w-6" />
-            </Menu.Button>
-            <Menu.Items className="absolute -top-16 left-6 flex flex-col divide-y rounded bg-white text-gray-600 shadow-md">
-              <Menu.Item>
-                {({ active }) => (
-                  <button
-                    className={clsx("px-4 py-2 transition", {
-                      "bg-gray-200": active,
-                    })}
-                    onClick={handleClickMarkdown}
-                  >
-                    Markdown
-                  </button>
-                )}
-              </Menu.Item>
-              <Menu.Item>
-                {({ active }) => (
-                  <button
-                    className={clsx("px-4 py-2 transition", {
-                      "bg-gray-200": active,
-                    })}
-                    onClick={handleClickHTML}
-                  >
-                    HTML
-                  </button>
-                )}
-              </Menu.Item>
-            </Menu.Items>
-          </Menu>
-        ),
-      },
-      {
-        icon: <HeartIcon className="h-6 w-6" />,
-        additionalClass: clsx(
-          "bg-white hover:bg-favorite-light",
-          "hover:border-t-favorite-light",
-          "text-favorite-dark",
-        ),
-      },
-      {
-        icon: <FlagIcon className="h-6 w-6" />,
-        additionalClass: clsx(
-          "rounded-br",
-          "border-t-report-main hover:border-t-report-dark",
-          "bg-report-main hover:bg-report-dark",
-        ),
-      },
-    ],
-    [],
-  );
-
+export default function ImageCard({
+  className,
+  children,
+  src,
+  alt,
+}: ImageCardProps) {
   return (
     <div
       className={clsx(
@@ -112,16 +26,7 @@ export default function ImageCard({ className, src, alt }: ImageCardProps) {
         <img className="max-w-100 max-h-36 border" src={src} alt={alt} />
       </div>
 
-      <div className="relative flex rounded-b text-white">
-        {buttons.map(
-          ({ button, icon, additionalClass }, index) =>
-            button || (
-              <button key={index} className={clsx(baseClass, additionalClass)}>
-                {icon}
-              </button>
-            ),
-        )}
-      </div>
+      {children}
     </div>
   );
 }

@@ -9,6 +9,7 @@ import { Tab } from "@headlessui/react";
 import { i18n } from "@/lib/i18n";
 import clsx from "clsx";
 import { LgtmUploader } from "./LgtmUploader";
+import { useStorage } from "@/lib/storage";
 
 export type MainProps = {
   locale: string;
@@ -17,6 +18,7 @@ export type MainProps = {
 };
 
 export default function Main({ locale, initialData, perPage }: MainProps) {
+  const { loadFavorites, saveFavorites } = useStorage();
   const t = i18n(locale);
 
   /*
@@ -45,6 +47,34 @@ export default function Main({ locale, initialData, perPage }: MainProps) {
     setImages(resp.data);
   }, []);
 
+  /*
+   * Favorite
+   */
+
+  const [favorites, setFavorites] = useState<string[]>(loadFavorites());
+
+  const handleFavorite = useCallback(
+    (id: string) => {
+      setFavorites((prev) => {
+        const next = [...prev, id];
+        saveFavorites(next);
+        return next;
+      });
+    },
+    [saveFavorites],
+  );
+
+  const handleUnfavorite = useCallback(
+    (id: string) => {
+      setFavorites((prev) => {
+        const next = prev.filter((v) => v !== id);
+        saveFavorites(next);
+        return next;
+      });
+    },
+    [saveFavorites],
+  );
+
   // Render
   return (
     <div>
@@ -70,8 +100,11 @@ export default function Main({ locale, initialData, perPage }: MainProps) {
             <LgtmUploader onUploaded={handleGenerated} />
             <LgtmPanel
               lgtms={lgtms}
+              favorites={favorites}
               perPage={perPage}
               onLoaded={handleLoaded}
+              onFavorite={handleFavorite}
+              onUnfavorite={handleUnfavorite}
             />
           </Tab.Panel>
 

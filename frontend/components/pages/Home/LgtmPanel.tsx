@@ -5,19 +5,26 @@ import ImageCard from "./ImageCard";
 import clsx from "clsx";
 import { useI18n } from "@/providers/I18nProvider";
 import { useFetchLgtms } from "@/lib/models/lgtm/lgtmHooks";
+import ImageCardButtons from "./ImageCardButtons";
 
 export type LgtmPanelProps = {
   perPage: number;
   lgtms: ModelsLGTM[];
+  favorites: string[];
 
   onLoaded: (lgtms: ModelsLGTM[]) => void;
+  onFavorite: (id: string) => void;
+  onUnfavorite: (id: string) => void;
 };
 
 export default function LgtmPanel({
   perPage,
   lgtms,
+  favorites,
 
   onLoaded,
+  onFavorite,
+  onUnfavorite,
 }: LgtmPanelProps) {
   const { t } = useI18n();
   const { fetchLgtms, fetching } = useFetchLgtms(perPage);
@@ -38,10 +45,18 @@ export default function LgtmPanel({
       <ul className="grid grid-cols-4 gap-4">
         {lgtms.map((lgtm) => (
           <li key={lgtm.id}>
-            <ImageCard className="h-full" src={lgtmUrl(lgtm.id)} alt="LGTM" />
+            <ImageCard className="h-full" src={lgtmUrl(lgtm.id)} alt="LGTM">
+              <ImageCardButtons
+                lgtmId={lgtm.id}
+                favorited={favorites.includes(lgtm.id)}
+                onFavorite={onFavorite}
+                onUnfavorite={onUnfavorite}
+              />
+            </ImageCard>
           </li>
         ))}
       </ul>
+
       <div className="flex justify-center">
         <button
           className={clsx(
@@ -52,6 +67,7 @@ export default function LgtmPanel({
         >
           {t.loadMore}
         </button>
+
         <div className={clsx("loader", { hidden: !fetching })} />
       </div>
     </div>
