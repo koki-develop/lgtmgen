@@ -3,6 +3,7 @@ import "./global.css";
 import "@fontsource/archivo-black";
 import type { Metadata } from "next";
 import Link from "next/link";
+import Providers from "@/providers/Providers";
 
 export const metadata: Metadata = {
   title: "Create Next App",
@@ -30,7 +31,9 @@ export default function RootLayout({
           </h1>
         </header>
 
-        <main className="container mx-auto p-4 py-8">{children}</main>
+        <Providers locale={locale}>
+          <main className="container mx-auto p-4 py-8">{children}</main>
+        </Providers>
 
         <footer className="flex flex-col items-center">
           <small>&copy; 2023 Koki Sato</small>
