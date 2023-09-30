@@ -2,9 +2,11 @@ import { ServiceCreateLGTMInput, ServiceErrCode } from "@/lib/generated/api";
 import { useCallback, useState } from "react";
 import { api } from "@/lib/api";
 import { useI18n } from "@/providers/I18nProvider";
+import { useToast } from "@/lib/toast";
 
 export const useGenerateLgtm = () => {
   const { t } = useI18n();
+  const { enqueueToast } = useToast();
 
   const [generating, setGenerating] = useState<boolean>(false);
 
@@ -14,15 +16,16 @@ export const useGenerateLgtm = () => {
       .lgtmsCreate(input)
       .then((response) => {
         if (response.ok) {
+          enqueueToast(t.successToGenerate);
           return response.data;
         }
 
         switch (response.error.code) {
           case ServiceErrCode.ErrCodeUnsupportedImageFormat:
-            alert(t.unsupportedImageFormat);
+            enqueueToast(t.unsupportedImageFormat, "error");
             break;
           case ServiceErrCode.ErrCodeInternalServerError:
-            alert(t.failedToGenerate);
+            enqueueToast(t.failedToGenerate, "error");
             break;
           default:
             throw response.error;
