@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useCallback, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { api } from "@/lib/api";
 import { ModelsImage, ModelsLGTM } from "@/lib/generated/api";
 import LgtmPanel from "./LgtmPanel";
@@ -51,7 +51,12 @@ export default function Main({ locale, initialData, perPage }: MainProps) {
    * Favorite
    */
 
-  const [favorites, setFavorites] = useState<string[]>(loadFavorites());
+  const [favorites, setFavorites] = useState<string[]>([]);
+
+  useEffect(() => {
+    const favorites = loadFavorites();
+    setFavorites(favorites);
+  }, [loadFavorites]);
 
   const handleFavorite = useCallback(
     (id: string) => {
