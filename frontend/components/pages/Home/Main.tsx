@@ -8,6 +8,7 @@ import SearchImagePanel from "./SearchImagePanel";
 import { Tab } from "@headlessui/react";
 import { i18n } from "@/lib/i18n";
 import clsx from "clsx";
+import { LgtmUploader } from "./LgtmUploader";
 
 export type MainProps = {
   locale: string;
@@ -66,6 +67,7 @@ export default function Main({ locale, initialData, perPage }: MainProps) {
 
         <Tab.Panels>
           <Tab.Panel>
+            <LgtmUploader onUploaded={handleGenerated} />
             <LgtmPanel
               lgtms={lgtms}
               perPage={perPage}
