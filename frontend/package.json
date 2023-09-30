@@ -23,7 +23,8 @@
     "next": "latest",
     "react": "latest",
     "react-device-detect": "^2.2.3",
-    "react-dom": "latest"
+    "react-dom": "latest",
+    "react-hot-toast": "^2.4.1"
   },
   "devDependencies": {
     "@types/negotiator": "^0.6.1",
