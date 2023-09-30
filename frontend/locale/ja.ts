@@ -12,6 +12,7 @@ const ja: I18n = {
   generate: "生成",
   cancel: "キャンセル",
 
+  successToGenerate: "LGTM を生成しました",
   failedToGenerate: "LGTM の生成に失敗しました",
   unsupportedImageFormat: "サポートされていない画像形式です",
 } as const;

@@ -13,6 +13,7 @@ export type I18n = {
   generate: string;
   cancel: string;
 
+  successToGenerate: string;
   failedToGenerate: string;
   unsupportedImageFormat: string;
 };
