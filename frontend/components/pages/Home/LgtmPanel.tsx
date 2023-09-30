@@ -4,7 +4,7 @@ import { lgtmUrl } from "@/lib/image";
 import ImageCard from "./ImageCard";
 import clsx from "clsx";
 import { useI18n } from "@/providers/I18nProvider";
-import { useFetchLgtms } from "@/lib/models/hooks/lgtmHooks";
+import { useFetchLgtms } from "@/lib/models/lgtm/lgtmHooks";
 
 export type LgtmPanelProps = {
   perPage: number;

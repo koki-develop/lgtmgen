@@ -1,12 +1,11 @@
-import { api } from "@/lib/api";
-import { ModelsLGTM, ServiceErrCode } from "@/lib/generated/api";
+import { ModelsLGTM } from "@/lib/generated/api";
 import { dataUrlToBase64, fileToDataUrl } from "@/lib/image";
 import { useI18n } from "@/providers/I18nProvider";
 import { PlusCircleIcon } from "@heroicons/react/24/solid";
 import React, { useCallback, useRef } from "react";
 import LgtmPreview from "./LgtmPreview";
 import clsx from "clsx";
-import { useGenerateLgtm } from "@/lib/models/hooks/lgtmHooks";
+import { useGenerateLgtm } from "@/lib/models/lgtm/lgtmHooks";
 
 export type LgtmUploaderProps = {
   onUploaded: (lgtm: ModelsLGTM) => void;
