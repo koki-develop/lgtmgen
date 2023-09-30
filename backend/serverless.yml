@@ -80,6 +80,7 @@ functions:
       name: api
       command: [serve, --lambda]
     timeout: 30 # s
+    memorySize: 4096 # MB
     events:
       - http:
           method: ANY
