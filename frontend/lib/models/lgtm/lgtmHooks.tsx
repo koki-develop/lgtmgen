@@ -48,6 +48,9 @@ export const useGenerateLgtm = () => {
             case ServiceErrCode.ErrCodeUnsupportedImageFormat:
               enqueueToast(t.unsupportedImageFormat, "error");
               break;
+            case ServiceErrCode.ErrCodeRateLimitReached:
+              enqueueToast(t.rateLimitReached, "error");
+              break;
             case ServiceErrCode.ErrCodeInternalServerError:
               enqueueToast(t.failedToGenerate, "error");
               break;
