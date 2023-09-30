@@ -1,4 +1,4 @@
-import React, { useMemo } from "react";
+import React, { useCallback, useMemo } from "react";
 import clsx from "clsx";
 import {
   DocumentDuplicateIcon,
@@ -6,6 +6,9 @@ import {
   FlagIcon,
 } from "@heroicons/react/24/outline";
 import { Menu } from "@headlessui/react";
+import copy from "copy-to-clipboard";
+import { useToast } from "@/lib/toast";
+import { useI18n } from "@/providers/I18nProvider";
 
 export type ImageCardProps = {
   className?: string;
@@ -16,10 +19,23 @@ export type ImageCardProps = {
 
 // TODO: Refactor
 export default function ImageCard({ className, src, alt }: ImageCardProps) {
+  const { t } = useI18n();
+  const { enqueueToast } = useToast();
+
   const baseClass = clsx(
     "flex flex-grow justify-center",
     "border-t py-2 transition",
   );
+
+  const handleClickMarkdown = useCallback(() => {
+    copy(`![${alt}](${src})`);
+    enqueueToast(t.copiedToClipboard);
+  }, [alt, src, enqueueToast, t]);
+
+  const handleClickHTML = useCallback(() => {
+    copy(`<img src="${src}" alt="${alt}" />`);
+    enqueueToast(t.copiedToClipboard);
+  }, [alt, src, enqueueToast, t]);
 
   const buttons = useMemo(
     () => [
@@ -43,6 +59,7 @@ export default function ImageCard({ className, src, alt }: ImageCardProps) {
                     className={clsx("px-4 py-2 transition", {
                       "bg-gray-200": active,
                     })}
+                    onClick={handleClickMarkdown}
                   >
                     Markdown
                   </button>
@@ -54,6 +71,7 @@ export default function ImageCard({ className, src, alt }: ImageCardProps) {
                     className={clsx("px-4 py-2 transition", {
                       "bg-gray-200": active,
                     })}
+                    onClick={handleClickHTML}
                   >
                     HTML
                   </button>
@@ -90,9 +108,10 @@ export default function ImageCard({ className, src, alt }: ImageCardProps) {
         "flex flex-col gap-2 rounded bg-white shadow-md",
       )}
     >
-      <div className="flex flex-grow items-center justify-center p-2">
+      <div className="flex h-40 flex-grow items-center justify-center p-2">
         <img className="max-w-100 max-h-36 border" src={src} alt={alt} />
       </div>
+
       <div className="relative flex rounded-b text-white">
         {buttons.map(
           ({ button, icon, additionalClass }, index) =>
