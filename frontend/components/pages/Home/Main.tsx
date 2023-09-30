@@ -26,13 +26,22 @@ export default function Main({ locale, initialData, perPage }: MainProps) {
   const [hasNextPage, setHasNextPage] = useState<boolean>(
     initialData.length === perPage,
   );
+  const [loading, setLoading] = useState<boolean>(false);
 
   const handleLoadMore = useCallback(async () => {
+    setLoading(true);
+
     const after = lgtms.slice(-1)[0]?.id;
-    const resp = await api.v1.lgtmsList({ after, limit: perPage });
-    if (!resp.ok) throw resp.error;
-    setLgtms((prev) => [...prev, ...resp.data]);
-    setHasNextPage(resp.data.length === perPage);
+    await api.v1
+      .lgtmsList({ after, limit: perPage })
+      .then((response) => {
+        if (!response.ok) throw response.error;
+        setLgtms((prev) => [...prev, ...response.data]);
+        setHasNextPage(response.data.length === perPage);
+      })
+      .finally(() => {
+        setLoading(false);
+      });
   }, [lgtms]);
 
   const handleGenerated = useCallback((lgtm: ModelsLGTM) => {
@@ -75,6 +84,7 @@ export default function Main({ locale, initialData, perPage }: MainProps) {
           <Tab.Panel>
             <LgtmPanel
               lgtms={lgtms}
+              loading={loading}
               hasNextPage={hasNextPage}
               onLoadMore={handleLoadMore}
               onUploaded={handleGenerated}
