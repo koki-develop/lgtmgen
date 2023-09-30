@@ -14,6 +14,7 @@ export type ImageCardProps = {
   alt: string;
 };
 
+// TODO: Refactor
 export default function ImageCard({ className, src, alt }: ImageCardProps) {
   const baseClass = clsx(
     "flex flex-grow justify-center",
@@ -28,6 +29,7 @@ export default function ImageCard({ className, src, alt }: ImageCardProps) {
             <Menu.Button
               className={clsx(
                 baseClass,
+                "rounded-bl",
                 "button-primary",
                 "border-t-primary-main hover:border-t-primary-dark",
               )}
@@ -72,6 +74,7 @@ export default function ImageCard({ className, src, alt }: ImageCardProps) {
       {
         icon: <FlagIcon className="h-6 w-6" />,
         additionalClass: clsx(
+          "rounded-br",
           "border-t-report-main hover:border-t-report-dark",
           "bg-report-main hover:bg-report-dark",
         ),
