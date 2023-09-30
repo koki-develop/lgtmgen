@@ -3,7 +3,7 @@ const keys = {
 } as const;
 
 export const useStorage = () => {
-  const getFavoriteIds = (): string[] => {
+  const loadFavorites = (): string[] => {
     const value = localStorage.getItem(keys.favoriteIds);
     if (value) {
       return JSON.parse(value);
@@ -11,12 +11,12 @@ export const useStorage = () => {
     return [];
   };
 
-  const setFavoriteIds = (ids: string[]) => {
+  const saveFavorites = (ids: string[]) => {
     localStorage.setItem(keys.favoriteIds, JSON.stringify(ids));
   };
 
   return {
-    getFavoriteIds,
-    setFavoriteIds,
+    loadFavorites,
+    saveFavorites,
   };
 };
