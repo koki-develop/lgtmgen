@@ -41,14 +41,14 @@ export default function LgtmPanel({
                   alt="LGTM"
                 />
               </div>
-              <div className="flex text-white border rounded-b overflow-hidden">
-                <button className="bg-primary-main transition hover:bg-primary-dark flex-grow flex justify-center py-2">
+              <div className="flex text-white rounded-b overflow-hidden">
+                <button className="bg-primary-main border-t border-t-primary-main hover:border-t-primary-dark transition hover:bg-primary-dark flex-grow flex justify-center py-2">
                   <DocumentDuplicateIcon className="w-6 h-6 " />
                 </button>
-                <button className="flex-grow transition bg-white text-favorite-dark hover:bg-favorite-light flex justify-center py-2">
+                <button className="flex-grow transition bg-white text-favorite-dark hover:bg-favorite-light border-t hover:border-t-favorite-light flex justify-center py-2">
                   <HeartIcon className="w-6 h-6" />
                 </button>
-                <button className="flex-grow transition bg-report-main hover:bg-report-dark flex justify-center py-2">
+                <button className="flex-grow transition bg-report-main hover:bg-report-dark flex justify-center border-t border-t-report-main hover:border-t-report-dark py-2">
                   <FlagIcon className="w-6 h-6" />
                 </button>
               </div>
