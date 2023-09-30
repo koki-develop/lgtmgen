@@ -69,7 +69,7 @@ export default function Main({ locale, initialData, perPage }: MainProps) {
             <Tab
               key={label}
               className={clsx(
-                "flex-grow py-2 outline-none transition",
+                "flex-grow py-4 outline-none transition",
                 "border-b-2 border-b-white",
                 "hover:border-b-gray-100 hover:bg-gray-100",
                 "ui-selected:border-b-primary-main ui-selected:font-semibold ui-selected:text-primary-main ui-not-selected:text-gray-400",
