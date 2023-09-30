@@ -5,6 +5,7 @@ import {
   HeartIcon,
   FlagIcon,
 } from "@heroicons/react/24/outline";
+import { Menu } from "@headlessui/react";
 
 export type ImageCardProps = {
   className?: string;
@@ -14,13 +15,50 @@ export type ImageCardProps = {
 };
 
 export default function ImageCard({ className, src, alt }: ImageCardProps) {
+  const baseClass = clsx(
+    "flex flex-grow justify-center",
+    "border-t py-2 transition",
+  );
+
   const buttons = useMemo(
     () => [
       {
-        icon: <DocumentDuplicateIcon className="h-6 w-6" />,
-        additionalClass: clsx(
-          "button-primary",
-          "border-t-primary-main hover:border-t-primary-dark",
+        button: (
+          <Menu>
+            <Menu.Button
+              className={clsx(
+                baseClass,
+                "button-primary",
+                "border-t-primary-main hover:border-t-primary-dark",
+              )}
+            >
+              <DocumentDuplicateIcon className="h-6 w-6" />
+            </Menu.Button>
+            <Menu.Items className="absolute -top-16 left-8 flex flex-col divide-y rounded bg-white text-black shadow-md">
+              <Menu.Item>
+                {({ active }) => (
+                  <button
+                    className={clsx("p-2 transition", {
+                      "bg-gray-200": active,
+                    })}
+                  >
+                    Markdown
+                  </button>
+                )}
+              </Menu.Item>
+              <Menu.Item>
+                {({ active }) => (
+                  <button
+                    className={clsx("p-2 transition", {
+                      "bg-gray-200": active,
+                    })}
+                  >
+                    HTML
+                  </button>
+                )}
+              </Menu.Item>
+            </Menu.Items>
+          </Menu>
         ),
       },
       {
@@ -52,19 +90,15 @@ export default function ImageCard({ className, src, alt }: ImageCardProps) {
       <div className="flex flex-grow items-center justify-center p-2">
         <img className="max-w-100 max-h-36 border" src={src} alt={alt} />
       </div>
-      <div className="flex overflow-hidden rounded-b text-white">
-        {buttons.map(({ icon, additionalClass }, index) => (
-          <button
-            key={index}
-            className={clsx(
-              additionalClass,
-              "flex flex-grow justify-center",
-              "border-t py-2 transition",
-            )}
-          >
-            {icon}
-          </button>
-        ))}
+      <div className="relative flex rounded-b text-white">
+        {buttons.map(
+          ({ button, icon, additionalClass }, index) =>
+            button || (
+              <button key={index} className={clsx(baseClass, additionalClass)}>
+                {icon}
+              </button>
+            ),
+        )}
       </div>
     </div>
   );
