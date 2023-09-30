@@ -1,3 +1,9 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+@layer components {
+  .button-primary {
+    @apply transition bg-primary-main hover:bg-primary-dark;
+  }
+}
