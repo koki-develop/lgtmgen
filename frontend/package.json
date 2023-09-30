@@ -16,6 +16,7 @@
   "dependencies": {
     "@fontsource/archivo-black": "^5.0.12",
     "@headlessui/react": "^1.7.17",
+    "@headlessui/tailwindcss": "^0.2.0",
     "@heroicons/react": "^2.0.18",
     "clsx": "^2.0.0",
     "negotiator": "^0.6.3",
