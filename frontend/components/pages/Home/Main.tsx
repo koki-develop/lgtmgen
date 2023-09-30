@@ -5,13 +5,18 @@ import { api } from "@/lib/api";
 import { ModelsImage, ModelsLGTM } from "@/lib/generated/api";
 import LgtmPanel from "./LgtmPanel";
 import SearchImagePanel from "./SearchImagePanel";
+import { Tab } from "@headlessui/react";
+import { i18n } from "@/lib/i18n";
 
 export type MainProps = {
+  locale: string;
   initialData: ModelsLGTM[];
   perPage: number;
 };
 
-export default function Main({ initialData, perPage }: MainProps) {
+export default function Main({ locale, initialData, perPage }: MainProps) {
+  const t = i18n(locale);
+
   /*
    * LGTM
    */
