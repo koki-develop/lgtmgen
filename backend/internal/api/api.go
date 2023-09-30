@@ -5,6 +5,7 @@ import (
 
 	"github.com/cockroachdb/errors"
 	"github.com/gin-gonic/gin"
+	"github.com/koki-develop/lgtmgen/backend/internal/env"
 	"github.com/koki-develop/lgtmgen/backend/internal/middleware"
 	"github.com/koki-develop/lgtmgen/backend/internal/repo"
 	"github.com/koki-develop/lgtmgen/backend/internal/service"
@@ -24,7 +25,7 @@ func NewEngine(ctx context.Context) (*gin.Engine, error) {
 	e := gin.New()
 	e.Use(middleware.NewLogger().Apply())
 	e.Use(gin.Recovery())
-	e.Use(middleware.NewCORS().Apply("http://localhost:3000")) // TODO: from env
+	e.Use(middleware.NewCORS().Apply(env.Vars.FrontendOrigin))
 	rl := middleware.NewRateLimitter(r)
 
 	e.GET("/h", svc.HealthCheck)

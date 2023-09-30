@@ -18,8 +18,9 @@ const (
 )
 
 type Env struct {
-	Stage         Stage  `env:"STAGE,required"`
-	ImagesBaseURL string `env:"IMAGES_BASE_URL,required"`
+	Stage          Stage  `env:"STAGE,required"`
+	FrontendOrigin string `env:"FRONTEND_ORIGIN,required"`
+	ImagesBaseURL  string `env:"IMAGES_BASE_URL,required"`
 	// Google
 	GoogleAPIKey   string `env:"GOOGLE_API_KEY,required"`
 	SearchEngineID string `env:"SEARCH_ENGINE_ID,required"`

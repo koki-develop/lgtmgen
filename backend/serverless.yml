@@ -61,6 +61,7 @@ provider:
 
   environment:
     STAGE: ${self:provider.stage}
+    FRONTEND_ORIGIN: ${env:FRONTEND_ORIGIN}
     IMAGES_BASE_URL: ${env:IMAGES_BASE_URL}
     # Google
     GOOGLE_API_KEY: ${env:GOOGLE_API_KEY}
