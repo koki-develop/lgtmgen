@@ -17,6 +17,7 @@
       disabled:opacity-50 disabled:cursor-not-allowed;
   }
 
+  /* https://css-loaders.com/spinner/ */
   .loader {
     @apply bg-primary-main;
     width: 40px;
