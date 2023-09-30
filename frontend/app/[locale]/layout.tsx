@@ -30,7 +30,7 @@ export default function RootLayout({
           </h1>
         </header>
 
-        <main className="container mx-auto px-4">{children}</main>
+        <main className="container mx-auto p-4 py-8">{children}</main>
 
         <footer className="flex flex-col items-center">
           <small>&copy; 2023 Koki Sato</small>
