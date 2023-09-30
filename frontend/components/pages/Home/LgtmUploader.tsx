@@ -1,6 +1,7 @@
 import { api } from "@/lib/api";
 import { ModelsLGTM, ServiceErrCode } from "@/lib/generated/api";
 import { dataUrlToBase64, fileToDataUrl } from "@/lib/image";
+import { useI18n } from "@/providers/I18nProvider";
 import React, { useCallback } from "react";
 
 export type LgtmUploaderProps = {
@@ -8,6 +9,8 @@ export type LgtmUploaderProps = {
 };
 
 export const LgtmUploader = ({ onUploaded }: LgtmUploaderProps) => {
+  const { t } = useI18n();
+
   const [file, setFile] = React.useState<File | null>(null);
   const [imageDataUrl, setImageDataUrl] = React.useState<string | null>(null);
 
@@ -50,7 +53,7 @@ export const LgtmUploader = ({ onUploaded }: LgtmUploaderProps) => {
   return (
     <div>
       <div>
-        <button onClick={handleClickUpload}>upload</button>
+        <button onClick={handleClickUpload}>{t.upload}</button>
       </div>
       <div>
         <input type="file" accept="image/*" onChange={handleChangeFile} />
