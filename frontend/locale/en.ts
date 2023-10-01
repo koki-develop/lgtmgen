@@ -11,6 +11,7 @@ const en: I18n = {
   upload: "Upload",
   confirmGeneration: "Would you like to generate an LGTM with this image?",
   generate: "Generate",
+  send: "Send",
   cancel: "Cancel",
 
   successToGenerate: "Successfully generated LGTM.",

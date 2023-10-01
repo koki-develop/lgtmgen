@@ -10,6 +10,7 @@ const ja: I18n = {
   upload: "アップロード",
   confirmGeneration: "この画像で LGTM を生成しますか？",
   generate: "生成",
+  send: "送信",
   cancel: "キャンセル",
 
   successToGenerate: "LGTM を生成しました",

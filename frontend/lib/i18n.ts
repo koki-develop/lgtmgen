@@ -11,6 +11,7 @@ export type I18n = {
   upload: string;
   confirmGeneration: string;
   generate: string;
+  send: string;
   cancel: string;
 
   successToGenerate: string;
