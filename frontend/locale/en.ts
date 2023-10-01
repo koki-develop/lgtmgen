@@ -12,6 +12,11 @@ const en: I18n = {
   confirmGeneration: "Would you like to generate an LGTM with this image?",
   generate: "Generate",
   send: "Send",
+  supplement: "( Optional ) Supplement",
+  illegal:
+    "Illegal ( Copyright infringement, invasion of privacy, defamation, etc. )",
+  inappropriate: "Inappropriate content",
+  other: "Other",
   cancel: "Cancel",
 
   successToGenerate: "Successfully generated LGTM.",

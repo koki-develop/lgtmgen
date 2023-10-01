@@ -12,6 +12,10 @@ export type I18n = {
   confirmGeneration: string;
   generate: string;
   send: string;
+  supplement: string;
+  illegal: string;
+  inappropriate: string;
+  other: string;
   cancel: string;
 
   successToGenerate: string;

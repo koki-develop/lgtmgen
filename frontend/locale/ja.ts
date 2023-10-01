@@ -11,6 +11,10 @@ const ja: I18n = {
   confirmGeneration: "この画像で LGTM を生成しますか？",
   generate: "生成",
   send: "送信",
+  supplement: "( 任意 ) 補足",
+  illegal: "法律違反 ( 著作権侵害、プライバシー侵害、名誉毀損等 )",
+  inappropriate: "不適切なコンテンツ",
+  other: "その他",
   cancel: "キャンセル",
 
   successToGenerate: "LGTM を生成しました",
