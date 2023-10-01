@@ -50,6 +50,12 @@ func (ipt createReportInput) Validate() error {
 	return nil
 }
 
+//	@Router		/v1/reports [post]
+//	@Accept		json
+//	@Param		body	body		createReportInput	true	"body"
+//	@Success	201		{object}	models.Report
+//	@Failure	400		{object}	ErrorResponse
+//	@Failure	500		{object}	ErrorResponse
 func (s *reportService) CreateReport(ctx *gin.Context) {
 	var ipt createReportInput
 	if err := ctx.ShouldBindJSON(&ipt); err != nil {
