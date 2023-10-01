@@ -20,9 +20,9 @@ func newReportService(repo *repo.Repository) *reportService {
 }
 
 type createReportInput struct {
-	LGTMID string            `json:"lgtm_id"`
-	Type   models.ReportType `json:"type"`
-	Text   string            `json:"text"`
+	LGTMID string            `json:"lgtm_id" validate:"required"`
+	Type   models.ReportType `json:"type"    validate:"required"`
+	Text   string            `json:"text"    validate:"required"`
 }
 
 func (ipt createReportInput) Validate() error {
@@ -50,12 +50,12 @@ func (ipt createReportInput) Validate() error {
 	return nil
 }
 
-//	@Router		/v1/reports [post]
-//	@Accept		json
-//	@Param		body	body		createReportInput	true	"body"
-//	@Success	201		{object}	models.Report
-//	@Failure	400		{object}	ErrorResponse
-//	@Failure	500		{object}	ErrorResponse
+// @Router		/v1/reports [post]
+// @Accept		json
+// @Param		body	body		createReportInput	true	"body"
+// @Success	201		{object}	models.Report
+// @Failure	400		{object}	ErrorResponse
+// @Failure	500		{object}	ErrorResponse
 func (s *reportService) CreateReport(ctx *gin.Context) {
 	var ipt createReportInput
 	if err := ctx.ShouldBindJSON(&ipt); err != nil {
