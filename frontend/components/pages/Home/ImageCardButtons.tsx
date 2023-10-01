@@ -15,8 +15,10 @@ import { lgtmUrl } from "@/lib/image";
 export type ImageCardButtonsProps = {
   lgtmId: string;
   favorited: boolean;
+
   onFavorite: (id: string) => void;
   onUnfavorite: (id: string) => void;
+  onStartReport: (id: string) => void;
 };
 
 // TODO: Refactor
@@ -25,6 +27,7 @@ export default function ImageCardButtons({
   favorited,
   onFavorite,
   onUnfavorite,
+  onStartReport,
 }: ImageCardButtonsProps) {
   const { t } = useI18n();
   const { enqueueToast } = useToast();
@@ -39,13 +42,17 @@ export default function ImageCardButtons({
     enqueueToast(t.copiedToClipboard);
   }, [enqueueToast, lgtmId, t]);
 
-  const handleFavorited = useCallback(() => {
+  const handleClickFavorite = useCallback(() => {
     if (favorited) {
       onUnfavorite(lgtmId);
     } else {
       onFavorite(lgtmId);
     }
   }, [lgtmId, favorited, onFavorite, onUnfavorite]);
+
+  const handleClickReport = useCallback(() => {
+    onStartReport(lgtmId);
+  }, [lgtmId, onStartReport]);
 
   const baseClass = clsx(
     "flex flex-grow justify-center",
@@ -102,7 +109,7 @@ export default function ImageCardButtons({
           "bg-favorite-light hover:border-t-favorite-main hover:bg-favorite-main":
             favorited,
         })}
-        onClick={handleFavorited}
+        onClick={handleClickFavorite}
       >
         {favorited ? (
           <HeartIconSolid className="h-6 w-6" />
@@ -119,6 +126,7 @@ export default function ImageCardButtons({
           "border-t-report-main hover:border-t-report-dark",
           "bg-report-main hover:bg-report-dark",
         )}
+        onClick={handleClickReport}
       >
         <FlagIcon className="h-6 w-6" />
       </button>
