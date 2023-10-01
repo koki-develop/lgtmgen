@@ -52,9 +52,9 @@ export interface ServiceCreateLGTMInput {
 }
 
 export interface ServiceCreateReportInput {
-  lgtm_id?: string;
-  text?: string;
-  type?: ModelsReportType;
+  lgtm_id: string;
+  text: string;
+  type: ModelsReportType;
 }
 
 export type QueryParamsType = Record<string | number, any>;

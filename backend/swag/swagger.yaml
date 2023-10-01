@@ -80,6 +80,10 @@ definitions:
         type: string
       type:
         $ref: '#/definitions/models.ReportType'
+    required:
+    - lgtm_id
+    - text
+    - type
     type: object
 info:
   contact: {}

@@ -274,6 +274,11 @@ const docTemplate = `{
         },
         "service.createReportInput": {
             "type": "object",
+            "required": [
+                "lgtm_id",
+                "text",
+                "type"
+            ],
             "properties": {
                 "lgtm_id": {
                     "type": "string"
