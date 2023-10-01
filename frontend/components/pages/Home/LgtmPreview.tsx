@@ -42,7 +42,7 @@ export default function LgtmPreview({
                 "button-secondary",
                 "w-64 flex-grow rounded py-2 shadow-md",
               )}
-              onClick={onCancel}
+              onClick={handleClose}
               disabled={generating}
             >
               {t.cancel}
