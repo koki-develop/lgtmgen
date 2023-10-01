@@ -19,6 +19,20 @@ export interface ModelsLGTM {
   id: string;
 }
 
+export interface ModelsReport {
+  created_at?: string;
+  id?: string;
+  lgtm_id?: string;
+  text?: string;
+  type?: ModelsReportType;
+}
+
+export enum ModelsReportType {
+  ReportTypeIllegal = "illegal",
+  ReportTypeInappropriate = "inappropriate",
+  ReportTypeOther = "other",
+}
+
 export enum ServiceErrCode {
   ErrCodeBadRequest = "BAD_REQUEST",
   ErrCodeUnsupportedImageFormat = "UNSUPPORTED_IMAGE_FORMAT",
@@ -35,6 +49,12 @@ export interface ServiceErrorResponse {
 export interface ServiceCreateLGTMInput {
   base64?: string;
   url?: string;
+}
+
+export interface ServiceCreateReportInput {
+  lgtm_id?: string;
+  text?: string;
+  type?: ModelsReportType;
 }
 
 export type QueryParamsType = Record<string | number, any>;
@@ -187,17 +207,9 @@ export class HttpClient<SecurityDataType = unknown> {
     }
   };
 
-  public request = async <T = any, E = any>({
-    body,
-    secure,
-    path,
-    type,
-    query,
-    format,
-    baseUrl,
-    cancelToken,
-    ...params
-  }: FullRequestParams): Promise<HttpResponse<T, E>> => {
+  public request = async <T = any, E = any>(
+    { body, secure, path, type, query, format, baseUrl, cancelToken, ...params }: FullRequestParams,
+  ): Promise<HttpResponse<T, E>> => {
     const secureParams =
       ((typeof secure === "boolean" ? secure : this.baseApiParams.secure) &&
         this.securityWorker &&
@@ -303,6 +315,21 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
     lgtmsCreate: (body: ServiceCreateLGTMInput, params: RequestParams = {}) =>
       this.request<ModelsLGTM, ServiceErrorResponse>({
         path: `/v1/lgtms`,
+        method: "POST",
+        body: body,
+        type: ContentType.Json,
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @name ReportsCreate
+     * @request POST:/v1/reports
+     */
+    reportsCreate: (body: ServiceCreateReportInput, params: RequestParams = {}) =>
+      this.request<ModelsReport, ServiceErrorResponse>({
+        path: `/v1/reports`,
         method: "POST",
         body: body,
         type: ContentType.Json,

@@ -19,6 +19,29 @@ definitions:
     - created_at
     - id
     type: object
+  models.Report:
+    properties:
+      created_at:
+        type: string
+      id:
+        type: string
+      lgtm_id:
+        type: string
+      text:
+        type: string
+      type:
+        $ref: '#/definitions/models.ReportType'
+    type: object
+  models.ReportType:
+    enum:
+    - illegal
+    - inappropriate
+    - other
+    type: string
+    x-enum-varnames:
+    - ReportTypeIllegal
+    - ReportTypeInappropriate
+    - ReportTypeOther
   service.ErrCode:
     enum:
     - BAD_REQUEST
@@ -48,6 +71,15 @@ definitions:
         type: string
       url:
         type: string
+    type: object
+  service.createReportInput:
+    properties:
+      lgtm_id:
+        type: string
+      text:
+        type: string
+      type:
+        $ref: '#/definitions/models.ReportType'
     type: object
 info:
   contact: {}
@@ -116,6 +148,30 @@ paths:
           description: Created
           schema:
             $ref: '#/definitions/models.LGTM'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/service.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/service.ErrorResponse'
+  /v1/reports:
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: body
+        in: body
+        name: body
+        required: true
+        schema:
+          $ref: '#/definitions/service.createReportInput'
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/models.Report'
         "400":
           description: Bad Request
           schema:

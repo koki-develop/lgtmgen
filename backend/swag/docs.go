@@ -127,6 +127,44 @@ const docTemplate = `{
                     }
                 }
             }
+        },
+        "/v1/reports": {
+            "post": {
+                "consumes": [
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "description": "body",
+                        "name": "body",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/service.createReportInput"
+                        }
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "Created",
+                        "schema": {
+                            "$ref": "#/definitions/models.Report"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/service.ErrorResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/service.ErrorResponse"
+                        }
+                    }
+                }
+            }
         }
     },
     "definitions": {
@@ -159,6 +197,39 @@ const docTemplate = `{
                     "type": "string"
                 }
             }
+        },
+        "models.Report": {
+            "type": "object",
+            "properties": {
+                "created_at": {
+                    "type": "string"
+                },
+                "id": {
+                    "type": "string"
+                },
+                "lgtm_id": {
+                    "type": "string"
+                },
+                "text": {
+                    "type": "string"
+                },
+                "type": {
+                    "$ref": "#/definitions/models.ReportType"
+                }
+            }
+        },
+        "models.ReportType": {
+            "type": "string",
+            "enum": [
+                "illegal",
+                "inappropriate",
+                "other"
+            ],
+            "x-enum-varnames": [
+                "ReportTypeIllegal",
+                "ReportTypeInappropriate",
+                "ReportTypeOther"
+            ]
         },
         "service.ErrCode": {
             "type": "string",
@@ -198,6 +269,20 @@ const docTemplate = `{
                 },
                 "url": {
                     "type": "string"
+                }
+            }
+        },
+        "service.createReportInput": {
+            "type": "object",
+            "properties": {
+                "lgtm_id": {
+                    "type": "string"
+                },
+                "text": {
+                    "type": "string"
+                },
+                "type": {
+                    "$ref": "#/definitions/models.ReportType"
                 }
             }
         }
