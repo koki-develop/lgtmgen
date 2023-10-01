@@ -16,6 +16,9 @@ export type I18n = {
 
   successToGenerate: string;
   failedToGenerate: string;
+  successToSend: string;
+  failedToSend: string;
+
   unsupportedImageFormat: string;
   copiedToClipboard: string;
   rateLimitReached: string;

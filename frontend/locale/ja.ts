@@ -15,6 +15,8 @@ const ja: I18n = {
 
   successToGenerate: "LGTM を生成しました",
   failedToGenerate: "LGTM の生成に失敗しました",
+  successToSend: "送信しました",
+  failedToSend: "送信に失敗しました",
   unsupportedImageFormat: "サポートされていない画像形式です",
   copiedToClipboard: "クリップボードにコピーしました",
   rateLimitReached:
