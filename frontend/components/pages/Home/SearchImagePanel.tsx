@@ -10,13 +10,18 @@ import { useSearchImages } from "@/lib/models/image/imageHooks";
 
 export type SearchImagePanelProps = {
   images: ModelsImage[];
+  query: string;
 
+  onChangeQuery: (query: string) => void;
   onSearched: (images: ModelsImage[]) => void;
   onGenerated: (lgtm: ModelsLGTM) => void;
 };
 
 export default function SearchImagePanel({
   images,
+  query,
+
+  onChangeQuery,
   onSearched,
   onGenerated,
 }: SearchImagePanelProps) {
@@ -24,14 +29,13 @@ export default function SearchImagePanel({
   const { generateLgtm, generating } = useGenerateLgtm();
   const { searchImages, searching } = useSearchImages();
 
-  const [query, setQuery] = useState<string>("");
   const [url, setUrl] = useState<string | null>(null);
 
   const handleChangeQuery = useCallback(
     (event: React.ChangeEvent<HTMLInputElement>) => {
-      setQuery(event.currentTarget.value);
+      onChangeQuery(event.target.value);
     },
-    [],
+    [onChangeQuery],
   );
 
   const handleClosePreview = useCallback(() => {

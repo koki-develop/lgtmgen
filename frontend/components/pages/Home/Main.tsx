@@ -40,6 +40,11 @@ export default function Main({ locale, initialData, perPage }: MainProps) {
    */
 
   const [images, setImages] = useState<ModelsImage[]>([]);
+  const [query, setQuery] = useState<string>("");
+
+  const handleChangeQuery = useCallback((query: string) => {
+    setQuery(query);
+  }, []);
 
   const handleSearched = useCallback((images: ModelsImage[]) => {
     setImages(images);
@@ -114,6 +119,8 @@ export default function Main({ locale, initialData, perPage }: MainProps) {
           <Tab.Panel>
             <SearchImagePanel
               images={images}
+              query={query}
+              onChangeQuery={handleChangeQuery}
               onSearched={handleSearched}
               onGenerated={handleGenerated}
             />
