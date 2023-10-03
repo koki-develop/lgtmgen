@@ -15,7 +15,6 @@ export interface ModelsImage {
 }
 
 export interface ModelsLGTM {
-  created_at: string;
   id: string;
 }
 

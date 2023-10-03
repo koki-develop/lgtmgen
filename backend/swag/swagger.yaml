@@ -11,12 +11,9 @@ definitions:
     type: object
   models.LGTM:
     properties:
-      created_at:
-        type: string
       id:
         type: string
     required:
-    - created_at
     - id
     type: object
   models.Report:

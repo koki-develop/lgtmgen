@@ -186,13 +186,9 @@ const docTemplate = `{
         "models.LGTM": {
             "type": "object",
             "required": [
-                "created_at",
                 "id"
             ],
             "properties": {
-                "created_at": {
-                    "type": "string"
-                },
                 "id": {
                     "type": "string"
                 }
