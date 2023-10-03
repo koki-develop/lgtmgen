@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import LgtmCardList from "./LgtmCardList";
 import { useI18n } from "@/providers/I18nProvider";
 
@@ -13,13 +13,15 @@ export default function FavoritePanel({
 }: FavoritePanelProps) {
   const { t } = useI18n();
 
-  if (favorites.length === 0) {
+  const [currentFavorites, _] = useState<string[]>(favorites); // clear favorites when unmount
+
+  if (currentFavorites.length === 0) {
     return <p className="text-center text-gray-500">{t.noFavorites}</p>;
   }
 
   return (
     <LgtmCardList
-      lgtmIds={favorites}
+      lgtmIds={currentFavorites}
       favorites={favorites}
       onChangeFavorites={onChangeFavorites}
     />
