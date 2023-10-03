@@ -2,6 +2,7 @@ import { useCallback } from "react";
 
 const keys = {
   favoriteIds: "FAVORITE_IDS",
+  randomly: "RANDOMLY",
 } as const;
 
 export const useStorage = () => {
@@ -21,8 +22,23 @@ export const useStorage = () => {
     window.localStorage.setItem(keys.favoriteIds, JSON.stringify(ids));
   }, []);
 
+  const loadRandomly = useCallback((): boolean => {
+    if (typeof window === "undefined") return false;
+
+    const value = window.localStorage.getItem(keys.randomly);
+    return value === "true";
+  }, []);
+
+  const saveRandomly = useCallback((randomly: boolean) => {
+    if (typeof window === "undefined") return;
+
+    window.localStorage.setItem(keys.randomly, randomly ? "true" : "false");
+  }, []);
+
   return {
     loadFavorites,
     saveFavorites,
+    loadRandomly,
+    saveRandomly,
   };
 };
