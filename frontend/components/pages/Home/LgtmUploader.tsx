@@ -68,7 +68,7 @@ export const LgtmUploader = ({ onUploaded }: LgtmUploaderProps) => {
       <button
         className={clsx(
           "button-primary rounded-full text-white shadow-md",
-          "fixed bottom-4 right-4",
+          "fixed bottom-4 right-4 z-10",
           "flex gap-2 px-4 py-4",
         )}
         onClick={handleClickUpload}
