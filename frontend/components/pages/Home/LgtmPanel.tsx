@@ -7,6 +7,7 @@ import LgtmCardList from "./LgtmCardList";
 
 export type LgtmPanelProps = {
   perPage: number;
+  hasNextPage: boolean;
   lgtms: ModelsLGTM[];
   favorites: string[];
 
@@ -16,6 +17,7 @@ export type LgtmPanelProps = {
 
 export default function LgtmPanel({
   perPage,
+  hasNextPage,
   lgtms,
   favorites,
 
@@ -25,16 +27,11 @@ export default function LgtmPanel({
   const { t } = useI18n();
   const { fetchLgtms, fetching } = useFetchLgtms(perPage);
 
-  const [hasNextPage, setHasNextPage] = useState<boolean>(
-    lgtms.length === perPage,
-  );
-
   const handleClickLoadMore = useCallback(async () => {
     const after = lgtms.slice(-1)[0]?.id;
     const loadedLgtms = await fetchLgtms(after);
     onLoaded(loadedLgtms);
-    setHasNextPage(loadedLgtms.length === perPage);
-  }, [fetchLgtms, lgtms, onLoaded, perPage]);
+  }, [fetchLgtms, lgtms, onLoaded]);
 
   return (
     <>

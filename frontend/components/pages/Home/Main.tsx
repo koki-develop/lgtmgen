@@ -1,7 +1,6 @@
 "use client";
 
 import React, { useCallback, useEffect, useState } from "react";
-import { api } from "@/lib/api";
 import { ModelsImage, ModelsLGTM } from "@/lib/generated/api";
 import LgtmPanel from "./LgtmPanel";
 import SearchImagePanel from "./SearchImagePanel";
@@ -19,7 +18,7 @@ export type MainProps = {
 };
 
 export default function Main({ locale, initialData, perPage }: MainProps) {
-  const { loadFavorites, saveFavorites } = useStorage();
+  const { loadFavorites } = useStorage();
   const t = i18n(locale);
 
   /*
@@ -27,10 +26,17 @@ export default function Main({ locale, initialData, perPage }: MainProps) {
    */
 
   const [lgtms, setLgtms] = useState<ModelsLGTM[]>(initialData);
+  const [hasNextPage, setHasNextPage] = useState<boolean>(
+    initialData.length === perPage,
+  );
 
-  const handleLoaded = useCallback((loadedLgtms: ModelsLGTM[]) => {
-    setLgtms((prev) => [...prev, ...loadedLgtms]);
-  }, []);
+  const handleLoaded = useCallback(
+    (loadedLgtms: ModelsLGTM[]) => {
+      setLgtms((prev) => [...prev, ...loadedLgtms]);
+      setHasNextPage(loadedLgtms.length === perPage);
+    },
+    [perPage],
+  );
 
   const handleGenerated = useCallback((lgtm: ModelsLGTM) => {
     setLgtms((prev) => [lgtm, ...prev]);
@@ -93,6 +99,7 @@ export default function Main({ locale, initialData, perPage }: MainProps) {
               lgtms={lgtms}
               favorites={favorites}
               perPage={perPage}
+              hasNextPage={hasNextPage}
               onLoaded={handleLoaded}
               onChangeFavorites={handleChangeFavorites}
             />
