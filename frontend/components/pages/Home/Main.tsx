@@ -37,16 +37,16 @@ export default function Main({
   const [randomly, setRandomly] = useState<boolean>(false);
 
   const handleLoaded = useCallback(
-    (loadedLgtms: ModelsLGTM[], options?: { reset?: boolean }) => {
-      if (options?.reset) {
-        setLgtms(loadedLgtms);
-      } else {
-        setLgtms((prev) => [...prev, ...loadedLgtms]);
-      }
+    (loadedLgtms: ModelsLGTM[]) => {
+      setLgtms((prev) => [...prev, ...loadedLgtms]);
       setHasNextPage(loadedLgtms.length === perPage);
     },
     [perPage],
   );
+
+  const handleClear = useCallback(() => {
+    setLgtms([]);
+  }, []);
 
   const handleGenerated = useCallback((lgtm: ModelsLGTM) => {
     setLgtms((prev) => [lgtm, ...prev]);
@@ -140,6 +140,7 @@ export default function Main({
                 perPage={perPage}
                 hasNextPage={hasNextPage}
                 onLoaded={handleLoaded}
+                onClear={handleClear}
                 onChangeFavorites={handleChangeFavorites}
               />
             ) : (

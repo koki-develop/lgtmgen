@@ -14,7 +14,8 @@ export type LgtmPanelProps = {
   lgtms: ModelsLGTM[];
   favorites: string[];
 
-  onLoaded: (lgtms: ModelsLGTM[], options?: { reset?: boolean }) => void;
+  onLoaded: (lgtms: ModelsLGTM[]) => void;
+  onClear: () => void;
   onChangeRandomly: (randomly: boolean) => void;
   onChangeFavorites: (favorites: string[]) => void;
 };
@@ -27,6 +28,7 @@ export default function LgtmPanel({
   favorites,
 
   onLoaded,
+  onClear,
   onChangeRandomly,
   onChangeFavorites,
 }: LgtmPanelProps) {
@@ -44,16 +46,17 @@ export default function LgtmPanel({
     async (randomly: boolean) => {
       onChangeRandomly(randomly);
       saveRandomly(randomly);
+      onClear();
 
       if (randomly) {
         const loadedLgtms = await fetchLgtms({ random: true });
-        onLoaded(loadedLgtms, { reset: true });
+        onLoaded(loadedLgtms);
       } else {
         const loadedLgtms = await fetchLgtms({});
-        onLoaded(loadedLgtms, { reset: true });
+        onLoaded(loadedLgtms);
       }
     },
-    [onChangeRandomly, saveRandomly, fetchLgtms, onLoaded],
+    [onChangeRandomly, saveRandomly, fetchLgtms, onLoaded, onClear],
   );
 
   return (
@@ -94,8 +97,8 @@ export default function LgtmPanel({
           onChangeFavorites={onChangeFavorites}
         />
 
-        {!randomly && (
-          <div className="flex justify-center">
+        <div className="flex justify-center">
+          {!randomly && (
             <button
               className={clsx(
                 { hidden: !hasNextPage || fetching },
@@ -105,10 +108,10 @@ export default function LgtmPanel({
             >
               {t.loadMore}
             </button>
+          )}
 
-            <div className={clsx("loader", { hidden: !fetching })} />
-          </div>
-        )}
+          <div className={clsx("loader", { hidden: !fetching })} />
+        </div>
       </div>
     </>
   );
