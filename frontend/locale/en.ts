@@ -20,6 +20,7 @@ const en: I18n = {
   keyword: "Keyword",
   cancel: "Cancel",
 
+  noFavorites: "No favorite LGTM.",
   successToGenerate: "Successfully generated LGTM.",
   failedToGenerate: "Failed to generate LGTM.",
   successToSend: "Sent.",

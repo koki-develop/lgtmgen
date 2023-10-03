@@ -17,6 +17,7 @@ export type I18n = {
   inappropriate: string;
   other: string;
   keyword: string;
+  noFavorites: string;
   cancel: string;
 
   successToGenerate: string;

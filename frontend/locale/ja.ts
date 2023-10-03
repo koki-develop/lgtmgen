@@ -18,6 +18,7 @@ const ja: I18n = {
   keyword: "キーワード",
   cancel: "キャンセル",
 
+  noFavorites: "お気に入りした LGTM はありません",
   successToGenerate: "LGTM を生成しました",
   failedToGenerate: "LGTM の生成に失敗しました",
   successToSend: "送信しました",
