@@ -10,6 +10,7 @@ import ReportForm from "./ReportForm";
 import copy from "copy-to-clipboard";
 import { useToast } from "@/lib/toast";
 import { DocumentDuplicateIcon } from "@heroicons/react/24/outline";
+import LgtmCard from "./LgtmCard";
 
 export type LgtmPanelProps = {
   perPage: number;
@@ -70,21 +71,14 @@ export default function LgtmPanel({
         <ul className="grid grid-cols-4 gap-4">
           {lgtms.map((lgtm) => (
             <li key={lgtm.id}>
-              <ImageCard
+              <LgtmCard
                 className="h-full"
-                src={lgtmUrl(lgtm.id)}
-                alt="LGTM"
-                icon={<DocumentDuplicateIcon />}
-                onClick={() => handleClickLgtm(lgtm.id)}
-              >
-                <ImageCardButtons
-                  lgtmId={lgtm.id}
-                  favorited={favorites.includes(lgtm.id)}
-                  onFavorite={onFavorite}
-                  onUnfavorite={onUnfavorite}
-                  onStartReport={handleStartReport}
-                />
-              </ImageCard>
+                lgtm={lgtm}
+                favorites={favorites}
+                onFavorite={onFavorite}
+                onUnfavorite={onUnfavorite}
+                onStartReport={handleStartReport}
+              />
             </li>
           ))}
         </ul>
