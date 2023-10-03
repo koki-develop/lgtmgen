@@ -8,11 +8,11 @@ export const useFetchLgtms = (perPage: number) => {
   const [fetching, setFetching] = useState<boolean>(false);
 
   const fetchLgtms = useCallback(
-    async (after: string) => {
+    async ({ after, random }: { after?: string; random?: boolean }) => {
       setFetching(true);
 
       return await api.v1
-        .lgtmsList({ limit: perPage, after })
+        .lgtmsList({ limit: perPage, after, random })
         .then((response) => {
           if (!response.ok) throw response.error;
           return response.data;
