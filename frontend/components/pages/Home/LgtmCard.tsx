@@ -56,9 +56,9 @@ export default function LgtmCard({
       alt="LGTM"
       icon={
         copied ? (
-          <CheckIcon className="text-green-500" />
+          <CheckIcon className="h-16 w-16 text-green-500" />
         ) : (
-          <DocumentDuplicateIcon className="text-white" />
+          <DocumentDuplicateIcon className="h-16 w-16 text-white" />
         )
       }
       onClick={handleClickLgtm}
