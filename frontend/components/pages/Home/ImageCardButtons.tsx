@@ -1,6 +1,7 @@
-import React, { useCallback, useMemo } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import clsx from "clsx";
 import {
+  CheckIcon,
   DocumentDuplicateIcon,
   HeartIcon as HeartIconOutline,
   FlagIcon,
@@ -32,13 +33,17 @@ export default function ImageCardButtons({
   const { t } = useI18n();
   const { enqueueToast } = useToast();
 
+  const [copied, setCopied] = useState<boolean>(false);
+
   const handleClickMarkdown = useCallback(() => {
     copy(`![LGTM](${lgtmUrl(lgtmId)})`);
+    setCopied(true);
     enqueueToast(t.copiedToClipboard);
   }, [enqueueToast, lgtmId, t]);
 
   const handleClickHTML = useCallback(() => {
     copy(`<img src="${lgtmUrl(lgtmId)}" alt="LGTM" />`);
+    setCopied(true);
     enqueueToast(t.copiedToClipboard);
   }, [enqueueToast, lgtmId, t]);
 
@@ -59,6 +64,15 @@ export default function ImageCardButtons({
     "border-t py-2 transition",
   );
 
+  useEffect(() => {
+    if (copied) {
+      const timer = setTimeout(() => {
+        setCopied(false);
+      }, 2000);
+      return () => clearTimeout(timer);
+    }
+  }, [copied]);
+
   return (
     <div className="relative flex rounded-b text-white">
       {/* Copy */}
@@ -71,7 +85,11 @@ export default function ImageCardButtons({
             "border-t-primary-main hover:border-t-primary-dark",
           )}
         >
-          <DocumentDuplicateIcon className="h-6 w-6" />
+          {copied ? (
+            <CheckIcon className="h-6 w-6 text-green-500" />
+          ) : (
+            <DocumentDuplicateIcon className="h-6 w-6" />
+          )}
         </Menu.Button>
         <Menu.Items className="absolute -top-16 left-6 flex flex-col divide-y rounded bg-white text-gray-600 shadow-md">
           <Menu.Item>
