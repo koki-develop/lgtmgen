@@ -15,6 +15,7 @@ const ja: I18n = {
   illegal: "法律違反 ( 著作権侵害、プライバシー侵害、名誉毀損等 )",
   inappropriate: "不適切なコンテンツ",
   other: "その他",
+  keyword: "キーワード",
   cancel: "キャンセル",
 
   successToGenerate: "LGTM を生成しました",

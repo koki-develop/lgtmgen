@@ -17,6 +17,7 @@ const en: I18n = {
     "Illegal ( Copyright infringement, invasion of privacy, defamation, etc. )",
   inappropriate: "Inappropriate content",
   other: "Other",
+  keyword: "Keyword",
   cancel: "Cancel",
 
   successToGenerate: "Successfully generated LGTM.",
