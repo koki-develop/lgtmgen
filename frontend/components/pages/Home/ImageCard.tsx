@@ -31,7 +31,7 @@ export default function ImageCard({
         onClick={onClick}
       >
         {icon && (
-          <span className="absolute h-1/3 w-1/3 text-white opacity-0 transition group-hover:opacity-80">
+          <span className="absolute h-1/3 w-1/3 opacity-0 transition group-hover:opacity-80">
             {icon}
           </span>
         )}
