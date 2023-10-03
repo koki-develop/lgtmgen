@@ -3,7 +3,7 @@ import { useI18n } from "@/providers/I18nProvider";
 import React from "react";
 
 export type LgtmPreviewProps = {
-  dataUrl: string | null;
+  src: string | null;
   generating: boolean;
 
   onGenerate: () => void;
@@ -11,7 +11,7 @@ export type LgtmPreviewProps = {
 };
 
 export default function LgtmPreview({
-  dataUrl,
+  src,
   generating,
   onCancel,
   onGenerate,
@@ -22,16 +22,17 @@ export default function LgtmPreview({
     <Dialog
       title={t.confirmGeneration}
       submitText={t.generate}
-      open={Boolean(dataUrl)}
+      open={Boolean(src)}
+      loading={generating}
       disabled={generating}
       onSubmit={onGenerate}
       onClose={onCancel}
     >
-      {dataUrl && (
+      {src && (
         <img
           className="max-h-72
           max-w-full border"
-          src={dataUrl}
+          src={src}
           alt=""
         />
       )}
