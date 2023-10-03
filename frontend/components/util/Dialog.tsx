@@ -6,9 +6,10 @@ import React, { useCallback } from "react";
 export type DialogProps = {
   children: React.ReactNode;
 
-  title: string;
+  title?: string;
   submitText: string;
   open: boolean;
+  loading: boolean;
   disabled: boolean;
 
   onSubmit: () => void;
@@ -21,6 +22,7 @@ export default function Dialog({
   title,
   submitText,
   open,
+  loading,
   disabled,
 
   onSubmit,
@@ -29,14 +31,14 @@ export default function Dialog({
   const { t } = useI18n();
 
   const handleClose = useCallback(() => {
-    if (disabled) return;
+    if (loading) return;
     onClose();
-  }, [disabled, onClose]);
+  }, [loading, onClose]);
 
   const handleSubmit = useCallback(() => {
-    if (disabled) return;
+    if (loading) return;
     onSubmit();
-  }, [disabled, onSubmit]);
+  }, [loading, onSubmit]);
 
   return (
     <HeadlessDialog open={open} onClose={handleClose}>
@@ -44,7 +46,7 @@ export default function Dialog({
 
       <div className="fixed inset-0 flex items-center justify-center">
         <HeadlessDialog.Panel className="flex flex-col items-center gap-4 rounded bg-white p-4">
-          <HeadlessDialog.Title>{title}</HeadlessDialog.Title>
+          {title && <HeadlessDialog.Title>{title}</HeadlessDialog.Title>}
 
           {children}
 
@@ -55,7 +57,7 @@ export default function Dialog({
                 "w-64 flex-grow rounded py-2 shadow-md",
               )}
               onClick={handleClose}
-              disabled={disabled}
+              disabled={loading}
             >
               {t.cancel}
             </button>
@@ -65,7 +67,7 @@ export default function Dialog({
                 "w-64 flex-grow rounded py-2 shadow-md transition",
               )}
               onClick={handleSubmit}
-              disabled={disabled}
+              disabled={loading || disabled}
             >
               {submitText}
             </button>
