@@ -9,6 +9,7 @@ import ImageCardButtons from "./ImageCardButtons";
 import ReportForm from "./ReportForm";
 import copy from "copy-to-clipboard";
 import { useToast } from "@/lib/toast";
+import { DocumentDuplicateIcon } from "@heroicons/react/24/outline";
 
 export type LgtmPanelProps = {
   perPage: number;
@@ -73,6 +74,7 @@ export default function LgtmPanel({
                 className="h-full"
                 src={lgtmUrl(lgtm.id)}
                 alt="LGTM"
+                icon={<DocumentDuplicateIcon />}
                 onClick={() => handleClickLgtm(lgtm.id)}
               >
                 <ImageCardButtons
