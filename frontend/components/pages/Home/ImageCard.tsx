@@ -7,6 +7,8 @@ export type ImageCardProps = {
 
   src: string;
   alt: string;
+
+  onClick: () => void;
 };
 
 export default function ImageCard({
@@ -14,17 +16,18 @@ export default function ImageCard({
   children,
   src,
   alt,
+  onClick,
 }: ImageCardProps) {
   return (
     <div
-      className={clsx(
-        className,
-        "flex flex-col gap-2 rounded bg-white shadow-md",
-      )}
+      className={clsx(className, "flex flex-col rounded bg-white shadow-md")}
     >
-      <div className="flex h-40 flex-grow items-center justify-center p-2">
+      <button
+        className="flex h-40 flex-grow items-center justify-center p-2 transition hover:bg-gray-100"
+        onClick={onClick}
+      >
         <img className="max-w-100 max-h-36 border" src={src} alt={alt} />
-      </div>
+      </button>
 
       {children}
     </div>
