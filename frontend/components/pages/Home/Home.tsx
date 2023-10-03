@@ -11,9 +11,22 @@ export type HomeProps = {
 };
 
 export default async function Home({ params: { locale } }: HomeProps) {
-  const resp = await api.v1.lgtmsList({ limit: perPage });
-  if (!resp.ok) throw resp.error;
-  const lgtms = resp.data;
+  const listing = api.v1.lgtmsList({ limit: perPage });
+  const randomListing = api.v1.lgtmsList({ limit: perPage, random: true });
 
-  return <Main locale={locale} initialData={lgtms} perPage={perPage} />;
+  const [listingResponse, randomListingResponse] = await Promise.all([
+    listing,
+    randomListing,
+  ]);
+  if (!listingResponse.ok) throw listingResponse.error;
+  if (!randomListingResponse.ok) throw randomListingResponse.error;
+
+  return (
+    <Main
+      locale={locale}
+      initialData={listingResponse.data}
+      initialRandomData={randomListingResponse.data}
+      perPage={perPage}
+    />
+  );
 }

@@ -14,25 +14,35 @@ import FavoritePanel from "./FavoritePanel";
 export type MainProps = {
   locale: string;
   initialData: ModelsLGTM[];
+  initialRandomData: ModelsLGTM[];
   perPage: number;
 };
 
-export default function Main({ locale, initialData, perPage }: MainProps) {
-  const { loadFavorites } = useStorage();
+export default function Main({
+  locale,
+  initialData,
+  initialRandomData,
+  perPage,
+}: MainProps) {
+  const { loadFavorites, loadRandomly } = useStorage();
   const t = i18n(locale);
+  const [rendered, setRendered] = useState<boolean>(false);
 
   /*
    * LGTM
    */
 
-  const [lgtms, setLgtms] = useState<ModelsLGTM[]>(initialData);
-  const [hasNextPage, setHasNextPage] = useState<boolean>(
-    initialData.length === perPage,
-  );
+  const [lgtms, setLgtms] = useState<ModelsLGTM[]>([]);
+  const [hasNextPage, setHasNextPage] = useState<boolean>(false);
+  const [randomly, setRandomly] = useState<boolean>(false);
 
   const handleLoaded = useCallback(
-    (loadedLgtms: ModelsLGTM[]) => {
-      setLgtms((prev) => [...prev, ...loadedLgtms]);
+    (loadedLgtms: ModelsLGTM[], options?: { reset?: boolean }) => {
+      if (options?.reset) {
+        setLgtms(loadedLgtms);
+      } else {
+        setLgtms((prev) => [...prev, ...loadedLgtms]);
+      }
       setHasNextPage(loadedLgtms.length === perPage);
     },
     [perPage],
@@ -40,6 +50,10 @@ export default function Main({ locale, initialData, perPage }: MainProps) {
 
   const handleGenerated = useCallback((lgtm: ModelsLGTM) => {
     setLgtms((prev) => [lgtm, ...prev]);
+  }, []);
+
+  const handleChangeRandomly = useCallback((randomly: boolean) => {
+    setRandomly(randomly);
   }, []);
 
   /*
@@ -64,9 +78,31 @@ export default function Main({ locale, initialData, perPage }: MainProps) {
   const [favorites, setFavorites] = useState<string[]>([]);
 
   useEffect(() => {
+    if (rendered) return;
+
     const favorites = loadFavorites();
     setFavorites(favorites);
-  }, [loadFavorites]);
+
+    const randomly = loadRandomly();
+    setRandomly(randomly);
+
+    if (randomly) {
+      setLgtms(initialRandomData);
+      setHasNextPage(initialRandomData.length === perPage);
+    } else {
+      setLgtms(initialData);
+      setHasNextPage(initialData.length === perPage);
+    }
+
+    setRendered(true);
+  }, [
+    rendered,
+    loadFavorites,
+    loadRandomly,
+    initialData,
+    initialRandomData,
+    perPage,
+  ]);
 
   const handleChangeFavorites = useCallback((favorites: string[]) => {
     setFavorites(favorites);
@@ -93,16 +129,24 @@ export default function Main({ locale, initialData, perPage }: MainProps) {
         </Tab.List>
 
         <Tab.Panels>
+          <LgtmUploader onUploaded={handleGenerated} />
           <Tab.Panel>
-            <LgtmUploader onUploaded={handleGenerated} />
-            <LgtmPanel
-              lgtms={lgtms}
-              favorites={favorites}
-              perPage={perPage}
-              hasNextPage={hasNextPage}
-              onLoaded={handleLoaded}
-              onChangeFavorites={handleChangeFavorites}
-            />
+            {rendered ? (
+              <LgtmPanel
+                lgtms={lgtms}
+                randomly={randomly}
+                onChangeRandomly={handleChangeRandomly}
+                favorites={favorites}
+                perPage={perPage}
+                hasNextPage={hasNextPage}
+                onLoaded={handleLoaded}
+                onChangeFavorites={handleChangeFavorites}
+              />
+            ) : (
+              <div className="flex justify-center">
+                <div className="loader" />
+              </div>
+            )}
           </Tab.Panel>
 
           <Tab.Panel>
@@ -116,10 +160,16 @@ export default function Main({ locale, initialData, perPage }: MainProps) {
           </Tab.Panel>
 
           <Tab.Panel>
-            <FavoritePanel
-              favorites={favorites}
-              onChangeFavorites={handleChangeFavorites}
-            />
+            {rendered ? (
+              <FavoritePanel
+                favorites={favorites}
+                onChangeFavorites={handleChangeFavorites}
+              />
+            ) : (
+              <div className="flex justify-center">
+                <div className="loader" />
+              </div>
+            )}
           </Tab.Panel>
         </Tab.Panels>
       </Tab.Group>
