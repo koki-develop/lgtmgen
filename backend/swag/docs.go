@@ -65,6 +65,12 @@ const docTemplate = `{
                         "description": "after",
                         "name": "after",
                         "in": "query"
+                    },
+                    {
+                        "type": "boolean",
+                        "description": "random",
+                        "name": "random",
+                        "in": "query"
                     }
                 ],
                 "responses": {

@@ -295,6 +295,8 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
         limit?: number;
         /** after */
         after?: string;
+        /** random */
+        random?: boolean;
       },
       params: RequestParams = {},
     ) =>
