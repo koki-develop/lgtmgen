@@ -7,6 +7,8 @@ import { useI18n } from "@/providers/I18nProvider";
 import { useFetchLgtms } from "@/lib/models/lgtm/lgtmHooks";
 import ImageCardButtons from "./ImageCardButtons";
 import ReportForm from "./ReportForm";
+import copy from "copy-to-clipboard";
+import { useToast } from "@/lib/toast";
 
 export type LgtmPanelProps = {
   perPage: number;
@@ -29,11 +31,20 @@ export default function LgtmPanel({
 }: LgtmPanelProps) {
   const { t } = useI18n();
   const { fetchLgtms, fetching } = useFetchLgtms(perPage);
+  const { enqueueToast } = useToast();
 
   const [hasNextPage, setHasNextPage] = useState<boolean>(
     lgtms.length === perPage,
   );
   const [reportingLgtmId, setReportingLgtmId] = useState<string | null>(null);
+
+  const handleClickLgtm = useCallback(
+    (lgtmId: string) => {
+      copy(`![LGTM](${lgtmUrl(lgtmId)})`);
+      enqueueToast(t.copiedToClipboard);
+    },
+    [enqueueToast, t],
+  );
 
   const handleClickLoadMore = useCallback(async () => {
     const after = lgtms.slice(-1)[0]?.id;
@@ -58,7 +69,12 @@ export default function LgtmPanel({
         <ul className="grid grid-cols-4 gap-4">
           {lgtms.map((lgtm) => (
             <li key={lgtm.id}>
-              <ImageCard className="h-full" src={lgtmUrl(lgtm.id)} alt="LGTM">
+              <ImageCard
+                className="h-full"
+                src={lgtmUrl(lgtm.id)}
+                alt="LGTM"
+                onClick={() => handleClickLgtm(lgtm.id)}
+              >
                 <ImageCardButtons
                   lgtmId={lgtm.id}
                   favorited={favorites.includes(lgtm.id)}
