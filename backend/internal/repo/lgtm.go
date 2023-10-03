@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"context"
 	"fmt"
+	"math/rand"
 	"net/http"
 	"strings"
 	"time"
@@ -64,8 +65,9 @@ func (r *lgtmRepository) FindLGTM(ctx context.Context, id string) (*models.LGTM,
 }
 
 type lgtmListOptions struct {
-	Limit int
-	After *models.LGTM
+	Limit  int
+	After  *models.LGTM
+	Random bool
 }
 
 type LGTMListOption func(*lgtmListOptions)
@@ -82,12 +84,26 @@ func WithLGTMAfter(l *models.LGTM) LGTMListOption {
 	}
 }
 
+func WithLGTMRandom() LGTMListOption {
+	return func(o *lgtmListOptions) {
+		o.Random = true
+	}
+}
+
 func (r *lgtmRepository) ListLGTMs(ctx context.Context, opts ...LGTMListOption) (models.LGTMs, error) {
 	o := &lgtmListOptions{}
 	for _, opt := range opts {
 		opt(o)
 	}
 
+	if o.Random {
+		return r.listLGTMsRandomly(ctx, o)
+	} else {
+		return r.listLGTMs(ctx, o)
+	}
+}
+
+func (r *lgtmRepository) listLGTMs(ctx context.Context, o *lgtmListOptions) (models.LGTMs, error) {
 	expr, err := expression.NewBuilder().
 		WithKeyCondition(expression.KeyEqual(expression.Key("status"), expression.Value("ok"))).
 		Build()
@@ -127,6 +143,32 @@ func (r *lgtmRepository) ListLGTMs(ctx context.Context, opts ...LGTMListOption) 
 			return nil, errors.Wrap(err, "failed to unmarshal")
 		}
 		lgtms[i] = &lgtm
+	}
+
+	return lgtms, nil
+}
+
+func (r *lgtmRepository) listLGTMsRandomly(ctx context.Context, o *lgtmListOptions) (models.LGTMs, error) {
+	resp, err := r.storageClient.ListObjectsV2(ctx, &s3.ListObjectsV2Input{
+		Bucket:  util.Ptr(r.bucket()),
+		MaxKeys: 500,
+	})
+	if err != nil {
+		return nil, errors.Wrap(err, "failed to list objects")
+	}
+	rand.Shuffle(len(resp.Contents), func(i, j int) {
+		resp.Contents[i], resp.Contents[j] = resp.Contents[j], resp.Contents[i]
+	})
+	limit := min(o.Limit, len(resp.Contents))
+
+	keys := make([]string, limit)
+	for i, obj := range resp.Contents[:limit] {
+		keys[i] = *obj.Key
+	}
+
+	lgtms := make(models.LGTMs, limit)
+	for i, key := range keys {
+		lgtms[i] = &models.LGTM{ID: key}
 	}
 
 	return lgtms, nil

@@ -27,12 +27,13 @@ func newLGTMService(repo *repo.Repository) *lgtmService {
 	}
 }
 
-// @Router		/v1/lgtms [get]
-// @Param		limit	query		int		false	"limit"
-// @Param		after	query		string	false	"after"
-// @Success	200		{array}		models.LGTM
-// @Failure	400		{object}	ErrorResponse
-// @Failure	500		{object}	ErrorResponse
+//	@Router		/v1/lgtms [get]
+//	@Param		limit	query		int		false	"limit"
+//	@Param		after	query		string	false	"after"
+//	@Param		random	query		bool	false	"random"
+//	@Success	200		{array}		models.LGTM
+//	@Failure	400		{object}	ErrorResponse
+//	@Failure	500		{object}	ErrorResponse
 func (svc *lgtmService) ListLGTMs(ctx *gin.Context) {
 	opts := []repo.LGTMListOption{}
 
@@ -66,6 +67,11 @@ func (svc *lgtmService) ListLGTMs(ctx *gin.Context) {
 		opts = append(opts, repo.WithLGTMAfter(lgtm))
 	}
 
+	random := ctx.Query("random")
+	if random == "true" {
+		opts = append(opts, repo.WithLGTMRandom())
+	}
+
 	lgtms, err := svc.repo.ListLGTMs(ctx, opts...)
 	if err != nil {
 		log.Error(ctx, "failed to list lgtms", err)
@@ -93,12 +99,12 @@ func (ipt *createLGTMInput) Validate() error {
 	return nil
 }
 
-// @Router		/v1/lgtms [post]
-// @Accept		json
-// @Param		body	body		createLGTMInput	true	"body"
-// @Success	201		{object}	models.LGTM
-// @Failure	400		{object}	ErrorResponse
-// @Failure	500		{object}	ErrorResponse
+//	@Router		/v1/lgtms [post]
+//	@Accept		json
+//	@Param		body	body		createLGTMInput	true	"body"
+//	@Success	201		{object}	models.LGTM
+//	@Failure	400		{object}	ErrorResponse
+//	@Failure	500		{object}	ErrorResponse
 func (svc *lgtmService) CreateLGTM(ctx *gin.Context) {
 	var ipt createLGTMInput
 	if err := ctx.ShouldBindJSON(&ipt); err != nil {
