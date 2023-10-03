@@ -79,7 +79,7 @@ export const LgtmUploader = ({ onUploaded }: LgtmUploaderProps) => {
 
       <LgtmPreview
         generating={generating}
-        dataUrl={imageDataUrl}
+        src={imageDataUrl}
         onCancel={handleClosePreview}
         onGenerate={handleGenerate}
       />
