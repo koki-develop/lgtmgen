@@ -41,10 +41,8 @@ export default function Main({ locale, initialData, perPage }: MainProps) {
 
   const [images, setImages] = useState<ModelsImage[]>([]);
 
-  const handleSearch = useCallback(async (query: string) => {
-    const resp = await api.v1.imagesList({ q: query });
-    if (!resp.ok) throw resp.error;
-    setImages(resp.data);
+  const handleSearched = useCallback((images: ModelsImage[]) => {
+    setImages(images);
   }, []);
 
   /*
@@ -116,7 +114,7 @@ export default function Main({ locale, initialData, perPage }: MainProps) {
           <Tab.Panel>
             <SearchImagePanel
               images={images}
-              onSearch={handleSearch}
+              onSearched={handleSearched}
               onGenerated={handleGenerated}
             />
           </Tab.Panel>
