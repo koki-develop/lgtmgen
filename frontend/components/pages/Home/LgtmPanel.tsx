@@ -1,15 +1,9 @@
 import React, { useCallback, useState } from "react";
 import { ModelsLGTM } from "@/lib/generated/api";
-import { lgtmUrl } from "@/lib/image";
-import ImageCard from "./ImageCard";
 import clsx from "clsx";
 import { useI18n } from "@/providers/I18nProvider";
 import { useFetchLgtms } from "@/lib/models/lgtm/lgtmHooks";
-import ImageCardButtons from "./ImageCardButtons";
 import ReportForm from "./ReportForm";
-import copy from "copy-to-clipboard";
-import { useToast } from "@/lib/toast";
-import { DocumentDuplicateIcon } from "@heroicons/react/24/outline";
 import LgtmCard from "./LgtmCard";
 
 export type LgtmPanelProps = {
@@ -33,20 +27,11 @@ export default function LgtmPanel({
 }: LgtmPanelProps) {
   const { t } = useI18n();
   const { fetchLgtms, fetching } = useFetchLgtms(perPage);
-  const { enqueueToast } = useToast();
 
   const [hasNextPage, setHasNextPage] = useState<boolean>(
     lgtms.length === perPage,
   );
   const [reportingLgtmId, setReportingLgtmId] = useState<string | null>(null);
-
-  const handleClickLgtm = useCallback(
-    (lgtmId: string) => {
-      copy(`![LGTM](${lgtmUrl(lgtmId)})`);
-      enqueueToast(t.copiedToClipboard);
-    },
-    [enqueueToast, t],
-  );
 
   const handleClickLoadMore = useCallback(async () => {
     const after = lgtms.slice(-1)[0]?.id;
