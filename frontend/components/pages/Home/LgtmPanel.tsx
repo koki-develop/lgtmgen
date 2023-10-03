@@ -3,8 +3,7 @@ import { ModelsLGTM } from "@/lib/generated/api";
 import clsx from "clsx";
 import { useI18n } from "@/providers/I18nProvider";
 import { useFetchLgtms } from "@/lib/models/lgtm/lgtmHooks";
-import ReportForm from "./ReportForm";
-import LgtmCard from "./LgtmCard";
+import LgtmCardList from "./LgtmCardList";
 
 export type LgtmPanelProps = {
   perPage: number;
@@ -31,7 +30,6 @@ export default function LgtmPanel({
   const [hasNextPage, setHasNextPage] = useState<boolean>(
     lgtms.length === perPage,
   );
-  const [reportingLgtmId, setReportingLgtmId] = useState<string | null>(null);
 
   const handleClickLoadMore = useCallback(async () => {
     const after = lgtms.slice(-1)[0]?.id;
@@ -40,33 +38,15 @@ export default function LgtmPanel({
     setHasNextPage(loadedLgtms.length === perPage);
   }, [fetchLgtms, lgtms, onLoaded, perPage]);
 
-  const handleStartReport = useCallback((id: string) => {
-    setReportingLgtmId(id);
-  }, []);
-
-  const handleCloseReportForm = useCallback(() => {
-    setReportingLgtmId(null);
-  }, []);
-
   return (
     <>
-      <ReportForm lgtmId={reportingLgtmId} onClose={handleCloseReportForm} />
-
       <div className="flex flex-col gap-4">
-        <ul className="grid grid-cols-4 gap-4">
-          {lgtms.map((lgtm) => (
-            <li key={lgtm.id}>
-              <LgtmCard
-                className="h-full"
-                lgtm={lgtm}
-                favorites={favorites}
-                onFavorite={onFavorite}
-                onUnfavorite={onUnfavorite}
-                onStartReport={handleStartReport}
-              />
-            </li>
-          ))}
-        </ul>
+        <LgtmCardList
+          lgtmIds={lgtms.map((lgtm) => lgtm.id)}
+          favorites={favorites}
+          onFavorite={onFavorite}
+          onUnfavorite={onUnfavorite}
+        />
 
         <div className="flex justify-center">
           <button

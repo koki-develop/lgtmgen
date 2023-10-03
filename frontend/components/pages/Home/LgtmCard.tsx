@@ -11,13 +11,13 @@ import { CheckIcon, DocumentDuplicateIcon } from "@heroicons/react/24/outline";
 export type LgtmCardProps = {
   className?: string;
 
-  lgtm: ModelsLGTM;
+  lgtmId: string;
   favorites: string[];
 } & Omit<ImageCardButtonsProps, "lgtmId" | "favorited">;
 
 export default function LgtmCard({
   className,
-  lgtm,
+  lgtmId,
   favorites,
   ...buttonProps
 }: LgtmCardProps) {
@@ -27,15 +27,15 @@ export default function LgtmCard({
   const [copied, setCopied] = useState<boolean>(false);
 
   const favorited = useMemo(
-    () => favorites.includes(lgtm.id),
-    [favorites, lgtm.id],
+    () => favorites.includes(lgtmId),
+    [favorites, lgtmId],
   );
 
   const handleClickLgtm = useCallback(() => {
-    copy(`![LGTM](${lgtmUrl(lgtm.id)})`);
+    copy(`![LGTM](${lgtmUrl(lgtmId)})`);
     setCopied(true);
     enqueueToast(t.copiedToClipboard);
-  }, [enqueueToast, lgtm.id, t]);
+  }, [enqueueToast, lgtmId, t]);
 
   useEffect(() => {
     if (copied) {
@@ -52,7 +52,7 @@ export default function LgtmCard({
   return (
     <ImageCard
       className={className}
-      src={lgtmUrl(lgtm.id)}
+      src={lgtmUrl(lgtmId)}
       alt="LGTM"
       icon={
         copied ? (
@@ -64,7 +64,7 @@ export default function LgtmCard({
       onClick={handleClickLgtm}
     >
       <ImageCardButtons
-        lgtmId={lgtm.id}
+        lgtmId={lgtmId}
         favorited={favorited}
         {...buttonProps}
       />
