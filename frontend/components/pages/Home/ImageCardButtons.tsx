@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useState } from "react";
+import React, { useCallback, useEffect, useMemo, useState } from "react";
 import clsx from "clsx";
 import {
   CheckIcon,
@@ -12,28 +12,33 @@ import copy from "copy-to-clipboard";
 import { useToast } from "@/lib/toast";
 import { useI18n } from "@/providers/I18nProvider";
 import { lgtmUrl } from "@/lib/image";
+import { useStorage } from "@/lib/storage";
 
 export type ImageCardButtonsProps = {
   lgtmId: string;
-  favorited: boolean;
+  favorites: string[];
 
-  onFavorite: (id: string) => void;
-  onUnfavorite: (id: string) => void;
+  onChangeFavorites: (favorites: string[]) => void;
   onStartReport: (id: string) => void;
 };
 
 // TODO: Refactor
 export default function ImageCardButtons({
   lgtmId,
-  favorited,
-  onFavorite,
-  onUnfavorite,
+  favorites,
+  onChangeFavorites,
   onStartReport,
 }: ImageCardButtonsProps) {
   const { t } = useI18n();
   const { enqueueToast } = useToast();
+  const { saveFavorites } = useStorage();
 
   const [copied, setCopied] = useState<boolean>(false);
+
+  const favorited = useMemo(
+    () => favorites.includes(lgtmId),
+    [favorites, lgtmId],
+  );
 
   const handleClickMarkdown = useCallback(() => {
     copy(`![LGTM](${lgtmUrl(lgtmId)})`);
@@ -48,12 +53,17 @@ export default function ImageCardButtons({
   }, [enqueueToast, lgtmId, t]);
 
   const handleClickFavorite = useCallback(() => {
-    if (favorited) {
-      onUnfavorite(lgtmId);
-    } else {
-      onFavorite(lgtmId);
-    }
-  }, [lgtmId, favorited, onFavorite, onUnfavorite]);
+    const next = (() => {
+      if (favorited) {
+        return favorites.filter((id) => id !== lgtmId);
+      } else {
+        return [lgtmId, ...favorites];
+      }
+    })();
+
+    saveFavorites(next);
+    onChangeFavorites(next);
+  }, [favorited, favorites, lgtmId, onChangeFavorites, saveFavorites]);
 
   const handleClickReport = useCallback(() => {
     onStartReport(lgtmId);

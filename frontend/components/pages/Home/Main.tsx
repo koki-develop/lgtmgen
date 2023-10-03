@@ -10,6 +10,7 @@ import { i18n } from "@/lib/i18n";
 import clsx from "clsx";
 import { LgtmUploader } from "./LgtmUploader";
 import { useStorage } from "@/lib/storage";
+import FavoritePanel from "./FavoritePanel";
 
 export type MainProps = {
   locale: string;
@@ -61,27 +62,9 @@ export default function Main({ locale, initialData, perPage }: MainProps) {
     setFavorites(favorites);
   }, [loadFavorites]);
 
-  const handleFavorite = useCallback(
-    (id: string) => {
-      setFavorites((prev) => {
-        const next = [...prev, id];
-        saveFavorites(next);
-        return next;
-      });
-    },
-    [saveFavorites],
-  );
-
-  const handleUnfavorite = useCallback(
-    (id: string) => {
-      setFavorites((prev) => {
-        const next = prev.filter((v) => v !== id);
-        saveFavorites(next);
-        return next;
-      });
-    },
-    [saveFavorites],
-  );
+  const handleChangeFavorites = useCallback((favorites: string[]) => {
+    setFavorites(favorites);
+  }, []);
 
   // Render
   return (
@@ -111,8 +94,7 @@ export default function Main({ locale, initialData, perPage }: MainProps) {
               favorites={favorites}
               perPage={perPage}
               onLoaded={handleLoaded}
-              onFavorite={handleFavorite}
-              onUnfavorite={handleUnfavorite}
+              onChangeFavorites={handleChangeFavorites}
             />
           </Tab.Panel>
 
@@ -123,6 +105,13 @@ export default function Main({ locale, initialData, perPage }: MainProps) {
               onChangeQuery={handleChangeQuery}
               onSearched={handleSearched}
               onGenerated={handleGenerated}
+            />
+          </Tab.Panel>
+
+          <Tab.Panel>
+            <FavoritePanel
+              favorites={favorites}
+              onChangeFavorites={handleChangeFavorites}
             />
           </Tab.Panel>
         </Tab.Panels>

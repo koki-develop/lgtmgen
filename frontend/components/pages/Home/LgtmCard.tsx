@@ -65,7 +65,7 @@ export default function LgtmCard({
     >
       <ImageCardButtons
         lgtmId={lgtmId}
-        favorited={favorited}
+        favorites={favorites}
         {...buttonProps}
       />
     </ImageCard>

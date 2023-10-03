@@ -11,8 +11,7 @@ export type LgtmPanelProps = {
   favorites: string[];
 
   onLoaded: (lgtms: ModelsLGTM[]) => void;
-  onFavorite: (id: string) => void;
-  onUnfavorite: (id: string) => void;
+  onChangeFavorites: (favorites: string[]) => void;
 };
 
 export default function LgtmPanel({
@@ -21,8 +20,7 @@ export default function LgtmPanel({
   favorites,
 
   onLoaded,
-  onFavorite,
-  onUnfavorite,
+  onChangeFavorites,
 }: LgtmPanelProps) {
   const { t } = useI18n();
   const { fetchLgtms, fetching } = useFetchLgtms(perPage);
@@ -44,8 +42,7 @@ export default function LgtmPanel({
         <LgtmCardList
           lgtmIds={lgtms.map((lgtm) => lgtm.id)}
           favorites={favorites}
-          onFavorite={onFavorite}
-          onUnfavorite={onUnfavorite}
+          onChangeFavorites={onChangeFavorites}
         />
 
         <div className="flex justify-center">
