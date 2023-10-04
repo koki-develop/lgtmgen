@@ -38,6 +38,8 @@ func NewEngine(ctx context.Context) (*gin.Engine, error) {
 		v1.POST("/reports", svc.CreateReport)
 
 		v1.GET("/images", rl.Apply("get/images", 5), svc.SearchImages) // TODO: 5 -> 30
+
+		v1.GET("/news", svc.ListNews)
 	}
 
 	return e, nil
