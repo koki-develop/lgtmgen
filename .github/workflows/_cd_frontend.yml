@@ -20,8 +20,13 @@ jobs:
     env:
       NEXT_PUBLIC_API_BASE_URL: ${{ vars.API_BASE_URL }}
       NEXT_PUBLIC_IMAGES_BASE_URL: ${{ vars.IMAGES_BASE_URL }}
+      # Vercel
       VERCEL_ORG_ID: ${{ vars.VERCEL_ORG_ID }}
       VERCEL_PROJECT_ID: ${{ vars.VERCEL_PROJECT_ID }}
+      # Sentry
+      NEXT_PUBLIC_SENTRY_ORG: ${{ vars.SENTRY_ORG }}
+      NEXT_PUBLIC_SENTRY_PROJECT: ${{ vars.SENTRY_PROJECT_FRONTEND }}
+      NEXT_PUBLIC_SENTRY_DSN: ${{ vars.SENTRY_DSN_FRONTEND }}
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v3
@@ -37,15 +42,11 @@ jobs:
         run: |
           yarn run vercel pull --yes --token=${{ secrets.vercel-token }}
           yarn run vercel build --token=${{ secrets.vercel-token }}
-          yarn run vercel deploy --prebuilt --token=${{ secrets.vercel-token }} \
-            --env NEXT_PUBLIC_API_BASE_URL=${{ env.NEXT_PUBLIC_API_BASE_URL }} \
-            --env NEXT_PUBLIC_IMAGES_BASE_URL=${{ env.NEXT_PUBLIC_IMAGES_BASE_URL }}
+          yarn run vercel deploy --prebuilt --token=${{ secrets.vercel-token }}
 
       - name: Deploy (prd)
         if: ${{ inputs.environment == 'prd' }}
         run: |
           yarn run vercel pull --yes --environment=production --token=${{ secrets.vercel-token }}
           yarn run vercel build --prod --token=${{ secrets.vercel-token }}
-          yarn run vercel deploy --prebuilt --prod --token=${{ secrets.vercel-token }} \
-            --env NEXT_PUBLIC_API_BASE_URL=${{ env.NEXT_PUBLIC_API_BASE_URL }} \
-            --env NEXT_PUBLIC_IMAGES_BASE_URL=${{ env.NEXT_PUBLIC_IMAGES_BASE_URL }}
+          yarn run vercel deploy --prebuilt --prod --token=${{ secrets.vercel-token }}
