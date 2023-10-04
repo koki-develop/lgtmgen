@@ -55,7 +55,9 @@ export default function ReportForm({ lgtmId, onClose }: ReportFormProps) {
 
   const handleChangeText = useCallback(
     (e: React.ChangeEvent<HTMLTextAreaElement>) => {
-      setText(e.target.value);
+      const text = e.target.value;
+      if (text.length > 1000) return;
+      setText(text);
     },
     [],
   );
