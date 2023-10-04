@@ -68,6 +68,7 @@ export default function SearchImagePanel({
     <>
       <LgtmPreview
         src={url}
+        open={Boolean(url)}
         onCancel={handleClosePreview}
         generating={generating}
         onGenerate={handleGenerate}
