@@ -3,6 +3,7 @@ package service
 import (
 	"net/http"
 	"strings"
+	"unicode/utf8"
 
 	"github.com/gin-gonic/gin"
 	"github.com/koki-develop/lgtmgen/backend/internal/log"
@@ -28,6 +29,11 @@ func (s *imageService) SearchImages(ctx *gin.Context) {
 	q := ctx.Query("q")
 	if strings.TrimSpace(q) == "" {
 		log.Info(ctx, "query is empty")
+		renderError(ctx, http.StatusBadRequest, ErrCodeBadRequest)
+		return
+	}
+	if utf8.RuneCountInString(q) > 255 {
+		log.Info(ctx, "query is too long")
 		renderError(ctx, http.StatusBadRequest, ErrCodeBadRequest)
 		return
 	}
