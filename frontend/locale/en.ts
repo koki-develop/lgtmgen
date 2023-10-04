@@ -25,6 +25,7 @@ const en: I18n = {
   failedToGenerate: "Failed to generate LGTM.",
   successToSend: "Sent.",
   failedToSend: "Failed to send.",
+  fileTooLarge: "File size is too large.",
   unsupportedImageFormat: "Unsupported image format.",
   copiedToClipboard: "Copied to clipboard.",
   rateLimitReached:

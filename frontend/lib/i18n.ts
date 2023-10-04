@@ -25,6 +25,7 @@ export type I18n = {
   successToSend: string;
   failedToSend: string;
 
+  fileTooLarge: string;
   unsupportedImageFormat: string;
   copiedToClipboard: string;
   rateLimitReached: string;
