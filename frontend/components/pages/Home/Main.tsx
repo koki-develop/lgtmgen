@@ -66,6 +66,7 @@ export default function Main({
   const [query, setQuery] = useState<string>("");
 
   const handleChangeQuery = useCallback((query: string) => {
+    if (query.length > 255) return;
     setQuery(query);
   }, []);
 
