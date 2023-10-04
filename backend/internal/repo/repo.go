@@ -20,6 +20,7 @@ type Repository struct {
 	*reportRepository
 	*notificationsRepository
 	*imageRepository
+	*newsRepository
 	*rateRepository
 }
 
@@ -60,6 +61,7 @@ func New(ctx context.Context) (*Repository, error) {
 		reportRepository:        newReportRepository(dbClient, queueClient),
 		imageRepository:         newImageRepository(env.Vars.SearchEngineID, search),
 		rateRepository:          newRateRepository(dbClient),
+		newsRepository:          newNewsRepository(storageClient),
 		notificationsRepository: newNotificationsRepository(queueClient, slackClient),
 	}, nil
 }
