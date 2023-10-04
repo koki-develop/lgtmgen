@@ -11,6 +11,7 @@ type Service struct {
 	*reportService
 	*notificationService
 	*imageService
+	*newsService
 	*healthService
 }
 
@@ -20,6 +21,7 @@ func New(ctx context.Context, repo *repo.Repository) (*Service, error) {
 		reportService:       newReportService(repo),
 		notificationService: newNotificationService(repo),
 		imageService:        newImageService(repo),
+		newsService:         newNewsService(repo),
 		healthService:       newHealthService(),
 	}, nil
 }
