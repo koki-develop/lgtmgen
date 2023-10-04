@@ -18,6 +18,12 @@ export interface ModelsLGTM {
   id: string;
 }
 
+export interface ModelsNews {
+  content?: string;
+  date?: string;
+  title?: string;
+}
+
 export interface ModelsReport {
   created_at?: string;
   id?: string;
@@ -319,6 +325,26 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
         method: "POST",
         body: body,
         type: ContentType.Json,
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @name NewsList
+     * @request GET:/v1/news
+     */
+    newsList: (
+      query?: {
+        /** locale */
+        locale?: string;
+      },
+      params: RequestParams = {},
+    ) =>
+      this.request<ModelsNews[], ServiceErrorResponse>({
+        path: `/v1/news`,
+        method: "GET",
+        query: query,
         ...params,
       }),
 

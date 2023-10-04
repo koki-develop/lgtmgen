@@ -134,6 +134,35 @@ const docTemplate = `{
                 }
             }
         },
+        "/v1/news": {
+            "get": {
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "locale",
+                        "name": "locale",
+                        "in": "query"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/models.News"
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/service.ErrorResponse"
+                        }
+                    }
+                }
+            }
+        },
         "/v1/reports": {
             "post": {
                 "consumes": [
@@ -196,6 +225,20 @@ const docTemplate = `{
             ],
             "properties": {
                 "id": {
+                    "type": "string"
+                }
+            }
+        },
+        "models.News": {
+            "type": "object",
+            "properties": {
+                "content": {
+                    "type": "string"
+                },
+                "date": {
+                    "type": "string"
+                },
+                "title": {
                     "type": "string"
                 }
             }
