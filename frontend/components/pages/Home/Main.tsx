@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useCallback, useEffect, useState } from "react";
-import { ModelsImage, ModelsLGTM } from "@/lib/generated/api";
+import { ModelsImage, ModelsLGTM, ModelsNews } from "@/lib/generated/api";
 import LgtmPanel from "./LgtmPanel";
 import SearchImagePanel from "./SearchImagePanel";
 import { Tab } from "@headlessui/react";
@@ -13,6 +13,7 @@ import FavoritePanel from "./FavoritePanel";
 
 export type MainProps = {
   locale: string;
+  newsList: ModelsNews[];
   initialData: ModelsLGTM[];
   initialRandomData: ModelsLGTM[];
   perPage: number;
@@ -20,6 +21,7 @@ export type MainProps = {
 
 export default function Main({
   locale,
+  newsList,
   initialData,
   initialRandomData,
   perPage,
@@ -110,7 +112,33 @@ export default function Main({
 
   // Render
   return (
-    <div>
+    <div className="flex flex-col gap-4">
+      <div className="flex flex-col gap-2">
+        {newsList.map((news, i) => (
+          <div
+            key={i}
+            className="flex flex-col gap-1 rounded border border-primary-main bg-blue-100 p-2 text-primary-dark shadow-md"
+          >
+            <div>
+              {news.title && (
+                <div className="text-lg font-bold">{news.title}</div>
+              )}
+
+              {news.date && <div className="mb-1 text-xs">{news.date}</div>}
+            </div>
+
+            {news.content && (
+              <div
+                className="whitespace-pre-wrap text-sm"
+                dangerouslySetInnerHTML={{
+                  __html: news.content,
+                }}
+              />
+            )}
+          </div>
+        ))}
+      </div>
+
       <Tab.Group>
         <Tab.List className="mb-4 flex rounded-t bg-white shadow-md">
           {[t.lgtm, t.searchImage, t.favorite].map((label) => (
