@@ -49,6 +49,15 @@ provider:
                 - - "arn:aws:s3:::"
                   - ${self:custom.prefix}-images
                   - /*
+            - Fn::Join:
+                - ""
+                - - "arn:aws:s3:::"
+                  - ${self:custom.prefix}-news
+            - Fn::Join:
+                - ""
+                - - "arn:aws:s3:::"
+                  - ${self:custom.prefix}-news
+                  - /*
         - Effect: Allow
           Action:
             - sqs:SendMessage
