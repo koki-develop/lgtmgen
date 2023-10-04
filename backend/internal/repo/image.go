@@ -2,6 +2,7 @@ package repo
 
 import (
 	"context"
+	"net/url"
 
 	"github.com/cockroachdb/errors"
 	"github.com/koki-develop/lgtmgen/backend/internal/models"
@@ -37,6 +38,14 @@ func (r *imageRepository) SearchImages(ctx context.Context, q string) (models.Im
 
 	imgs := models.Images{}
 	for _, item := range resp.Items {
+		u, err := url.ParseRequestURI(item.Link)
+		if err != nil {
+			continue
+		}
+		if u.Scheme != "https" {
+			continue
+		}
+
 		exclude := []string{"image/svg+xml"}
 		if util.Contains(exclude, item.Mime) {
 			continue
