@@ -7,5 +7,6 @@ variable "tier" {
 }
 
 variable "distribution_arn" {
-  type = string
+  type    = string
+  default = null
 }

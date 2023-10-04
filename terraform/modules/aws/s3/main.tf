@@ -22,11 +22,15 @@ resource "aws_s3_bucket_server_side_encryption_configuration" "main" {
 }
 
 resource "aws_s3_bucket_policy" "main" {
+  count = var.distribution_arn != null ? 1 : 0
+
   bucket = aws_s3_bucket.main.id
-  policy = data.aws_iam_policy_document.s3_main_policy.json
+  policy = data.aws_iam_policy_document.s3_main_policy[0].json
 }
 
 data "aws_iam_policy_document" "s3_main_policy" {
+  count = var.distribution_arn != null ? 1 : 0
+
   statement {
     principals {
       type        = "Service"
