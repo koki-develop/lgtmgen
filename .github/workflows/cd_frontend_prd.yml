@@ -10,5 +10,7 @@ jobs:
     uses: ./.github/workflows/_cd_frontend.yml
     with:
       environment: prd
+      version: ${{ github.ref }}
     secrets:
       vercel-token: ${{ secrets.VERCEL_TOKEN }}
+      sentry-auth-token: ${{ secrets.sentry-auth-token }}
