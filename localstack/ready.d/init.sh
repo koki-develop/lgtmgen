@@ -4,10 +4,14 @@ set -euo pipefail
 
 readonly RESOURCE_PREFIX="lgtmgen-local"
 
-# Create Public S3 Bucket
+# Create S3 Buckets
 awslocal s3api create-bucket \
   --bucket ${RESOURCE_PREFIX}-images \
   --acl public-read
+
+awslocal s3api create-bucket \
+  --bucket ${RESOURCE_PREFIX}-news \
+  --acl private
 
 # Create DynamoDB Tables
 awslocal dynamodb create-table \
