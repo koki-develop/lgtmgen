@@ -1,18 +1,22 @@
 import { ModelsLGTM } from "@/lib/generated/api";
-import { dataUrlToBase64, fileToDataUrl } from "@/lib/image";
+import { dataUrlToBase64, fileToDataUrl, resizeDataUrl } from "@/lib/image";
 import { useI18n } from "@/providers/I18nProvider";
 import { PlusCircleIcon } from "@heroicons/react/24/solid";
 import React, { useCallback, useRef } from "react";
 import LgtmPreview from "./LgtmPreview";
 import clsx from "clsx";
 import { useGenerateLgtm } from "@/lib/models/lgtm/lgtmHooks";
+import { useToast } from "@/lib/toast";
 
 export type LgtmUploaderProps = {
   onUploaded: (lgtm: ModelsLGTM) => void;
 };
 
+const maxSideLength = 425;
+
 export const LgtmUploader = ({ onUploaded }: LgtmUploaderProps) => {
   const { t } = useI18n();
+  const { enqueueToast } = useToast();
 
   const [file, setFile] = React.useState<File | null>(null);
   const [imageDataUrl, setImageDataUrl] = React.useState<string | null>(null);
@@ -31,11 +35,26 @@ export const LgtmUploader = ({ onUploaded }: LgtmUploaderProps) => {
       if (!e.target.files) return;
 
       const file = e.target.files[0];
-      const dataUrl = await fileToDataUrl(file);
+      let dataUrl = await fileToDataUrl(file);
+
+      switch (file.type) {
+        case "image/jpeg":
+        case "image/png":
+          dataUrl = await resizeDataUrl(dataUrl, maxSideLength, file.type);
+          break;
+        default:
+          const sizeLimit = 1024 * 1024 * 4; // 4MB
+          if (file.size > sizeLimit) {
+            enqueueToast(`${t.fileTooLarge}: ${file.name}`, "error");
+            return;
+          }
+          break;
+      }
+
       setFile(file);
       setImageDataUrl(dataUrl);
     },
-    [],
+    [enqueueToast, t],
   );
 
   const handleClosePreview = useCallback(() => {
