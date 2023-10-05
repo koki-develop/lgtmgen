@@ -10,7 +10,7 @@ export default function UsagePrecautions() {
     <div className="flex flex-col gap-4">
       <h2 className="text-3xl">{t.usagePrecautions}</h2>
 
-      <ul className="list-disc">
+      <ul className="list-disc pl-4">
         {t.usagePrecautionsItems.map((item, i) => (
           <li key={i} className="">
             {item}

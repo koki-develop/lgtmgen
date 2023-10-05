@@ -40,9 +40,6 @@ func (ipt createReportInput) Validate() error {
 		return errors.New("type is invalid")
 	}
 
-	if ipt.Text == "" {
-		return errors.New("text is required")
-	}
 	if utf8.RuneCountInString(ipt.Text) > 1000 {
 		return errors.New("text is too long")
 	}

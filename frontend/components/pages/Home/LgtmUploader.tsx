@@ -104,6 +104,7 @@ export const LgtmUploader = ({ onUploaded }: LgtmUploaderProps) => {
       <LgtmPreview
         generating={generating}
         src={imageDataUrl}
+        alt={file?.name ?? null}
         open={openPreview}
         onCancel={handleClosePreview}
         onGenerate={handleGenerate}

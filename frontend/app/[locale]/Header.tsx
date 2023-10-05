@@ -21,18 +21,18 @@ export default function Header() {
     <header className="flex justify-center bg-primary-main shadow">
       <div className="container flex px-4 py-2">
         <h1
-          className="flex-grow text-3xl text-white"
+          className="flex-grow text-2xl text-white sm:text-3xl"
           style={{ fontFamily: "Archivo Black" }}
         >
           <Link href={`/${locale}`}>{t.app}</Link>
         </h1>
-        <div className="flex justify-center px-2">
+        <div className="relative flex justify-center px-2">
           <Menu>
             <Menu.Button className="flex items-center text-white">
               <ChevronDownIcon className="h-3 w-3" />
               <LanguageIcon className="h-6 w-6" />
             </Menu.Button>
-            <Menu.Items className="absolute flex flex-col divide-y overflow-hidden rounded bg-white text-gray-600 shadow-md">
+            <Menu.Items className="absolute -left-8 top-4 flex flex-col divide-y overflow-hidden rounded bg-white text-gray-600 shadow-md">
               <Menu.Item>
                 {({ active }) => (
                   <Link

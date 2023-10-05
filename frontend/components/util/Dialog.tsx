@@ -42,19 +42,19 @@ export default function Dialog({
 
   return (
     <HeadlessDialog open={open} onClose={handleClose}>
-      <div className="fixed inset-0 bg-black/30" />
+      <div className="fixed inset-0 z-30 bg-black/30" />
 
-      <div className="fixed inset-0 flex items-center justify-center">
-        <HeadlessDialog.Panel className="flex flex-col items-center gap-4 rounded bg-white p-4">
+      <div className="container fixed inset-0 z-40 mx-auto flex w-full items-center justify-center px-4 py-2">
+        <HeadlessDialog.Panel className="flex max-h-full max-w-full flex-col items-center gap-4 overflow-y-auto rounded bg-white p-4">
           {title && <HeadlessDialog.Title>{title}</HeadlessDialog.Title>}
 
           {children}
 
-          <div className="flex gap-2">
+          <div className="flex w-full gap-2">
             <button
               className={clsx(
-                "button-secondary",
-                "w-64 flex-grow rounded py-2 shadow-md",
+                "button-secondary text-sm sm:text-base",
+                "w-full flex-grow rounded py-2 shadow-md",
               )}
               onClick={handleClose}
               disabled={loading}
@@ -63,8 +63,8 @@ export default function Dialog({
             </button>
             <button
               className={clsx(
-                "button-primary",
-                "w-64 flex-grow rounded py-2 shadow-md transition",
+                "button-primary text-sm sm:text-base",
+                "w-full flex-grow rounded py-2 shadow-md transition",
               )}
               onClick={handleSubmit}
               disabled={loading || disabled}

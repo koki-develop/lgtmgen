@@ -70,7 +70,9 @@ export default function LgtmPanel({
           >
             <span
               className={clsx(
-                "relative flex h-[32px] w-[60px] items-center rounded-full border shadow-inner transition",
+                "relative flex items-center rounded-full border shadow-inner transition",
+                "h-[28px] w-[56px]",
+                "sm:h-[32px] sm:w-[60px]",
                 {
                   "bg-primary-main": randomly,
                   "bg-gray-300": !randomly,
@@ -79,7 +81,9 @@ export default function LgtmPanel({
             >
               <span
                 className={clsx(
-                  "absolute inline-block h-[24px] w-[24px] rounded-full bg-white transition",
+                  "absolute inline-block rounded-full bg-white transition",
+                  "h-[20px] w-[20px]",
+                  "sm:h-[24px] sm:w-[24px]",
                   {
                     "translate-x-[4px]": !randomly,
                     "translate-x-[30px]": randomly,
@@ -87,7 +91,7 @@ export default function LgtmPanel({
                 )}
               />
             </span>
-            <span>{t.random}</span>
+            <span className="text-sm sm:text-base">{t.random}</span>
           </Switch>
         </div>
 

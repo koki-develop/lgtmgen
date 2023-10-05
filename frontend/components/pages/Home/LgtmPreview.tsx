@@ -4,6 +4,7 @@ import React from "react";
 
 export type LgtmPreviewProps = {
   src: string | null;
+  alt: string | null;
   generating: boolean;
   open: boolean;
 
@@ -13,6 +14,7 @@ export type LgtmPreviewProps = {
 
 export default function LgtmPreview({
   src,
+  alt,
   generating,
   open,
   onCancel,
@@ -26,13 +28,17 @@ export default function LgtmPreview({
       submitText={t.generate}
       open={open}
       loading={generating}
-      disabled={generating}
+      disabled={!Boolean(src) || generating}
       onSubmit={onGenerate}
       onClose={onCancel}
     >
-      <div className="h-72">
+      <div>
         {src ? (
-          <img className="h-full max-w-full border" src={src} alt="" />
+          <img
+            className="max-h-60 max-w-full border sm:max-h-72"
+            src={src}
+            alt={alt ?? ""}
+          />
         ) : (
           <div className="flex h-full items-center">
             <div className="loader" />

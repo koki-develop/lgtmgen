@@ -24,7 +24,7 @@ export default function LgtmCardList({
     <>
       <ReportForm lgtmId={reportingLgtmId} onClose={handleCloseReportForm} />
 
-      <ul className="grid grid-cols-4 gap-4">
+      <ul className="grid grid-cols-2 gap-4 sm:grid-cols-3 md:grid-cols-4">
         {lgtmIds.map((id) => (
           <li key={id}>
             <LgtmCard

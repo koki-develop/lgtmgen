@@ -1,5 +1,4 @@
-import { ModelsLGTM } from "@/lib/generated/api";
-import React, { useCallback, useEffect, useMemo, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import ImageCard from "./ImageCard";
 import ImageCardButtons, { ImageCardButtonsProps } from "./ImageCardButtons";
 import { useI18n } from "@/providers/I18nProvider";
@@ -25,11 +24,6 @@ export default function LgtmCard({
   const { enqueueToast } = useToast();
 
   const [copied, setCopied] = useState<boolean>(false);
-
-  const favorited = useMemo(
-    () => favorites.includes(lgtmId),
-    [favorites, lgtmId],
-  );
 
   const handleClickLgtm = useCallback(() => {
     copy(`![LGTM](${lgtmUrl(lgtmId)})`);

@@ -29,7 +29,7 @@ export default function SearchImagePanel({
   const { generateLgtm, generating } = useGenerateLgtm();
   const { searchImages, searching } = useSearchImages();
 
-  const [url, setUrl] = useState<string | null>(null);
+  const [image, setImage] = useState<ModelsImage | null>(null);
 
   const handleChangeQuery = useCallback(
     (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -39,7 +39,7 @@ export default function SearchImagePanel({
   );
 
   const handleClosePreview = useCallback(() => {
-    setUrl(null);
+    setImage(null);
   }, []);
 
   const handleSearch = useCallback(async () => {
@@ -51,24 +51,25 @@ export default function SearchImagePanel({
   }, [query, searchImages, onSearched]);
 
   const handleClickImage = useCallback(async (image: ModelsImage) => {
-    setUrl(image.url);
+    setImage(image);
   }, []);
 
   const handleGenerate = useCallback(async () => {
-    if (!url) return;
+    if (!image) return;
 
-    const lgtm = await generateLgtm({ url });
+    const lgtm = await generateLgtm({ url: image.url });
     if (lgtm) {
       onGenerated(lgtm);
       handleClosePreview();
     }
-  }, [url, generateLgtm, onGenerated, handleClosePreview]);
+  }, [image, generateLgtm, onGenerated, handleClosePreview]);
 
   return (
     <>
       <LgtmPreview
-        src={url}
-        open={Boolean(url)}
+        src={image?.url ?? null}
+        alt={image?.title ?? null}
+        open={Boolean(image?.url)}
         onCancel={handleClosePreview}
         generating={generating}
         onGenerate={handleGenerate}
@@ -78,7 +79,7 @@ export default function SearchImagePanel({
         <Form onSubmit={handleSearch}>
           <div className="flex overflow-hidden rounded bg-white shadow-md">
             <input
-              className="flex-grow p-4 outline-none"
+              className="flex-grow px-4 py-3 text-sm outline-none sm:py-4 sm:text-base"
               disabled={searching}
               type="search"
               placeholder={t.keyword}
@@ -97,7 +98,7 @@ export default function SearchImagePanel({
         </Form>
 
         <div>
-          <ul className="grid grid-cols-4 gap-4">
+          <ul className="grid grid-cols-2 gap-4 sm:grid-cols-3 md:grid-cols-4">
             {images.map((image) => (
               <li key={image.url}>
                 <ImageCard

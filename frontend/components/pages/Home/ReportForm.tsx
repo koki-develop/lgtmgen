@@ -24,9 +24,8 @@ export default function ReportForm({ lgtmId, onClose }: ReportFormProps) {
 
   const isValid = useMemo(() => {
     if (type == null) return false;
-    if (text.trim() === "") return false;
     return true;
-  }, [type, text]);
+  }, [type]);
 
   const handleClose = useCallback(() => {
     onClose();
@@ -37,7 +36,6 @@ export default function ReportForm({ lgtmId, onClose }: ReportFormProps) {
   const handleClickSend = useCallback(async () => {
     if (lgtmId == null) return;
     if (type == null) return;
-    if (text.trim() === "") return;
 
     const report = await sendReport({
       lgtm_id: lgtmId,
@@ -73,7 +71,7 @@ export default function ReportForm({ lgtmId, onClose }: ReportFormProps) {
     >
       {lgtmId && (
         <img
-          className="max-h-72 max-w-full border"
+          className="max-h-60 max-w-full border sm:max-h-72"
           src={lgtmUrl(lgtmId)}
           alt=""
         />
@@ -96,12 +94,14 @@ export default function ReportForm({ lgtmId, onClose }: ReportFormProps) {
                   },
                 )}
               >
-                {checked ? (
-                  <CheckCircleIcon className="h-6 w-6 text-primary-main" />
-                ) : (
-                  <CheckCircleIconOutline className="h-6 w-6 text-gray-400" />
-                )}
-                {t[type]}
+                <span>
+                  {checked ? (
+                    <CheckCircleIcon className="h-6 w-6 text-primary-main" />
+                  ) : (
+                    <CheckCircleIconOutline className="h-6 w-6 text-gray-400" />
+                  )}
+                </span>
+                <span className="text-sm sm:text-base">{t[type]}</span>
               </div>
             )}
           </RadioGroup.Option>

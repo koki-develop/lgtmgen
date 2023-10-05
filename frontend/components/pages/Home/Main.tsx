@@ -113,7 +113,7 @@ export default function Main({
 
   // Render
   return (
-    <div className="flex flex-col gap-4">
+    <div className="flex flex-col">
       <div className="flex flex-col gap-2">
         {newsList.map((news, i) => (
           <div
@@ -146,7 +146,8 @@ export default function Main({
             <Tab
               key={label}
               className={clsx(
-                "flex-grow py-4 outline-none transition",
+                "text-sm sm:text-base",
+                "flex-grow py-3 outline-none transition sm:py-4",
                 "border-b-2 border-b-white",
                 "hover:border-b-gray-100 hover:bg-gray-100",
                 "ui-selected:border-b-primary-main ui-selected:font-semibold ui-selected:text-primary-main ui-not-selected:text-gray-400",
