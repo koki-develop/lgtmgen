@@ -5,6 +5,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import Providers from "@/providers/Providers";
 import { AiOutlineGithub } from "react-icons/ai";
+import GoogleAnalytics from "@/components/util/GoogleAnalytics";
 
 export const metadata: Metadata = {
   title: "Create Next App",
@@ -33,6 +34,7 @@ export default function RootLayout({
         </header>
 
         <Providers locale={locale}>
+          <GoogleAnalytics />
           <main className="container mx-auto p-4 py-8">{children}</main>
         </Providers>
 
