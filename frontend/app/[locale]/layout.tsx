@@ -5,6 +5,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import Providers from "@/providers/Providers";
 import { AiOutlineGithub } from "react-icons/ai";
+import Header from "./Header";
 // import GoogleAnalytics from "@/components/util/GoogleAnalytics";
 
 export const metadata: Metadata = {
@@ -24,14 +25,7 @@ export default function RootLayout({
   return (
     <html lang={locale}>
       <body className="bg-primary-light text-gray-600">
-        <header className="bg-primary-main px-4 py-2 shadow">
-          <h1
-            className="text-3xl text-white"
-            style={{ fontFamily: "Archivo Black" }}
-          >
-            <Link href={`/${locale}`}>{t.app}</Link>
-          </h1>
-        </header>
+        <Header />
 
         <Providers locale={locale}>
           {/* TODO */}
