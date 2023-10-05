@@ -1,5 +1,6 @@
 import ja from "@/locale/ja";
 import en from "@/locale/en";
+import React from "react";
 
 export type I18n = {
   app: string;
@@ -32,6 +33,13 @@ export type I18n = {
   unsupportedImageFormat: string;
   copiedToClipboard: string;
   rateLimitReached: string;
+
+  aboutTrafficAnalysisTool: string;
+  aboutTrafficAnalysisToolContent: React.ReactNode;
+  aboutPrivacyPolicyChange: string;
+  aboutPrivacyPolicyChangeContent: string;
+
+  usagePrecautionsItems: readonly string[];
 };
 
 export const i18n = (locale: string): I18n => {
