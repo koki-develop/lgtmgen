@@ -79,7 +79,7 @@ export default function SearchImagePanel({
         <Form onSubmit={handleSearch}>
           <div className="flex overflow-hidden rounded bg-white shadow-md">
             <input
-              className="flex-grow px-4 py-3 text-sm outline-none sm:py-4 sm:text-base"
+              className="flex-grow bg-white px-4 py-3 text-sm outline-none sm:py-4 sm:text-base"
               disabled={searching}
               type="search"
               placeholder={t.keyword}
