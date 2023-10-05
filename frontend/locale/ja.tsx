@@ -21,6 +21,20 @@ const ja: I18n = {
 
   privacyPolicy: "プライバシーポリシー",
   usagePrecautions: "利用上の注意",
+  pleaseReadUsagePrecautions: (locale: string) => (
+    <>
+      LGTM を生成する前に
+      <a
+        className="text-primary-main underline"
+        href={`/${locale}/usage-precautions`}
+        target="_blank"
+        rel="noopener noreferrer"
+      >
+        利用上の注意
+      </a>
+      をお読みください。
+    </>
+  ),
 
   noFavorites: "お気に入りした LGTM はありません",
   successToGenerate: "LGTM を生成しました",

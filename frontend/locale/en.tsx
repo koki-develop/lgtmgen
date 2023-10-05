@@ -23,6 +23,20 @@ const en: I18n = {
 
   privacyPolicy: "Privacy Policy",
   usagePrecautions: "Usage Precautions",
+  pleaseReadUsagePrecautions: (locale: string) => (
+    <>
+      Please read the{" "}
+      <a
+        className="text-primary-main underline"
+        href={`/${locale}/usage-precautions`}
+        target="_blank"
+        rel="noopener noreferrer"
+      >
+        usage precautions
+      </a>{" "}
+      before generating LGTM.
+    </>
+  ),
 
   noFavorites: "No favorite LGTM.",
   successToGenerate: "Successfully generated LGTM.",

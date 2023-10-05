@@ -20,7 +20,7 @@ export default function LgtmPreview({
   onCancel,
   onGenerate,
 }: LgtmPreviewProps) {
-  const { t } = useI18n();
+  const { t, locale } = useI18n();
 
   return (
     <Dialog
@@ -45,6 +45,7 @@ export default function LgtmPreview({
           </div>
         )}
       </div>
+      <div className="text-sm">{t.pleaseReadUsagePrecautions(locale)}</div>
     </Dialog>
   );
 }

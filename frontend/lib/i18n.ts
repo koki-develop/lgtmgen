@@ -24,6 +24,7 @@ export type I18n = {
 
   privacyPolicy: string;
   usagePrecautions: string;
+  pleaseReadUsagePrecautions: (locale: string) => React.ReactNode;
 
   successToGenerate: string;
   failedToGenerate: string;
