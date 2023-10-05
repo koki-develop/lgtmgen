@@ -75,10 +75,9 @@ export const LgtmUploader = ({ onUploaded }: LgtmUploaderProps) => {
     const lgtm = await generateLgtm({ base64 });
     if (lgtm) {
       onUploaded(lgtm);
-      setFile(null);
-      setImageDataUrl(null);
+      handleClosePreview();
     }
-  }, [file, imageDataUrl, generateLgtm, onUploaded]);
+  }, [file, imageDataUrl, generateLgtm, onUploaded, handleClosePreview]);
 
   return (
     <>
