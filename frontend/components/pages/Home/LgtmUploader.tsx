@@ -45,7 +45,7 @@ export const LgtmUploader = ({ onUploaded }: LgtmUploaderProps) => {
       }
 
       setOpenPreview(true);
-      const dataUrl = await (async () => {
+      await (async () => {
         const dataUrl = await fileToDataUrl(file);
         switch (file.type) {
           case "image/jpeg":
@@ -54,10 +54,15 @@ export const LgtmUploader = ({ onUploaded }: LgtmUploaderProps) => {
           default:
             return dataUrl;
         }
-      })();
-
-      setFile(file);
-      setImageDataUrl(dataUrl);
+      })()
+        .then((dataUrl) => {
+          setFile(file);
+          setImageDataUrl(dataUrl);
+        })
+        .catch(() => {
+          setOpenPreview(false);
+          enqueueToast(t.unsupportedImageFormat, "error");
+        });
     },
     [enqueueToast, t],
   );

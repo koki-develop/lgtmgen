@@ -23,8 +23,9 @@ export const resizeDataUrl = async (
   // load image
   const image = new Image();
   image.src = dataUrl;
-  await new Promise<void>((resolve) => {
+  await new Promise<void>((resolve, reject) => {
     image.onload = () => resolve();
+    image.onerror = (error) => reject(error);
   });
 
   // create canvas
