@@ -41,6 +41,11 @@ export async function generateMetadata({
     twitter: {
       card: "summary_large_image",
       site: "@koki_develop",
+      images: {
+        url: "/card.png",
+        width: 600,
+        height: 314,
+      },
     },
   };
 }

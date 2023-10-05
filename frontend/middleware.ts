@@ -12,6 +12,15 @@ const extractLocale = (headers: Negotiator.Headers) => {
 
 export function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
+
+  const excluded: (string | RegExp)[] = [
+    "/favicon.ico",
+    "/robots.txt",
+    /^\/.*\.xml/,
+    /^\/.*\.png$/,
+  ];
+  if (excluded.some((path) => pathname.match(path))) return;
+
   const pathnameHasLocale = supportedLocales.some(
     (locale) => pathname.startsWith(`/${locale}/`) || pathname === `/${locale}`,
   );
