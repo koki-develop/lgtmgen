@@ -1,0 +1,49 @@
+name: CD - backend
+
+on:
+  workflow_call:
+    inputs:
+      environment:
+        type: string
+        required: true
+    secrets:
+      google-api-key:
+        required: true
+      slack-oauth-token:
+        required: true
+
+jobs:
+  cd:
+    runs-on: ubuntu-latest
+    environment: ${{ inputs.environment }}
+    defaults:
+      run:
+        working-directory: backend
+    permissions:
+      id-token: write
+      contents: read
+    steps:
+      - uses: actions/checkout@v4
+      - uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-region: us-east-1
+          role-to-assume: ${{ vars.AWS_IAM_ROLE_ARN }}
+      - uses: actions/setup-node@v3
+        with:
+          node-version-file: backend/package.json
+          cache: yarn
+          cache-dependency-path: backend/yarn.lock
+      - name: Install dependencies
+        run: yarn install --frozen-lockfile
+
+      - uses: aws-actions/amazon-ecr-login@v1
+      - name: Deploy
+        run: yarn run deploy --stage ${{ inputs.environment }}
+        env:
+          FRONTEND_ORIGIN: ${{ vars.FRONTEND_ORIGIN }}
+          # Google
+          GOOGLE_API_KEY: ${{ secrets.google-api-key }}
+          SEARCH_ENGINE_ID: ${{ vars.SEARCH_ENGINE_ID }}
+          # Slack
+          SLACK_OAUTH_TOKEN: ${{ secrets.slack-oauth-token }}
+          IMAGES_BASE_URL: ${{ vars.IMAGES_BASE_URL }}

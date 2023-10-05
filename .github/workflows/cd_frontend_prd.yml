@@ -5,6 +5,9 @@ on:
     tags:
       - "frontend/v*"
 
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+
 jobs:
   cd:
     uses: ./.github/workflows/_cd_frontend.yml
