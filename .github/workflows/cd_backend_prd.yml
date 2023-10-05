@@ -1,0 +1,18 @@
+name: CD - backend (prd)
+
+on:
+  push:
+    tags:
+      - "backend/v*"
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+
+jobs:
+  cd:
+    uses: ./.github/workflows/_cd_backend.yml
+    with:
+      environment: prd
+    secrets:
+      google-api-key: ${{ secrets.GOOGLE_API_KEY }}
+      slack-oauth-token: ${{ secrets.SLACK_OAUTH_TOKEN }}
