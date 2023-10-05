@@ -25,6 +25,8 @@ export const useSendReport = () => {
             case ServiceErrCode.ErrCodeInternalServerError:
               enqueueToast(t.failedToSend);
               break;
+            default:
+              throw response.error;
           }
 
           return null;
