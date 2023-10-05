@@ -39,8 +39,10 @@ jobs:
         run: yarn install --frozen-lockfile
       - name: Create .env
         run: |
+          echo NEXT_PUBLIC_STAGE=${{ inputs.environment }}
           echo NEXT_PUBLIC_API_BASE_URL=${{ vars.API_BASE_URL }} >> .env
           echo NEXT_PUBLIC_IMAGES_BASE_URL=${{ vars.IMAGES_BASE_URL }} >> .env
+          echo NEXT_PUBLIC_GA_MEASUREMENT_ID=${{ vars.GA_MEASUREMENT_ID }} >> .env
           echo NEXT_PUBLIC_SENTRY_ORG=${{ vars.SENTRY_ORG }} >> .env
           echo NEXT_PUBLIC_SENTRY_PROJECT=${{ vars.SENTRY_PROJECT_FRONTEND }} >> .env
           echo NEXT_PUBLIC_SENTRY_DSN=${{ vars.SENTRY_DSN_FRONTEND }} >> .env
@@ -51,14 +53,6 @@ jobs:
           yarn run vercel pull --yes --token=${{ secrets.vercel-token }}
           yarn run vercel build --token=${{ secrets.vercel-token }}
           yarn run vercel deploy --prebuilt --token=${{ secrets.vercel-token }}
-      - uses: getsentry/action-release@v1
-        env:
-          SENTRY_AUTH_TOKEN: ${{ secrets.sentry-auth-token }}
-          SENTRY_ORG: ${{ vars.SENTRY_ORG }}
-          SENTRY_PROJECT: ${{ vars.SENTRY_PROJECT_FRONTEND }}
-        with:
-          version: ${{ inputs.version }}
-          environment: vercel-preview
 
       - name: Deploy (prd)
         if: ${{ inputs.environment == 'prd' }}
@@ -66,4 +60,12 @@ jobs:
           yarn run vercel pull --yes --environment=production --token=${{ secrets.vercel-token }}
           yarn run vercel build --prod --token=${{ secrets.vercel-token }}
           yarn run vercel deploy --prebuilt --prod --token=${{ secrets.vercel-token }}
-      # TODO: Create sentry release
+
+      - uses: getsentry/action-release@v1
+        env:
+          SENTRY_AUTH_TOKEN: ${{ secrets.sentry-auth-token }}
+          SENTRY_ORG: ${{ vars.SENTRY_ORG }}
+          SENTRY_PROJECT: ${{ vars.SENTRY_PROJECT_FRONTEND }}
+        with:
+          version: ${{ inputs.version }}
+          environment: ${{ inputs.environment }}
