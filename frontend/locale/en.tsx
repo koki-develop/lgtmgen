@@ -2,6 +2,8 @@ import { I18n } from "@/lib/i18n";
 
 const en: I18n = {
   app: "LGTM Generator",
+  description:
+    "This is a simple LGTM image generation service. LGTM stands for 'Looks Good To Me', a type of internet slang used during code reviews, among other situations.",
 
   lgtm: "LGTM",
   searchImage: "Search Image",

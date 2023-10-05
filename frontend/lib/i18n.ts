@@ -4,6 +4,8 @@ import React from "react";
 
 export type I18n = {
   app: string;
+  description: string;
+
   lgtm: string;
   searchImage: string;
   favorite: string;
