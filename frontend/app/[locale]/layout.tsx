@@ -48,10 +48,12 @@ export default function RootLayout({
               </a>
             </li>
             <li>
-              <Link href="/privacy">{t.privacyPolicy}</Link>
+              <Link href={`/${locale}/privacy`}>{t.privacyPolicy}</Link>
             </li>
             <li>
-              <Link href="/usage-precautions">{t.usagePrecautions}</Link>
+              <Link href={`/${locale}/usage-precautions`}>
+                {t.usagePrecautions}
+              </Link>
             </li>
           </ul>
 
