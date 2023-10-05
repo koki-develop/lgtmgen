@@ -11,6 +11,9 @@ concurrency:
 jobs:
   cd:
     uses: ./.github/workflows/_cd_backend.yml
+    permissions:
+      id-token: write
+      contents: read
     with:
       environment: dev
     secrets:
