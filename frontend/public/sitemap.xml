@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+  <!-- Japanese pages -->
+  <url>
+    <loc>https://www.lgtmgen.org/ja</loc>
+    <lastmod>2023-10-04</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>1.0</priority>
+  </url>
+  <url>
+    <loc>https://www.lgtmgen.org/ja/privacy</loc>
+    <lastmod>2023-10-04</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://www.lgtmgen.org/ja/usage-precautions</loc>
+    <lastmod>2023-10-04</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+
+  <!-- English pages -->
+  <url>
+    <loc>https://www.lgtmgen.org/en</loc>
+    <lastmod>2023-10-04</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>1.0</priority>
+  </url>
+  <url>
+    <loc>https://www.lgtmgen.org/en/privacy</loc>
+    <lastmod>2023-10-04</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://www.lgtmgen.org/en/usage-precautions</loc>
+    <lastmod>2023-10-04</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+</urlset>
+

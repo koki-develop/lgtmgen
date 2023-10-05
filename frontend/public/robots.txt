@@ -1,0 +1,9 @@
+# *
+User-agent: *
+Allow: /
+
+# Host
+Host: https://www.lgtmgen.org
+
+# Sitemaps
+Sitemap: https://www.lgtmgen.org/sitemap.xml
