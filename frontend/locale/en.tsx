@@ -19,6 +19,7 @@ const en: I18n = {
   other: "Other",
   keyword: "Keyword",
   cancel: "Cancel",
+  random: "Random",
 
   privacyPolicy: "Privacy Policy",
   usagePrecautions: "Usage Precautions",

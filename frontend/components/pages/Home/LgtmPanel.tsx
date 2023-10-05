@@ -87,7 +87,7 @@ export default function LgtmPanel({
                 )}
               />
             </span>
-            <span>ランダムに表示</span>
+            <span>{t.random}</span>
           </Switch>
         </div>
 

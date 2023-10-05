@@ -17,6 +17,7 @@ const ja: I18n = {
   other: "その他",
   keyword: "キーワード",
   cancel: "キャンセル",
+  random: "ランダムに表示",
 
   privacyPolicy: "プライバシーポリシー",
   usagePrecautions: "利用上の注意",

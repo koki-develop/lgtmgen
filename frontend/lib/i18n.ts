@@ -20,6 +20,7 @@ export type I18n = {
   keyword: string;
   noFavorites: string;
   cancel: string;
+  random: string;
 
   privacyPolicy: string;
   usagePrecautions: string;
