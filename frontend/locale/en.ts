@@ -20,6 +20,9 @@ const en: I18n = {
   keyword: "Keyword",
   cancel: "Cancel",
 
+  privacyPolicy: "Privacy Policy",
+  usagePrecautions: "Usage Precautions",
+
   noFavorites: "No favorite LGTM.",
   successToGenerate: "Successfully generated LGTM.",
   failedToGenerate: "Failed to generate LGTM.",

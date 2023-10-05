@@ -20,6 +20,9 @@ export type I18n = {
   noFavorites: string;
   cancel: string;
 
+  privacyPolicy: string;
+  usagePrecautions: string;
+
   successToGenerate: string;
   failedToGenerate: string;
   successToSend: string;
