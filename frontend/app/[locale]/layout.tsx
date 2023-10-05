@@ -4,6 +4,7 @@ import "@fontsource/archivo-black";
 import type { Metadata } from "next";
 import Link from "next/link";
 import Providers from "@/providers/Providers";
+import { AiOutlineGithub } from "react-icons/ai";
 
 export const metadata: Metadata = {
   title: "Create Next App",
@@ -35,7 +36,25 @@ export default function RootLayout({
           <main className="container mx-auto p-4 py-8">{children}</main>
         </Providers>
 
-        <footer className="flex flex-col items-center">
+        <footer className="flex flex-col items-center gap-4">
+          <ul className="flex flex-col items-center justify-center gap-2">
+            <li>
+              <a
+                href="https://github.com/koki-develop/lgtmgen"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                <AiOutlineGithub size={30} />
+              </a>
+            </li>
+            <li>
+              <Link href="/privacy">{t.privacyPolicy}</Link>
+            </li>
+            <li>
+              <Link href="/usage-precautions">{t.usagePrecautions}</Link>
+            </li>
+          </ul>
+
           <small>&copy; 2023 Koki Sato</small>
         </footer>
       </body>
