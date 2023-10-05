@@ -30,6 +30,7 @@
     "react-icons": "^4.11.0"
   },
   "devDependencies": {
+    "@types/gtag.js": "^0.0.14",
     "@types/negotiator": "^0.6.1",
     "@types/node": "latest",
     "@types/react": "latest",
