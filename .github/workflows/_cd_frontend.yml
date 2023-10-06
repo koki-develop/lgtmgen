@@ -68,7 +68,7 @@ jobs:
       - name: Get version
         run: |
           VERSION="${{ inputs.version }}"
-          echo "VERSION=${VERSION#refs/frontend/*}" >> $GITHUB_ENV
+          echo "VERSION=${VERSION#refs/tags/frontend/*}" >> $GITHUB_ENV
       - uses: getsentry/action-release@v1
         with:
           version: ${{ env.VERSION }}
