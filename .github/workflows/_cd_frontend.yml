@@ -26,6 +26,10 @@ jobs:
       # Vercel
       VERCEL_ORG_ID: ${{ vars.VERCEL_ORG_ID }}
       VERCEL_PROJECT_ID: ${{ vars.VERCEL_PROJECT_ID }}
+      # Sentry
+      SENTRY_AUTH_TOKEN: ${{ secrets.sentry-auth-token }}
+      SENTRY_ORG: ${{ vars.SENTRY_ORG }}
+      SENTRY_PROJECT: ${{ vars.SENTRY_PROJECT_FRONTEND }}
     steps:
       - uses: actions/checkout@v4
         with:
@@ -62,10 +66,6 @@ jobs:
           yarn run vercel deploy --prebuilt --prod --token=${{ secrets.vercel-token }}
 
       - uses: getsentry/action-release@v1
-        env:
-          SENTRY_AUTH_TOKEN: ${{ secrets.sentry-auth-token }}
-          SENTRY_ORG: ${{ vars.SENTRY_ORG }}
-          SENTRY_PROJECT: ${{ vars.SENTRY_PROJECT_FRONTEND }}
         with:
           version: ${{ inputs.version }}
           environment: ${{ inputs.environment }}
