@@ -2,7 +2,7 @@ import React from "react";
 import { api } from "@/lib/api";
 import Main from "./Main";
 
-const perPage = 40;
+const perPage = 20;
 
 export type HomeProps = {
   params: {
