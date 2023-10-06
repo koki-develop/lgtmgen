@@ -73,3 +73,4 @@ jobs:
         with:
           version: ${{ env.VERSION }}
           environment: ${{ inputs.environment }}
+          ignore_empty: true
