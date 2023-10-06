@@ -42,6 +42,12 @@ export default function LgtmPanel({
     onLoaded(loadedLgtms);
   }, [fetchLgtms, lgtms, onLoaded]);
 
+  const handleClickReload = useCallback(async () => {
+    const loadedLgtms = await fetchLgtms({ random: true });
+    onClear();
+    onLoaded(loadedLgtms);
+  }, [fetchLgtms, onLoaded, onClear]);
+
   const handleChangeRandomly = useCallback(
     async (randomly: boolean) => {
       onChangeRandomly(randomly);
@@ -102,17 +108,15 @@ export default function LgtmPanel({
         />
 
         <div className="flex justify-center">
-          {!randomly && (
-            <button
-              className={clsx(
-                { hidden: !hasNextPage || fetching },
-                "button-primary rounded px-4 py-2 shadow-md",
-              )}
-              onClick={handleClickLoadMore}
-            >
-              {t.loadMore}
-            </button>
-          )}
+          <button
+            className={clsx(
+              { hidden: !hasNextPage || fetching },
+              "button-primary rounded px-4 py-2 shadow-md",
+            )}
+            onClick={randomly ? handleClickReload : handleClickLoadMore}
+          >
+            {randomly ? t.reload : t.loadMore}
+          </button>
 
           <div className={clsx("loader", { hidden: !fetching })} />
         </div>
