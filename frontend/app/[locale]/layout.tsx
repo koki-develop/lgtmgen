@@ -6,7 +6,7 @@ import Link from "next/link";
 import Providers from "@/providers/Providers";
 import { AiOutlineGithub } from "react-icons/ai";
 import Header from "./Header";
-// import GoogleAnalytics from "@/components/util/GoogleAnalytics";
+import GoogleAnalytics from "@/components/util/GoogleAnalytics";
 
 export async function generateMetadata({
   params: { locale },
@@ -65,8 +65,7 @@ export default function RootLayout({
         <Header />
 
         <Providers locale={locale}>
-          {/* TODO */}
-          {/* <GoogleAnalytics /> */}
+          <GoogleAnalytics />
           <main className="container mx-auto p-4 py-8">{children}</main>
         </Providers>
 
