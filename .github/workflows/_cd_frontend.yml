@@ -65,7 +65,11 @@ jobs:
           yarn run vercel build --prod --token=${{ secrets.vercel-token }}
           yarn run vercel deploy --prebuilt --prod --token=${{ secrets.vercel-token }}
 
+      - name: Get version
+        run: |
+          VERSION="${{ inputs.version }}"
+          echo "VERSION=${VERSION#refs/frontend/*}" >> $GITHUB_ENV
       - uses: getsentry/action-release@v1
         with:
-          version: ${{ inputs.version }}
+          version: ${{ env.VERSION }}
           environment: ${{ inputs.environment }}
