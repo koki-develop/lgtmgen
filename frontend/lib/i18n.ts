@@ -23,6 +23,7 @@ export type I18n = {
   noFavorites: string;
   cancel: string;
   random: string;
+  reload: string;
 
   privacyPolicy: string;
   usagePrecautions: string;

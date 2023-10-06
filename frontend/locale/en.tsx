@@ -22,6 +22,7 @@ const en: I18n = {
   keyword: "Keyword",
   cancel: "Cancel",
   random: "Random",
+  reload: "Reload",
 
   privacyPolicy: "Privacy Policy",
   usagePrecautions: "Usage Precautions",
