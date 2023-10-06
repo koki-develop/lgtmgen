@@ -139,11 +139,13 @@ func (r *notificationsRepository) NotifyReportCreated(ctx context.Context, msg *
 			},
 			slack.NewAccessory(slack.NewImageBlockElement(imgURL, "LGTM")),
 		),
-		slack.NewSectionBlock(
+	}
+	if msg.Report.Text != "" {
+		blocks = append(blocks, slack.NewSectionBlock(
 			slack.NewTextBlockObject(slack.PlainTextType, msg.Report.Text, false, false),
 			nil,
 			nil,
-		),
+		))
 	}
 	log.Info(ctx, "notify lgtm created", "channel", channel, "blocks", blocks)
 
