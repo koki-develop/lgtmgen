@@ -19,6 +19,16 @@ jobs:
     defaults:
       run:
         working-directory: backend
+    env:
+      FRONTEND_ORIGIN: ${{ vars.FRONTEND_ORIGIN }}
+      # Sentry
+      SENTRY_DSN: ${{ vars.SENTRY_DSN }}
+      # Google
+      GOOGLE_API_KEY: ${{ secrets.google-api-key }}
+      SEARCH_ENGINE_ID: ${{ vars.SEARCH_ENGINE_ID }}
+      # Slack
+      SLACK_OAUTH_TOKEN: ${{ secrets.slack-oauth-token }}
+      IMAGES_BASE_URL: ${{ vars.IMAGES_BASE_URL }}
     steps:
       - uses: actions/checkout@v4
       - uses: aws-actions/configure-aws-credentials@v4
@@ -36,11 +46,3 @@ jobs:
       - uses: aws-actions/amazon-ecr-login@v1
       - name: Deploy
         run: yarn run deploy --stage ${{ inputs.environment }}
-        env:
-          FRONTEND_ORIGIN: ${{ vars.FRONTEND_ORIGIN }}
-          # Google
-          GOOGLE_API_KEY: ${{ secrets.google-api-key }}
-          SEARCH_ENGINE_ID: ${{ vars.SEARCH_ENGINE_ID }}
-          # Slack
-          SLACK_OAUTH_TOKEN: ${{ secrets.slack-oauth-token }}
-          IMAGES_BASE_URL: ${{ vars.IMAGES_BASE_URL }}

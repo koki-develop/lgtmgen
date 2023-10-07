@@ -73,6 +73,8 @@ provider:
     STAGE: ${self:provider.stage}
     FRONTEND_ORIGIN: ${env:FRONTEND_ORIGIN}
     IMAGES_BASE_URL: ${env:IMAGES_BASE_URL}
+    # Sentry
+    SENTRY_DSN: ${env:SENTRY_DSN}
     # Google
     GOOGLE_API_KEY: ${env:GOOGLE_API_KEY}
     SEARCH_ENGINE_ID: ${env:SEARCH_ENGINE_ID}
