@@ -1,0 +1,40 @@
+name: Build Base Image
+
+on:
+  workflow_dispatch:
+    inputs:
+      environment:
+        description: ""
+        type: string
+        default: dev
+
+jobs:
+  build-and-push:
+    runs-on: ubuntu-latest
+    environment: ${{ inputs.environment }}
+    permissions:
+      id-token: write
+      contents: read
+    defaults:
+      run:
+        working-directory: backend
+    steps:
+      - uses: actions/checkout@v4
+      - uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-region: us-east-1
+          role-to-assume: ${{ vars.AWS_IAM_ROLE_ARN }}
+      - uses: aws-actions/amazon-ecr-login@v1
+        id: login-ecr
+
+      # TODO: enable cache
+      - name: Build and Push
+        env:
+          REGISTRY: ${{ steps.login-ecr.outputs.registry }}
+          REPOSITORY: serverless-lgtmgen-backend-${{ inputs.environment }}
+          IMAGE_TAG: latest
+        run: |
+          docker build . \
+            --file ./dockerfiles/base/Dockerfile \
+            --tag ${{ env.REGISTRY }}/${{ env.REPOSITORY }}:${{ env.IMAGE_TAG }}
+          docker push ${{ env.REGISTRY }}/${{ env.REPOSITORY }}:${{ env.IMAGE_TAG }}
