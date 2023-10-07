@@ -1,4 +1,6 @@
-FROM golang:1.21 AS base
+ARG BASE_IMAGE
+
+FROM ${BASE_IMAGE} AS base
 WORKDIR /var/task
 
 ENV CGO_CFLAGS_ALLOW="-Xpreprocessor"

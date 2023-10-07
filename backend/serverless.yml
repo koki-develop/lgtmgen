@@ -14,6 +14,8 @@ provider:
       api:
         path: ./
         file: ./dockerfiles/api/Dockerfile
+        buildArgs:
+          BASE_IMAGE: ${aws:accountId}.dkr.ecr.${self:provider.region}.amazonaws.com/lgtmgen-${self:provider.stage}-api-base
         cacheFrom:
           - ${aws:accountId}.dkr.ecr.${self:provider.region}.amazonaws.com/serverless-lgtmgen-backend-${self:provider.stage}:api
   iam:
