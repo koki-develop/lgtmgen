@@ -30,6 +30,7 @@ jobs:
       SENTRY_AUTH_TOKEN: ${{ secrets.sentry-auth-token }}
       SENTRY_ORG: ${{ vars.SENTRY_ORG }}
       SENTRY_PROJECT: ${{ vars.SENTRY_PROJECT_FRONTEND }}
+      SENTRY_DSN: ${{ vars.SENTRY_DSN_FRONTEND }}
     steps:
       - uses: actions/checkout@v4
         with:
@@ -43,13 +44,14 @@ jobs:
         run: yarn install --frozen-lockfile
       - name: Create .env
         run: |
-          echo NEXT_PUBLIC_STAGE=${{ inputs.environment }}                    >> .env
-          echo NEXT_PUBLIC_API_BASE_URL=${{ vars.API_BASE_URL }}              >> .env
-          echo NEXT_PUBLIC_IMAGES_BASE_URL=${{ vars.IMAGES_BASE_URL }}        >> .env
-          echo NEXT_PUBLIC_GA_MEASUREMENT_ID=${{ vars.GA_MEASUREMENT_ID }}    >> .env
-          echo NEXT_PUBLIC_SENTRY_ORG=${{ vars.SENTRY_ORG }}                  >> .env
-          echo NEXT_PUBLIC_SENTRY_PROJECT=${{ vars.SENTRY_PROJECT_FRONTEND }} >> .env
-          echo NEXT_PUBLIC_SENTRY_DSN=${{ vars.SENTRY_DSN_FRONTEND }}         >> .env
+          echo NEXT_PUBLIC_STAGE=${{ inputs.environment }}                 >> .env
+          echo NEXT_PUBLIC_API_BASE_URL=${{ vars.API_BASE_URL }}           >> .env
+          echo NEXT_PUBLIC_IMAGES_BASE_URL=${{ vars.IMAGES_BASE_URL }}     >> .env
+          echo NEXT_PUBLIC_GA_MEASUREMENT_ID=${{ vars.GA_MEASUREMENT_ID }} >> .env
+          # Sentry
+          echo NEXT_PUBLIC_SENTRY_ORG=${{ env.SENTRY_ORG }}                >> .env
+          echo NEXT_PUBLIC_SENTRY_PROJECT=${{ env.SENTRY_PROJECT }}        >> .env
+          echo NEXT_PUBLIC_SENTRY_DSN=${{ env.SENTRY_DSN }}                >> .env
 
       - name: Deploy (dev)
         if: ${{ inputs.environment != 'prd' }}
