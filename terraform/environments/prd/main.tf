@@ -1,3 +1,7 @@
+data "aws_route53_zone" "main" {
+  name = local.domain
+}
+
 module "github_actions" {
   source = "../../modules/aws/github_actions"
   name   = local.name
@@ -21,4 +25,11 @@ module "cloudfront_images" {
   name                      = local.name
   tier                      = "images"
   origin_bucket_domain_name = module.s3_images.this.bucket_regional_domain_name
+  domain                    = local.domain_images
+  certificate_arn           = aws_acm_certificate.images.arn
+}
+
+module "ecr" {
+  source = "../../modules/aws/ecr"
+  name   = local.name
 }
