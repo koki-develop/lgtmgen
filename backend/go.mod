@@ -15,6 +15,7 @@ require (
 	github.com/caarlos0/env/v9 v9.0.0
 	github.com/cockroachdb/errors v1.11.1
 	github.com/cosmtrek/air v1.45.0
+	github.com/getsentry/sentry-go v0.18.0
 	github.com/gin-gonic/gin v1.9.1
 	github.com/google/uuid v1.3.0
 	github.com/slack-go/slack v0.12.3
@@ -63,7 +64,6 @@ require (
 	github.com/fatih/color v1.14.1 // indirect
 	github.com/fsnotify/fsnotify v1.6.0 // indirect
 	github.com/gabriel-vasile/mimetype v1.4.2 // indirect
-	github.com/getsentry/sentry-go v0.18.0 // indirect
 	github.com/gin-contrib/sse v0.1.0 // indirect
 	github.com/go-openapi/jsonpointer v0.19.5 // indirect
 	github.com/go-openapi/jsonreference v0.19.6 // indirect
