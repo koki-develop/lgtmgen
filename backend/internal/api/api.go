@@ -4,6 +4,7 @@ import (
 	"context"
 
 	"github.com/cockroachdb/errors"
+	sentrygin "github.com/getsentry/sentry-go/gin"
 	"github.com/gin-gonic/gin"
 	"github.com/koki-develop/lgtmgen/backend/internal/env"
 	"github.com/koki-develop/lgtmgen/backend/internal/middleware"
@@ -23,6 +24,7 @@ func NewEngine(ctx context.Context) (*gin.Engine, error) {
 	}
 
 	e := gin.New()
+	e.Use(sentrygin.New(sentrygin.Options{}))
 	e.Use(middleware.NewLogger().Apply())
 	e.Use(gin.Recovery())
 	e.Use(middleware.NewCORS().Apply(env.Vars.FrontendOrigin))
