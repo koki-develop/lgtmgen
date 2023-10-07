@@ -15,7 +15,7 @@ require (
 	github.com/caarlos0/env/v9 v9.0.0
 	github.com/cockroachdb/errors v1.11.1
 	github.com/cosmtrek/air v1.45.0
-	github.com/getsentry/sentry-go v0.18.0
+	github.com/getsentry/sentry-go v0.25.0
 	github.com/gin-gonic/gin v1.9.1
 	github.com/google/uuid v1.3.0
 	github.com/slack-go/slack v0.12.3
