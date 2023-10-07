@@ -16,6 +16,8 @@ jobs:
       contents: read
     with:
       environment: prd
+      version: ${{ github.ref }}
     secrets:
       google-api-key: ${{ secrets.GOOGLE_API_KEY }}
       slack-oauth-token: ${{ secrets.SLACK_OAUTH_TOKEN }}
+      sentry-auth-token: ${{ secrets.SENTRY_AUTH_TOKEN }}

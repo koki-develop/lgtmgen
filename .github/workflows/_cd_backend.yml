@@ -6,10 +6,15 @@ on:
       environment:
         type: string
         required: true
+      version:
+        type: string
+        required: true
     secrets:
       google-api-key:
         required: true
       slack-oauth-token:
+        required: true
+      sentry-auth-token:
         required: true
 
 jobs:
@@ -22,7 +27,10 @@ jobs:
     env:
       FRONTEND_ORIGIN: ${{ vars.FRONTEND_ORIGIN }}
       # Sentry
-      SENTRY_DSN: ${{ vars.SENTRY_DSN }}
+      SENTRY_AUTH_TOKEN: ${{ secrets.sentry-auth-token }}
+      SENTRY_ORG: ${{ vars.SENTRY_ORG }}
+      SENTRY_PROJECT: ${{ vars.SENTRY_PROJECT_BACKEND }}
+      SENTRY_DSN: ${{ vars.SENTRY_DSN_BACKEND }}
       # Google
       GOOGLE_API_KEY: ${{ secrets.google-api-key }}
       SEARCH_ENGINE_ID: ${{ vars.SEARCH_ENGINE_ID }}
@@ -46,3 +54,13 @@ jobs:
       - uses: aws-actions/amazon-ecr-login@v1
       - name: Deploy
         run: yarn run deploy --stage ${{ inputs.environment }}
+
+      - name: Get version
+        run: |
+          VERSION="${{ inputs.version }}"
+          echo "VERSION=${VERSION#refs/tags/frontend/*}" >> $GITHUB_ENV
+      - uses: getsentry/action-release@v1
+        with:
+          version: ${{ env.VERSION }}
+          environment: ${{ inputs.environment }}
+          ignore_empty: true
