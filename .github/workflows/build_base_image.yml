@@ -31,7 +31,7 @@ jobs:
       - name: Build and Push
         env:
           REGISTRY: ${{ steps.login-ecr.outputs.registry }}
-          REPOSITORY: serverless-lgtmgen-backend-${{ inputs.environment }}
+          REPOSITORY: lgtmgen-${{ inputs.environment }}-api-base
           IMAGE_TAG: latest
         run: |
           docker build . \
