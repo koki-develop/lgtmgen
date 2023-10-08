@@ -1,12 +1,8 @@
-variable "name" {
+variable "stage" {
   type = string
 }
 
-variable "tier" {
-  type = string
-}
-
-variable "origin_bucket_domain_name" {
+variable "api_name" {
   type = string
 }
 
