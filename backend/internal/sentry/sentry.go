@@ -15,6 +15,7 @@ func Setup() error {
 	err := sentry.Init(sentry.ClientOptions{
 		Debug:              debug(),
 		Dsn:                env.Vars.SentryDSN,
+		Environment:        string(env.Vars.Stage),
 		EnableTracing:      true,
 		TracesSampleRate:   1.0,
 		ProfilesSampleRate: 1.0,
