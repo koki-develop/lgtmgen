@@ -12,8 +12,11 @@ import (
 )
 
 func Setup() error {
+	if debug() {
+		return nil
+	}
+
 	err := sentry.Init(sentry.ClientOptions{
-		Debug:              debug(),
 		Dsn:                env.Vars.SentryDSN,
 		Environment:        string(env.Vars.Stage),
 		EnableTracing:      true,
@@ -28,10 +31,18 @@ func Setup() error {
 }
 
 func Flush() {
+	if debug() {
+		return
+	}
+
 	sentry.Flush(10 * time.Second)
 }
 
 func CaptureExceptionWithGin(ctx *gin.Context, err error) {
+	if debug() {
+		return
+	}
+
 	hub := sentrygin.GetHubFromContext(ctx)
 	if hub == nil {
 		log.Warn(ctx, "failed to get sentry hub from context")

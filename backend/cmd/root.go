@@ -14,14 +14,14 @@ var rootCmd = &cobra.Command{
 }
 
 func Execute() error {
+	if err := env.Load(); err != nil {
+		return errors.Wrap(err, "failed to load env")
+	}
+
 	if err := sentry.Setup(); err != nil {
 		return errors.Wrap(err, "failed to setup sentry")
 	}
 	defer sentry.Flush()
-
-	if err := env.Load(); err != nil {
-		return errors.Wrap(err, "failed to load env")
-	}
 
 	if err := rootCmd.Execute(); err != nil {
 		return errors.Wrap(err, "failed to execute root command")
