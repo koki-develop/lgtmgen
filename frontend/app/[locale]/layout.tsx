@@ -69,7 +69,7 @@ export default function RootLayout({
           <main className="container mx-auto p-4 py-8">{children}</main>
         </Providers>
 
-        <footer className="flex flex-col items-center gap-4">
+        <footer className="flex flex-col items-center gap-4 pb-8">
           <ul className="flex flex-col items-center justify-center gap-2">
             <li>
               <a
