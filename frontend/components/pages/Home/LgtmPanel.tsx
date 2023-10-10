@@ -110,7 +110,7 @@ export default function LgtmPanel({
         <div className="flex justify-center">
           <button
             className={clsx(
-              { hidden: !hasNextPage || fetching },
+              { hidden: (!hasNextPage && !randomly) || fetching },
               "button-primary rounded px-4 py-2 shadow-md",
             )}
             onClick={randomly ? handleClickReload : handleClickLoadMore}
