@@ -43,8 +43,8 @@ export default function LgtmPanel({
   }, [fetchLgtms, lgtms, onLoaded]);
 
   const handleClickReload = useCallback(async () => {
-    const loadedLgtms = await fetchLgtms({ random: true });
     onClear();
+    const loadedLgtms = await fetchLgtms({ random: true });
     onLoaded(loadedLgtms);
   }, [fetchLgtms, onLoaded, onClear]);
 
