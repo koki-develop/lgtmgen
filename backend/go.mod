@@ -21,7 +21,7 @@ require (
 	github.com/slack-go/slack v0.12.3
 	github.com/spf13/cobra v1.7.0
 	github.com/swaggo/swag v1.16.2
-	golang.org/x/net v0.10.0
+	golang.org/x/net v0.17.0
 	google.golang.org/api v0.108.0
 	gopkg.in/gographics/imagick.v3 v3.5.0
 	gopkg.in/yaml.v3 v3.0.1
@@ -106,10 +106,10 @@ require (
 	github.com/urfave/cli/v2 v2.3.0 // indirect
 	go.opencensus.io v0.24.0 // indirect
 	golang.org/x/arch v0.3.0 // indirect
-	golang.org/x/crypto v0.9.0 // indirect
+	golang.org/x/crypto v0.14.0 // indirect
 	golang.org/x/oauth2 v0.4.0 // indirect
-	golang.org/x/sys v0.8.0 // indirect
-	golang.org/x/text v0.9.0 // indirect
+	golang.org/x/sys v0.13.0 // indirect
+	golang.org/x/text v0.13.0 // indirect
 	golang.org/x/tools v0.7.0 // indirect
 	google.golang.org/appengine v1.6.7 // indirect
 	google.golang.org/genproto v0.0.0-20230227214838-9b19f0bdc514 // indirect
