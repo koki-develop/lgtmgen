@@ -26,5 +26,5 @@ runs:
         cd /tmp/ImageMagick-*
         ./configure --with-freetype=yes --with-webp=yes
         make
-        make install
+        sudo make install
         ldconfig /usr/local/lib
