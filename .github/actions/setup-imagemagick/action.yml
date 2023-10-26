@@ -7,8 +7,8 @@ runs:
     - name: Install Dependencies
       shell: bash
       run: |
-        apt update
-        apt install -y \
+        sudo apt update
+        sudo apt install -y \
           libjpeg-dev \
           libwebp-dev \
           ghostscript \
