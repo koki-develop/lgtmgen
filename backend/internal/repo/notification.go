@@ -104,10 +104,10 @@ func (r *notificationsRepository) NotifyLGTMCreated(ctx context.Context, msg *LG
 			nil,
 			[]*slack.TextBlockObject{
 				slack.NewTextBlockObject(slack.MarkdownType, fmt.Sprintf("*ID*\n%s", msg.LGTM.ID), false, false),
-				slack.NewTextBlockObject(slack.MarkdownType, fmt.Sprintf("*Source*\n`%s`", msg.Source), false, false),
 				slack.NewTextBlockObject(slack.MarkdownType, fmt.Sprintf("*Client IP*\n%s", msg.ClientIP), false, false),
+				slack.NewTextBlockObject(slack.MarkdownType, fmt.Sprintf("*URL*\n%s", imgURL), false, false),
 			},
-			slack.NewAccessory(slack.NewImageBlockElement(imgURL, "LGTM")),
+			nil,
 		),
 	}
 	log.Info(ctx, "notify lgtm created", "channel", channel, "blocks", blocks)
