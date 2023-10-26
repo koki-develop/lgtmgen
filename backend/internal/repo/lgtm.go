@@ -39,6 +39,10 @@ func (r *lgtmRepository) FindLGTM(ctx context.Context, id string) (*models.LGTM,
 	expr, err := expression.NewBuilder().
 		WithKeyCondition(expression.KeyEqual(expression.Key("id"), expression.Value(id))).
 		Build()
+	if err != nil {
+		return nil, errors.Wrap(err, "failed to build expression")
+	}
+
 	resp, err := r.dbClient.Query(
 		ctx,
 		&dynamodb.QueryInput{
