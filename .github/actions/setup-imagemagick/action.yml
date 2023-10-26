@@ -1,0 +1,30 @@
+name: Setup ImageMagick
+description: ''
+
+runs:
+  using: composite
+  steps:
+    - name: Install Dependencies
+      shell: bash
+      run: |
+        apt update
+        apt install -y \
+          libjpeg-dev \
+          libwebp-dev \
+          ghostscript \
+          build-essential \
+          libfreetype6-dev
+
+    - name: Download ImageMagick Source
+      shell: bash
+      run: |
+        wget https://imagemagick.org/archive/ImageMagick.tar.gz -O /tmp/ImageMagick.tar.gz
+        tar -xzf /tmp/ImageMagick.tar.gz -C /tmp
+    - name: Install ImageMagick
+      shell: bash
+      run: |
+        cd /tmp/ImageMagick-*
+        ./configure --with-freetype=yes --with-webp=yes
+        make
+        make install
+        ldconfig /usr/local/lib
