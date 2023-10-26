@@ -4,7 +4,7 @@ on:
   workflow_call:
 
 jobs:
-  build:
+  ci:
     runs-on: ubuntu-latest
     defaults:
       run:
@@ -14,24 +14,13 @@ jobs:
       - uses: actions/setup-go@v4
         with:
           go-version-file: backend/go.mod
-      - run: go build .
+      - uses: ./.github/actions/setup-imagemagick
 
-  test:
-    needs: [build]
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-go@v4
-        with:
-          go-version-file: backend/go.mod
-      - run: go test ./...
+      - name: Lint
+        uses: golangci/golangci-lint-action@v3
 
-  lint:
-    needs: [build]
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-go@v4
-        with:
-          go-version-file: backend/go.mod
-      - uses: golangci/golangci-lint-action@v3
+      - name: Build
+        run: go build .
+
+      - name: Test
+        run: go test ./...
