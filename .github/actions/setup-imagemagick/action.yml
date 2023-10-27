@@ -27,4 +27,4 @@ runs:
         ./configure --with-freetype=yes --with-webp=yes
         make
         sudo make install
-        ldconfig /usr/local/lib
+        sudo ldconfig /usr/local/lib
