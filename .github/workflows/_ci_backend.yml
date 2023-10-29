@@ -20,6 +20,7 @@ jobs:
         uses: golangci/golangci-lint-action@v3
         with:
           working-directory: backend
+          args: --timeout=10m
 
       - name: Build
         run: go build .
