@@ -114,31 +114,33 @@ export default function Main({
   // Render
   return (
     <div className="flex flex-col">
-      <div className="flex flex-col gap-2">
-        {newsList.map((news, i) => (
-          <div
-            key={i}
-            className="flex flex-col gap-1 rounded border border-primary-main bg-blue-100 p-2 text-primary-dark shadow-md"
-          >
-            <div>
-              {news.title && (
-                <div className="text-lg font-bold">{news.title}</div>
+      {newsList.length > 0 && (
+        <div className="mb-4 flex flex-col gap-2">
+          {newsList.map((news, i) => (
+            <div
+              key={i}
+              className="flex flex-col gap-1 rounded border border-primary-main bg-blue-100 p-2 text-primary-dark shadow-md"
+            >
+              <div>
+                {news.title && (
+                  <div className="text-lg font-bold">{news.title}</div>
+                )}
+
+                {news.date && <div className="mb-1 text-xs">{news.date}</div>}
+              </div>
+
+              {news.content && (
+                <div
+                  className="whitespace-pre-wrap text-sm"
+                  dangerouslySetInnerHTML={{
+                    __html: news.content,
+                  }}
+                />
               )}
-
-              {news.date && <div className="mb-1 text-xs">{news.date}</div>}
             </div>
-
-            {news.content && (
-              <div
-                className="whitespace-pre-wrap text-sm"
-                dangerouslySetInnerHTML={{
-                  __html: news.content,
-                }}
-              />
-            )}
-          </div>
-        ))}
-      </div>
+          ))}
+        </div>
+      )}
 
       <Tab.Group>
         <Tab.List className="mb-4 flex rounded-t bg-white shadow-md">
