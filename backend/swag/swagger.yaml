@@ -75,7 +75,14 @@ definitions:
     properties:
       base64:
         type: string
+      options:
+        $ref: '#/definitions/service.createLGTMOptions'
       url:
+        type: string
+    type: object
+  service.createLGTMOptions:
+    properties:
+      textColor:
         type: string
     type: object
   service.createReportInput:
