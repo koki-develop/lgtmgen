@@ -27,13 +27,13 @@ func newLGTMService(repo *repo.Repository) *lgtmService {
 	}
 }
 
-//	@Router		/v1/lgtms [get]
-//	@Param		limit	query		int		false	"limit"
-//	@Param		after	query		string	false	"after"
-//	@Param		random	query		bool	false	"random"
-//	@Success	200		{array}		models.LGTM
-//	@Failure	400		{object}	ErrorResponse
-//	@Failure	500		{object}	ErrorResponse
+// @Router		/v1/lgtms [get]
+// @Param		limit	query		int		false	"limit"
+// @Param		after	query		string	false	"after"
+// @Param		random	query		bool	false	"random"
+// @Success	200		{array}		models.LGTM
+// @Failure	400		{object}	ErrorResponse
+// @Failure	500		{object}	ErrorResponse
 func (svc *lgtmService) ListLGTMs(ctx *gin.Context) {
 	opts := []repo.LGTMListOption{}
 
@@ -83,8 +83,13 @@ func (svc *lgtmService) ListLGTMs(ctx *gin.Context) {
 }
 
 type createLGTMInput struct {
-	URL    string `json:"url"`
-	Base64 string `json:"base64"`
+	URL     string             `json:"url"`
+	Base64  string             `json:"base64"`
+	Options *createLGTMOptions `json:"options"`
+}
+
+type createLGTMOptions struct {
+	TextColor string `json:"textColor"`
 }
 
 func (ipt *createLGTMInput) Validate() error {
@@ -99,12 +104,12 @@ func (ipt *createLGTMInput) Validate() error {
 	return nil
 }
 
-//	@Router		/v1/lgtms [post]
-//	@Accept		json
-//	@Param		body	body		createLGTMInput	true	"body"
-//	@Success	201		{object}	models.LGTM
-//	@Failure	400		{object}	ErrorResponse
-//	@Failure	500		{object}	ErrorResponse
+// @Router		/v1/lgtms [post]
+// @Accept		json
+// @Param		body	body		createLGTMInput	true	"body"
+// @Success	201		{object}	models.LGTM
+// @Failure	400		{object}	ErrorResponse
+// @Failure	500		{object}	ErrorResponse
 func (svc *lgtmService) CreateLGTM(ctx *gin.Context) {
 	var ipt createLGTMInput
 	if err := ctx.ShouldBindJSON(&ipt); err != nil {
@@ -143,8 +148,18 @@ func (svc *lgtmService) CreateLGTM(ctx *gin.Context) {
 		src = ipt.URL
 	}
 
-	lgtm, err := svc.repo.CreateLGTM(ctx, data)
+	genopts := []lgtmgen.GenerateOption{}
+	if ipt.Options != nil {
+		genopts = append(genopts, lgtmgen.WithTextColor(ipt.Options.TextColor))
+	}
+
+	lgtm, err := svc.repo.CreateLGTM(ctx, data, genopts...)
 	if err != nil {
+		if errors.Is(err, lgtmgen.ErrInvalidOption) {
+			log.Info(ctx, "invalid option", "error", err)
+			renderError(ctx, http.StatusBadRequest, ErrCodeBadRequest)
+			return
+		}
 		if errors.Is(err, lgtmgen.ErrUnsupportImageFormat) {
 			log.Info(ctx, "unsupported image format", "error", err)
 			renderError(ctx, http.StatusBadRequest, ErrCodeUnsupportedImageFormat)

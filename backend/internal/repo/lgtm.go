@@ -178,7 +178,7 @@ func (r *lgtmRepository) listLGTMsRandomly(ctx context.Context, o *lgtmListOptio
 	return lgtms, nil
 }
 
-func (r *lgtmRepository) CreateLGTM(ctx context.Context, data []byte) (*models.LGTM, error) {
+func (r *lgtmRepository) CreateLGTM(ctx context.Context, data []byte, opts ...lgtmgen.GenerateOption) (*models.LGTM, error) {
 	t := http.DetectContentType(data)
 	log.Info(ctx, "detected content type", "type", t)
 
@@ -186,7 +186,7 @@ func (r *lgtmRepository) CreateLGTM(ctx context.Context, data []byte) (*models.L
 		return nil, errors.Wrap(lgtmgen.ErrUnsupportImageFormat, "not image")
 	}
 
-	img, err := lgtmgen.Generate(data)
+	img, err := lgtmgen.Generate(data, opts...)
 	if err != nil {
 		return nil, errors.Wrap(err, "failed to generate lgtm")
 	}
