@@ -10,7 +10,7 @@ const ja: I18n = {
   favorite: "お気に入り",
 
   loadMore: "もっと見る",
-  upload: "アップロード",
+  upload: "画像をアップロード",
   confirmGeneration: "この画像で LGTM を生成しますか？",
   generate: "生成",
   send: "送信",

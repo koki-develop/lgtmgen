@@ -10,7 +10,7 @@ const en: I18n = {
   favorite: "Favorite",
 
   loadMore: "More",
-  upload: "Upload",
+  upload: "Upload Image",
   confirmGeneration: "Would you like to generate an LGTM with this image?",
   generate: "Generate",
   send: "Send",
