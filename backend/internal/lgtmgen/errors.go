@@ -6,4 +6,5 @@ import (
 
 var (
 	ErrUnsupportImageFormat = errors.New("unsupported image format")
+	ErrInvalidOption        = errors.New("invalid option")
 )

@@ -2,6 +2,7 @@ package lgtmgen
 
 import (
 	"math"
+	"regexp"
 	"strings"
 
 	"github.com/cockroachdb/errors"
@@ -13,7 +14,45 @@ const (
 	font          string  = "assets/fonts/Archivo_Black/ArchivoBlack-Regular.ttf"
 )
 
-func Generate(src []byte) ([]byte, error) {
+var (
+	colorRegexp = regexp.MustCompile(`^#[0-9a-fA-F]{6}$`)
+)
+
+type generateOptions struct {
+	textColor string
+}
+
+func (o generateOptions) Validate() error {
+	// textColor
+	if o.textColor == "" {
+		return errors.Wrap(ErrInvalidOption, "textColor is required")
+	}
+	if !colorRegexp.MatchString(o.textColor) {
+		return errors.Wrap(ErrInvalidOption, "textColor is invalid format")
+	}
+
+	return nil
+}
+
+type GenerateOption func(*generateOptions)
+
+func WithTextColor(color string) GenerateOption {
+	return func(o *generateOptions) {
+		o.textColor = color
+	}
+}
+
+func Generate(src []byte, opts ...GenerateOption) ([]byte, error) {
+	o := &generateOptions{
+		textColor: "#ffffff",
+	}
+	for _, opt := range opts {
+		opt(o)
+	}
+	if err := o.Validate(); err != nil {
+		return nil, errors.Wrap(err, "failed to validate options")
+	}
+
 	imagick.Initialize()
 	defer imagick.Terminate()
 
@@ -43,16 +82,16 @@ func Generate(src []byte) ([]byte, error) {
 	}
 
 	fgpw := imagick.NewPixelWand()
-	if ok := fgpw.SetColor("#ffffff"); !ok {
+	if ok := fgpw.SetColor(o.textColor); !ok {
 		return nil, errors.New("invalid color")
 	}
-	bgpw := imagick.NewPixelWand()
-	if ok := bgpw.SetColor("#000000"); !ok {
+	stpw := imagick.NewPixelWand()
+	if ok := stpw.SetColor("#000000"); !ok {
 		return nil, errors.New("invalid color")
 	}
 
-	ttldw.SetStrokeColor(bgpw)
-	txtdw.SetStrokeColor(bgpw)
+	ttldw.SetStrokeColor(stpw)
+	txtdw.SetStrokeColor(stpw)
 	ttldw.SetStrokeWidth(1)
 	txtdw.SetStrokeWidth(0.8)
 	ttldw.SetFillColor(fgpw)
