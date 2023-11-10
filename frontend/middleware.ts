@@ -14,10 +14,13 @@ export function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
 
   const excluded: (string | RegExp)[] = [
+    // static files
     "/favicon.ico",
     "/robots.txt",
-    /^\/.*\.xml/,
-    /^\/.*\.png$/,
+    "/sitemap.xml",
+    "/card.png",
+    "/logo192.png",
+    "/logo512.png",
   ];
   if (excluded.some((path) => pathname.match(path))) return;
 
