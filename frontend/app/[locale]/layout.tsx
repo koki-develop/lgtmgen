@@ -88,6 +88,15 @@ export default function RootLayout({
                 {t.usagePrecautions}
               </Link>
             </li>
+            <li>
+              <a
+                href={t.feedbackLink}
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                {t.feedback}
+              </a>
+            </li>
           </ul>
 
           <small>&copy; 2023 Koki Sato</small>
