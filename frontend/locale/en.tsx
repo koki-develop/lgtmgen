@@ -5,6 +5,9 @@ const en: I18n = {
   description:
     "This is a simple LGTM image generation service. LGTM stands for 'Looks Good To Me', a type of internet slang used during code reviews, among other situations.",
 
+  feedback: "Feedback",
+  feedbackLink: "https://forms.gle/4xcwMaZveyXK1jvu6",
+
   lgtm: "LGTM",
   searchImage: "Search Image",
   favorite: "Favorite",

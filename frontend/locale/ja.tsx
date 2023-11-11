@@ -5,6 +5,9 @@ const ja: I18n = {
   description:
     "シンプルな LGTM 画像生成サービスです。 LGTM とは「Looks Good To Me」の略で、コードレビューのときなどに用いられるネットスラングの一種です。",
 
+  feedback: "ご意見・ご要望",
+  feedbackLink: "https://forms.gle/gtb76RRwBYGejKgd8",
+
   lgtm: "LGTM",
   searchImage: "画像検索",
   favorite: "お気に入り",

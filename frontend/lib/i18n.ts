@@ -6,6 +6,9 @@ export type I18n = {
   app: string;
   description: string;
 
+  feedback: string;
+  feedbackLink: string;
+
   lgtm: string;
   searchImage: string;
   favorite: string;
