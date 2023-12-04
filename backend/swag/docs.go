@@ -71,6 +71,12 @@ const docTemplate = `{
                         "description": "random",
                         "name": "random",
                         "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "tag",
+                        "name": "tag",
+                        "in": "query"
                     }
                 ],
                 "responses": {

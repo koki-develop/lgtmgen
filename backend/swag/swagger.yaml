@@ -139,6 +139,10 @@ paths:
         in: query
         name: random
         type: boolean
+      - description: tag
+        in: query
+        name: tag
+        type: string
       responses:
         "200":
           description: OK
