@@ -54,6 +54,15 @@ provider:
             - Fn::Join:
                 - ""
                 - - "arn:aws:s3:::"
+                  - ${self:custom.prefix}-original-images
+            - Fn::Join:
+                - ""
+                - - "arn:aws:s3:::"
+                  - ${self:custom.prefix}-original-images
+                  - /*
+            - Fn::Join:
+                - ""
+                - - "arn:aws:s3:::"
                   - ${self:custom.prefix}-news
             - Fn::Join:
                 - ""
