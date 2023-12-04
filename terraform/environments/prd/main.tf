@@ -14,6 +14,12 @@ module "s3_images" {
   distribution_arn = module.cloudfront_images.this.arn
 }
 
+module "s3_original_images" {
+  source = "../../modules/aws/s3"
+  name   = local.name
+  tier   = "original-images"
+}
+
 module "s3_news" {
   source = "../../modules/aws/s3"
   name   = local.name
