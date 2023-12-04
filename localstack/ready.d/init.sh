@@ -10,6 +10,10 @@ awslocal s3api create-bucket \
   --acl public-read
 
 awslocal s3api create-bucket \
+  --bucket ${RESOURCE_PREFIX}-original-images \
+  --acl public-read
+
+awslocal s3api create-bucket \
   --bucket ${RESOURCE_PREFIX}-news \
   --acl private
 
