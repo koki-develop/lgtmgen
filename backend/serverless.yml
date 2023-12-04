@@ -3,6 +3,9 @@ frameworkVersion: "3"
 
 custom:
   prefix: lgtmgen-${self:provider.stage}
+  tagScheduleEnabled:
+    dev: false
+    prd: true
 
 provider:
   name: aws
@@ -111,6 +114,15 @@ functions:
       - http:
           method: ANY
           path: "/{any+}"
+  tag:
+    image:
+      name: api
+      command: [tag, --lambda]
+    timeout: 30
+    events:
+      - schedule:
+          rate: rate(1 minutes)
+          enabled: ${self:custom.tagScheduleEnabled.${self:provider.stage}}
   delete:
     image:
       name: api
