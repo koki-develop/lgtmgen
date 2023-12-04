@@ -73,12 +73,19 @@ func (r *lgtmRepository) FindLGTM(ctx context.Context, id string) (*models.LGTM,
 }
 
 type lgtmListOptions struct {
+	Tag    string
 	Limit  int
 	After  *models.LGTM
 	Random bool
 }
 
 type LGTMListOption func(*lgtmListOptions)
+
+func WithLGTMTag(tag string) LGTMListOption {
+	return func(o *lgtmListOptions) {
+		o.Tag = tag
+	}
+}
 
 func WithLGTMLimit(limit int) LGTMListOption {
 	return func(o *lgtmListOptions) {
@@ -112,9 +119,14 @@ func (r *lgtmRepository) ListLGTMs(ctx context.Context, opts ...LGTMListOption) 
 }
 
 func (r *lgtmRepository) listLGTMs(ctx context.Context, o *lgtmListOptions) (models.LGTMs, error) {
-	expr, err := expression.NewBuilder().
-		WithKeyCondition(expression.KeyEqual(expression.Key("status"), expression.Value("ok"))).
-		Build()
+	exb := expression.NewBuilder().
+		WithKeyCondition(expression.KeyEqual(expression.Key("status"), expression.Value("ok")))
+
+	if o.Tag != "" {
+		exb = exb.WithFilter(expression.Contains(expression.Name("tags_ja"), o.Tag).Or(expression.Contains(expression.Name("tags_en"), o.Tag)))
+	}
+
+	expr, err := exb.Build()
 	if err != nil {
 		return nil, errors.Wrap(err, "failed to build expression")
 	}
@@ -132,6 +144,7 @@ func (r *lgtmRepository) listLGTMs(ctx context.Context, o *lgtmListOptions) (mod
 		&dynamodb.QueryInput{
 			TableName:                 util.Ptr(r.table()),
 			IndexName:                 util.Ptr("index_by_status"),
+			FilterExpression:          expr.Filter(),
 			KeyConditionExpression:    expr.KeyCondition(),
 			ExpressionAttributeNames:  expr.Names(),
 			ExpressionAttributeValues: expr.Values(),
