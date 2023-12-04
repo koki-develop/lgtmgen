@@ -221,6 +221,16 @@ func (r *lgtmRepository) CreateLGTM(ctx context.Context, data []byte, opts ...lg
 		return nil, errors.Wrap(err, "failed to upload image")
 	}
 
+	_, err = uploader.Upload(ctx, &s3.PutObjectInput{
+		Bucket:      util.Ptr(r.originalBucket()),
+		Key:         util.Ptr(lgtm.ID),
+		Body:        bytes.NewReader(data),
+		ContentType: util.Ptr(t),
+	})
+	if err != nil {
+		return nil, errors.Wrap(err, "failed to upload image")
+	}
+
 	k, err := attributevalue.MarshalMap(map[string]interface{}{"id": lgtm.ID, "created_at": lgtm.CreatedAt})
 	if err != nil {
 		return nil, errors.Wrap(err, "failed to marshal")
@@ -283,4 +293,8 @@ func (*lgtmRepository) table() string {
 
 func (*lgtmRepository) bucket() string {
 	return fmt.Sprintf("lgtmgen-%s-images", env.Vars.Stage)
+}
+
+func (*lgtmRepository) originalBucket() string {
+	return fmt.Sprintf("lgtmgen-%s-original-images", env.Vars.Stage)
 }
