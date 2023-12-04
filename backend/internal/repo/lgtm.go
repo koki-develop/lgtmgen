@@ -247,6 +247,36 @@ func (r *lgtmRepository) CreateLGTM(ctx context.Context, data []byte, opts ...lg
 	return lgtm, nil
 }
 
+func (r *lgtmRepository) DeleteLGTM(ctx context.Context, id string) error {
+	lgtm, err := r.FindLGTM(ctx, id)
+	if err != nil {
+		return errors.Wrap(err, "failed to find lgtm")
+	}
+
+	k, err := attributevalue.MarshalMap(map[string]interface{}{"id": lgtm.ID, "created_at": lgtm.CreatedAt})
+	if err != nil {
+		return errors.Wrap(err, "failed to marshal")
+	}
+
+	_, err = r.dbClient.DeleteItem(ctx, &dynamodb.DeleteItemInput{
+		TableName: util.Ptr(r.table()),
+		Key:       k,
+	})
+	if err != nil {
+		return errors.Wrap(err, "failed to delete item")
+	}
+
+	_, err = r.storageClient.DeleteObject(ctx, &s3.DeleteObjectInput{
+		Bucket: util.Ptr(r.bucket()),
+		Key:    util.Ptr(lgtm.ID),
+	})
+	if err != nil {
+		return errors.Wrap(err, "failed to delete object")
+	}
+
+	return nil
+}
+
 func (*lgtmRepository) table() string {
 	return fmt.Sprintf("lgtmgen-%s-lgtms", env.Vars.Stage)
 }

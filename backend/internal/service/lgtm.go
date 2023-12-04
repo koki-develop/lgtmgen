@@ -183,6 +183,14 @@ func (svc *lgtmService) CreateLGTM(ctx *gin.Context) {
 	ctx.JSON(http.StatusCreated, lgtm)
 }
 
+func (svc *lgtmService) DeleteLGTM(ctx context.Context, id string) error {
+	if err := svc.repo.DeleteLGTM(ctx, id); err != nil {
+		return errors.Wrap(err, "failed to delete lgtm")
+	}
+
+	return nil
+}
+
 func (svc *lgtmService) readFromBase64(ctx context.Context, b string) ([]byte, error) {
 	d, err := base64.StdEncoding.DecodeString(b)
 	if err != nil {
