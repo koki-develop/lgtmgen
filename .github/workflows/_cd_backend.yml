@@ -12,6 +12,8 @@ on:
     secrets:
       google-api-key:
         required: true
+      azure-api-key:
+        required: true
       slack-oauth-token:
         required: true
       sentry-auth-token:
@@ -34,6 +36,9 @@ jobs:
       # Google
       GOOGLE_API_KEY: ${{ secrets.google-api-key }}
       SEARCH_ENGINE_ID: ${{ vars.SEARCH_ENGINE_ID }}
+      # Azure
+      AZURE_API_KEY: ${{ secrets.azure-api-key }}
+      AZURE_ENDPOINT: ${{ vars.AZURE_ENDPOINT }}
       # Slack
       SLACK_OAUTH_TOKEN: ${{ secrets.slack-oauth-token }}
       IMAGES_BASE_URL: ${{ vars.IMAGES_BASE_URL }}
