@@ -99,6 +99,11 @@ functions:
       - http:
           method: ANY
           path: "/{any+}"
+  delete:
+    image:
+      name: api
+      command: [delete]
+    timeout: 30 # s
   notify:
     image:
       name: api
