@@ -89,6 +89,9 @@ provider:
     # Google
     GOOGLE_API_KEY: ${env:GOOGLE_API_KEY}
     SEARCH_ENGINE_ID: ${env:SEARCH_ENGINE_ID}
+    # Azure
+    AZURE_API_KEY: ${env:AZURE_API_KEY}
+    AZURE_ENDPOINT: ${env:AZURE_ENDPOINT}
     # Slack
     SLACK_OAUTH_TOKEN: ${env:SLACK_OAUTH_TOKEN}
     # SQS Queue

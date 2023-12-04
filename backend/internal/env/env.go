@@ -26,6 +26,9 @@ type Env struct {
 	// Google
 	GoogleAPIKey   string `env:"GOOGLE_API_KEY,required"`
 	SearchEngineID string `env:"SEARCH_ENGINE_ID,required"`
+	// Azure
+	AzureAPIKey   string `env:"AZURE_API_KEY,required"`
+	AzureEndpoint string `env:"AZURE_ENDPOINT,required"`
 	// Slack
 	SlackOAuthToken string `env:"SLACK_OAUTH_TOKEN,required"`
 	// SQS Queue
