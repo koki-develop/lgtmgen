@@ -4,11 +4,15 @@ import (
 	"bytes"
 	"context"
 	"fmt"
+	"io"
 	"math/rand"
 	"net/http"
 	"strings"
 	"time"
 
+	"github.com/Azure/azure-sdk-for-go/services/cognitiveservices/v2.1/computervision"
+	_ "github.com/Azure/azure-sdk-for-go/services/cognitiveservices/v2.1/computervision"
+	"github.com/Azure/go-autorest/autorest"
 	"github.com/aws/aws-sdk-go-v2/feature/dynamodb/attributevalue"
 	"github.com/aws/aws-sdk-go-v2/feature/dynamodb/expression"
 	"github.com/aws/aws-sdk-go-v2/feature/s3/manager"
@@ -285,6 +289,101 @@ func (r *lgtmRepository) DeleteLGTM(ctx context.Context, id string) error {
 	}
 
 	return nil
+}
+
+func (r *lgtmRepository) TagLGTM(ctx context.Context) (*models.LGTM, error) {
+	resp, err := r.storageClient.ListObjectsV2(ctx, &s3.ListObjectsV2Input{
+		Bucket:  util.Ptr(r.originalBucket()),
+		MaxKeys: 1,
+	})
+	if err != nil {
+		return nil, errors.Wrap(err, "failed to list objects")
+	}
+	if len(resp.Contents) == 0 {
+		return nil, nil
+	}
+
+	id := resp.Contents[0].Key
+
+	lgtm, err := r.FindLGTM(ctx, *id)
+	if err != nil {
+		return nil, errors.Wrap(err, "failed to find lgtm")
+	}
+
+	if lgtm == nil {
+		_, err = r.storageClient.DeleteObject(ctx, &s3.DeleteObjectInput{
+			Bucket: util.Ptr(r.originalBucket()),
+			Key:    id,
+		})
+		if err != nil {
+			return nil, errors.Wrap(err, "failed to delete object")
+		}
+		return nil, nil
+	}
+
+	obj, err := r.storageClient.GetObject(ctx, &s3.GetObjectInput{
+		Bucket: util.Ptr(r.originalBucket()),
+		Key:    id,
+	})
+	if err != nil {
+		return nil, errors.Wrap(err, "failed to download image")
+	}
+	defer obj.Body.Close()
+	buf := new(bytes.Buffer)
+	buf.ReadFrom(obj.Body)
+
+	k, err := attributevalue.MarshalMap(map[string]interface{}{"id": lgtm.ID, "created_at": lgtm.CreatedAt})
+	if err != nil {
+		return nil, errors.Wrap(err, "failed to marshal")
+	}
+
+	cv := computervision.New(env.Vars.AzureEndpoint)
+	cv.Authorizer = autorest.NewCognitiveServicesAuthorizer(env.Vars.AzureAPIKey)
+	for _, lang := range []string{"ja", "en"} {
+		b := io.NopCloser(bytes.NewReader(buf.Bytes()))
+		defer b.Close()
+
+		rslt, err := cv.TagImageInStream(ctx, b, lang)
+		if err != nil {
+			return nil, errors.Wrap(err, "failed to tag image")
+		}
+		defer rslt.Body.Close()
+
+		var tags []string
+		for _, tag := range *rslt.Tags {
+			if *tag.Confidence > 0.90 {
+				tags = append(tags, *tag.Name)
+			}
+		}
+
+		expr, err := expression.NewBuilder().
+			WithUpdate(expression.Set(expression.Name(fmt.Sprintf("tags_%s", lang)), expression.Value(tags))).
+			Build()
+		if err != nil {
+			return nil, errors.Wrap(err, "failed to build expression")
+		}
+
+		_, err = r.dbClient.UpdateItem(ctx, &dynamodb.UpdateItemInput{
+			TableName:                 util.Ptr(r.table()),
+			Key:                       k,
+			UpdateExpression:          expr.Update(),
+			ExpressionAttributeNames:  expr.Names(),
+			ExpressionAttributeValues: expr.Values(),
+		})
+		if err != nil {
+			return nil, errors.Wrap(err, "failed to update item")
+		}
+	}
+
+	_, err = r.storageClient.DeleteObject(ctx, &s3.DeleteObjectInput{
+		Bucket: util.Ptr(r.originalBucket()),
+		Key:    id,
+	})
+	if err != nil {
+		return nil, errors.Wrap(err, "failed to delete object")
+	}
+
+	return lgtm, nil
 }
 
 func (*lgtmRepository) table() string {

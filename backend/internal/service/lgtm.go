@@ -191,6 +191,20 @@ func (svc *lgtmService) DeleteLGTM(ctx context.Context, id string) error {
 	return nil
 }
 
+func (svc *lgtmService) TagLGTM(ctx context.Context) error {
+	lgtm, err := svc.repo.TagLGTM(ctx)
+	if err != nil {
+		return errors.Wrap(err, "failed to tag lgtm")
+	}
+
+	if lgtm != nil {
+		log.Info(ctx, "tagged lgtm", "id", lgtm.ID)
+	} else {
+		log.Info(ctx, "no lgtm to tag")
+	}
+	return nil
+}
+
 func (svc *lgtmService) readFromBase64(ctx context.Context, b string) ([]byte, error) {
 	d, err := base64.StdEncoding.DecodeString(b)
 	if err != nil {
