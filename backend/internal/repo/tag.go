@@ -9,6 +9,7 @@ import (
 	"github.com/aws/aws-sdk-go-v2/service/dynamodb"
 	"github.com/cockroachdb/errors"
 	"github.com/koki-develop/lgtmgen/backend/internal/env"
+	"github.com/koki-develop/lgtmgen/backend/internal/models"
 	"github.com/koki-develop/lgtmgen/backend/internal/util"
 )
 
@@ -20,6 +21,35 @@ func newTagRepository(dbClient *dynamodb.Client) *tagRepository {
 	return &tagRepository{
 		dbClient: dbClient,
 	}
+}
+
+func (r *tagRepository) ListTags(ctx context.Context, lang string) (models.Tags, error) {
+	expr, err := expression.NewBuilder().
+		WithKeyCondition(expression.KeyEqual(expression.Key("lang"), expression.Value(lang))).
+		Build()
+	if err != nil {
+		return nil, errors.Wrap(err, "failed to build expression")
+	}
+
+	res, err := r.dbClient.Query(ctx, &dynamodb.QueryInput{
+		TableName:                 util.Ptr(r.table()),
+		IndexName:                 util.Ptr("index_by_lang"),
+		KeyConditionExpression:    expr.KeyCondition(),
+		ExpressionAttributeNames:  expr.Names(),
+		ExpressionAttributeValues: expr.Values(),
+		Limit:                     util.Ptr(int32(20)),
+		ScanIndexForward:          util.Ptr(false),
+	})
+	if err != nil {
+		return nil, errors.Wrap(err, "failed to query tags")
+	}
+
+	var tags models.Tags
+	if err := attributevalue.UnmarshalListOfMaps(res.Items, &tags); err != nil {
+		return nil, errors.Wrap(err, "failed to unmarshal tags")
+	}
+
+	return tags, nil
 }
 
 func (r *tagRepository) IncrementTagByName(ctx context.Context, name string, lang string) error {
