@@ -27,14 +27,14 @@ func newLGTMService(repo *repo.Repository) *lgtmService {
 	}
 }
 
-//	@Router		/v1/lgtms [get]
-//	@Param		limit	query		int		false	"limit"
-//	@Param		after	query		string	false	"after"
-//	@Param		random	query		bool	false	"random"
-//	@Param		tag		query		string	false	"tag"
-//	@Success	200		{array}		models.LGTM
-//	@Failure	400		{object}	ErrorResponse
-//	@Failure	500		{object}	ErrorResponse
+// @Router		/v1/lgtms [get]
+// @Param		limit	query		int		false	"limit"
+// @Param		after	query		string	false	"after"
+// @Param		random	query		bool	false	"random"
+// @Param		tag		query		string	false	"tag"
+// @Success	200		{array}		models.LGTM
+// @Failure	400		{object}	ErrorResponse
+// @Failure	500		{object}	ErrorResponse
 func (svc *lgtmService) ListLGTMs(ctx *gin.Context) {
 	opts := []repo.LGTMListOption{}
 
@@ -109,12 +109,12 @@ func (ipt *createLGTMInput) Validate() error {
 	return nil
 }
 
-//	@Router		/v1/lgtms [post]
-//	@Accept		json
-//	@Param		body	body		createLGTMInput	true	"body"
-//	@Success	201		{object}	models.LGTM
-//	@Failure	400		{object}	ErrorResponse
-//	@Failure	500		{object}	ErrorResponse
+// @Router		/v1/lgtms [post]
+// @Accept		json
+// @Param		body	body		createLGTMInput	true	"body"
+// @Success	201		{object}	models.LGTM
+// @Failure	400		{object}	ErrorResponse
+// @Failure	500		{object}	ErrorResponse
 func (svc *lgtmService) CreateLGTM(ctx *gin.Context) {
 	var ipt createLGTMInput
 	if err := ctx.ShouldBindJSON(&ipt); err != nil {
@@ -204,9 +204,21 @@ func (svc *lgtmService) TagLGTM(ctx context.Context) error {
 
 	if lgtm != nil {
 		log.Info(ctx, "tagged lgtm", "id", lgtm.ID)
+
+		for lang, tags := range map[string][]string{
+			"ja": lgtm.TagsJa,
+			"en": lgtm.TagsEn,
+		} {
+			for _, tag := range tags {
+				if err := svc.repo.IncrementTagByName(ctx, tag, lang); err != nil {
+					return errors.Wrap(err, "failed to upsert tags")
+				}
+			}
+		}
 	} else {
 		log.Info(ctx, "no lgtm to tag")
 	}
+
 	return nil
 }
 
