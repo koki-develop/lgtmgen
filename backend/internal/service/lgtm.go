@@ -213,6 +213,8 @@ func (svc *lgtmService) TagLGTM(ctx context.Context) error {
 				if err := svc.repo.IncrementTagByName(ctx, tag, lang); err != nil {
 					return errors.Wrap(err, "failed to upsert tags")
 				}
+
+				// TODO: sync to algolia
 			}
 		}
 	} else {
