@@ -9,6 +9,8 @@ import (
 
 type LGTM struct {
 	ID        string     `json:"id" dynamodbav:"id"         validate:"required"`
+	TagsJa    []string   `json:"-"  dynamodbav:"tags_ja"`
+	TagsEn    []string   `json:"-"  dynamodbav:"tags_en"`
 	Status    LGTMStatus `json:"-"  dynamodbav:"status"                        `
 	CreatedAt time.Time  `json:"-"  dynamodbav:"created_at"                    `
 }
