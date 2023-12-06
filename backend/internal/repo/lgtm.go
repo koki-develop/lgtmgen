@@ -365,6 +365,7 @@ func (r *lgtmRepository) TagLGTM(ctx context.Context) (*models.LGTM, error) {
 		var tags []string
 		for _, tag := range *rslt.Tags {
 			if *tag.Confidence > 0.90 {
+				log.Info(ctx, "tagged", "tag", *tag.Name, "confidence", *tag.Confidence)
 				tags = append(tags, *tag.Name)
 			}
 		}
