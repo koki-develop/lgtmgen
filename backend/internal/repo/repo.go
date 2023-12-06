@@ -17,6 +17,7 @@ import (
 
 type Repository struct {
 	*lgtmRepository
+	*tagRepository
 	*reportRepository
 	*notificationsRepository
 	*imageRepository
@@ -58,6 +59,7 @@ func New(ctx context.Context) (*Repository, error) {
 
 	return &Repository{
 		lgtmRepository:          newLGTMRepository(dbClient, storageClient),
+		tagRepository:           newTagRepository(dbClient),
 		reportRepository:        newReportRepository(dbClient, queueClient),
 		imageRepository:         newImageRepository(env.Vars.SearchEngineID, search),
 		rateRepository:          newRateRepository(dbClient),
