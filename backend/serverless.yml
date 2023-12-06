@@ -121,7 +121,7 @@ functions:
     timeout: 30
     events:
       - schedule:
-          rate: rate(1 minutes)
+          rate: rate(5 minutes)
           enabled: ${self:custom.tagScheduleEnabled.${self:provider.stage}}
   delete:
     image:
