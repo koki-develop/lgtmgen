@@ -32,6 +32,19 @@ awslocal dynamodb create-table \
   --billing-mode PAY_PER_REQUEST
 
 awslocal dynamodb create-table \
+  --table-name ${RESOURCE_PREFIX}-tags \
+  --key-schema \
+    AttributeName=name,KeyType=HASH \
+    AttributeName=lang,KeyType=RANGE \
+  --attribute-definitions \
+    AttributeName=name,AttributeType=S \
+    AttributeName=count,AttributeType=N \
+    AttributeName=lang,AttributeType=S \
+  --global-secondary-indexes \
+    IndexName=index_by_lang,KeySchema=["{AttributeName=lang,KeyType=HASH}","{AttributeName=count,KeyType=RANGE}"],Projection="{ProjectionType=ALL}" \
+  --billing-mode PAY_PER_REQUEST
+
+awslocal dynamodb create-table \
   --table-name ${RESOURCE_PREFIX}-reports \
   --key-schema \
     AttributeName=id,KeyType=HASH \

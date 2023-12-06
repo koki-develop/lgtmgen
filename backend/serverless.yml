@@ -168,6 +168,32 @@ resources:
                 KeyType: RANGE
             Projection:
               ProjectionType: ALL
+    TagsTable:
+      Type: AWS::DynamoDB::Table
+      Properties:
+        TableName: ${self:custom.prefix}-tags
+        BillingMode: PAY_PER_REQUEST
+        AttributeDefinitions:
+          - AttributeName: name
+            AttributeType: S
+          - AttributeName: lang
+            AttributeType: S
+          - AttributeName: count
+            AttributeType: N
+        KeySchema:
+          - AttributeName: name
+            KeyType: HASH
+          - AttributeName: lang
+            KeyType: RANGE
+        GlobalSecondaryIndexes:
+          - IndexName: index_by_lang
+            KeySchema:
+              - AttributeName: lang
+                KeyType: HASH
+              - AttributeName: count
+                KeyType: RANGE
+            Projection:
+              ProjectionType: ALL
     ReportsTable:
       Type: AWS::DynamoDB::Table
       Properties:
