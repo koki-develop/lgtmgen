@@ -368,6 +368,14 @@ func (r *lgtmRepository) TagLGTM(ctx context.Context) (*models.LGTM, error) {
 				tags = append(tags, *tag.Name)
 			}
 		}
+		switch lang {
+		case "ja":
+			lgtm.TagsJa = tags
+		case "en":
+			lgtm.TagsEn = tags
+		default:
+			return nil, errors.Errorf("unknown lang: %s", lang)
+		}
 
 		expr, err := expression.NewBuilder().
 			WithUpdate(expression.Set(expression.Name(fmt.Sprintf("tags_%s", lang)), expression.Value(tags))).
