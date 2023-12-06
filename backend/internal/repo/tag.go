@@ -7,6 +7,7 @@ import (
 	"github.com/aws/aws-sdk-go-v2/feature/dynamodb/attributevalue"
 	"github.com/aws/aws-sdk-go-v2/feature/dynamodb/expression"
 	"github.com/aws/aws-sdk-go-v2/service/dynamodb"
+	"github.com/aws/aws-sdk-go-v2/service/dynamodb/types"
 	"github.com/cockroachdb/errors"
 	"github.com/koki-develop/lgtmgen/backend/internal/env"
 	"github.com/koki-develop/lgtmgen/backend/internal/models"
@@ -52,31 +53,37 @@ func (r *tagRepository) ListTags(ctx context.Context, lang string) (models.Tags,
 	return tags, nil
 }
 
-func (r *tagRepository) IncrementTagByName(ctx context.Context, name string, lang string) error {
+func (r *tagRepository) IncrementTagByName(ctx context.Context, name string, lang string) (*models.Tag, error) {
 	expr, err := expression.NewBuilder().
 		WithUpdate(expression.Add(expression.Name("count"), expression.Value(1))).
 		Build()
 	if err != nil {
-		return errors.Wrap(err, "failed to build expression")
+		return nil, errors.Wrap(err, "failed to build expression")
 	}
 
 	k, err := attributevalue.MarshalMap(map[string]interface{}{"name": name, "lang": lang})
 	if err != nil {
-		return errors.Wrap(err, "failed to marshal key")
+		return nil, errors.Wrap(err, "failed to marshal key")
 	}
 
-	_, err = r.dbClient.UpdateItem(ctx, &dynamodb.UpdateItemInput{
+	resp, err := r.dbClient.UpdateItem(ctx, &dynamodb.UpdateItemInput{
 		TableName:                 util.Ptr(r.table()),
 		Key:                       k,
 		UpdateExpression:          expr.Update(),
 		ExpressionAttributeNames:  expr.Names(),
 		ExpressionAttributeValues: expr.Values(),
+		ReturnValues:              types.ReturnValueAllNew,
 	})
 	if err != nil {
-		return errors.Wrap(err, "failed to update tag")
+		return nil, errors.Wrap(err, "failed to update tag")
 	}
 
-	return nil
+	var tag models.Tag
+	if err := attributevalue.UnmarshalMap(resp.Attributes, &tag); err != nil {
+		return nil, errors.Wrap(err, "failed to unmarshal tag")
+	}
+
+	return &tag, nil
 }
 
 func (*tagRepository) table() string {

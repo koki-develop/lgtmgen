@@ -205,16 +205,18 @@ func (svc *lgtmService) TagLGTM(ctx context.Context) error {
 	if lgtm != nil {
 		log.Info(ctx, "tagged lgtm", "id", lgtm.ID)
 
-		for lang, tags := range map[string][]string{
+		for lang, names := range map[string][]string{
 			"ja": lgtm.TagsJa,
 			"en": lgtm.TagsEn,
 		} {
-			for _, tag := range tags {
-				if err := svc.repo.IncrementTagByName(ctx, tag, lang); err != nil {
+			for _, name := range names {
+				tag, err := svc.repo.IncrementTagByName(ctx, name, lang)
+				if err != nil {
 					return errors.Wrap(err, "failed to upsert tags")
 				}
 
 				// TODO: sync to algolia
+				log.Info(ctx, "incremented tag", "tag", tag)
 			}
 		}
 	} else {
