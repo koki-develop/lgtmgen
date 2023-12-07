@@ -5,6 +5,9 @@ definitions:
         type: integer
       name:
         type: string
+    required:
+    - count
+    - name
     type: object
   models.Image:
     properties:

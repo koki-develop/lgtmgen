@@ -252,6 +252,10 @@ const docTemplate = `{
     "definitions": {
         "models.Category": {
             "type": "object",
+            "required": [
+                "count",
+                "name"
+            ],
             "properties": {
                 "count": {
                     "type": "integer"

@@ -10,8 +10,8 @@
  */
 
 export interface ModelsCategory {
-  count?: number;
-  name?: string;
+  count: number;
+  name: string;
 }
 
 export interface ModelsImage {
