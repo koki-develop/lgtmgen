@@ -10,15 +10,27 @@ export type HomeProps = {
 };
 
 export default async function Home({ params: { locale } }: HomeProps) {
+  const lang = ["ja", "en"].includes(locale) ? locale : "ja";
   const newsListing = api.v1.newsList({ locale });
   const lgtmsListing = api.v1.lgtmsList({ limit: perPage });
   const lgtmsRandomListing = api.v1.lgtmsList({ limit: perPage, random: true });
+  const categoriesListing = api.v1.categoriesList({ lang });
 
-  const [newsListResponse, lgtmsListResponse, lgtmListRandomResponse] =
-    await Promise.all([newsListing, lgtmsListing, lgtmsRandomListing]);
+  const [
+    newsListResponse,
+    lgtmsListResponse,
+    lgtmListRandomResponse,
+    categoriesListResponse,
+  ] = await Promise.all([
+    newsListing,
+    lgtmsListing,
+    lgtmsRandomListing,
+    categoriesListing,
+  ]);
   if (!newsListResponse.ok) throw newsListResponse.error;
   if (!lgtmsListResponse.ok) throw lgtmsListResponse.error;
   if (!lgtmListRandomResponse.ok) throw lgtmListRandomResponse.error;
+  if (!categoriesListResponse.ok) throw categoriesListResponse.error;
 
   return (
     <Main
@@ -26,6 +38,7 @@ export default async function Home({ params: { locale } }: HomeProps) {
       newsList={newsListResponse.data}
       initialData={lgtmsListResponse.data}
       initialRandomData={lgtmListRandomResponse.data}
+      categories={categoriesListResponse.data}
       perPage={perPage}
     />
   );

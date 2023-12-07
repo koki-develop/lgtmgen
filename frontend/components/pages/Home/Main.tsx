@@ -1,6 +1,11 @@
 "use client";
 
-import { ModelsImage, ModelsLGTM, ModelsNews } from "@/lib/generated/api";
+import {
+  ModelsCategory,
+  ModelsImage,
+  ModelsLGTM,
+  ModelsNews,
+} from "@/lib/generated/api";
 import { i18n } from "@/lib/i18n";
 import { useStorage } from "@/lib/storage";
 import { Tab } from "@headlessui/react";
@@ -16,6 +21,7 @@ export type MainProps = {
   newsList: ModelsNews[];
   initialData: ModelsLGTM[];
   initialRandomData: ModelsLGTM[];
+  categories: ModelsCategory[];
   perPage: number;
 };
 
@@ -24,6 +30,7 @@ export default function Main({
   newsList,
   initialData,
   initialRandomData,
+  categories,
   perPage,
 }: MainProps) {
   const { loadFavorites, loadRandomly } = useStorage();
@@ -166,6 +173,7 @@ export default function Main({
             {rendered ? (
               <LgtmPanel
                 lgtms={lgtms}
+                categories={categories}
                 randomly={randomly}
                 onChangeRandomly={handleChangeRandomly}
                 favorites={favorites}

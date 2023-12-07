@@ -1,4 +1,4 @@
-import { ModelsLGTM } from "@/lib/generated/api";
+import { ModelsCategory, ModelsLGTM } from "@/lib/generated/api";
 import { useFetchLgtms } from "@/lib/models/lgtm/lgtmHooks";
 import { useStorage } from "@/lib/storage";
 import { useI18n } from "@/providers/I18nProvider";
@@ -12,6 +12,7 @@ export type LgtmPanelProps = {
   hasNextPage: boolean;
   randomly: boolean;
   lgtms: ModelsLGTM[];
+  categories: ModelsCategory[];
   favorites: string[];
 
   onLoaded: (lgtms: ModelsLGTM[]) => void;
@@ -25,6 +26,7 @@ export default function LgtmPanel({
   hasNextPage,
   randomly,
   lgtms,
+  categories,
   favorites,
 
   onLoaded,
@@ -68,6 +70,11 @@ export default function LgtmPanel({
   return (
     <>
       <div className="flex flex-col gap-4">
+        <div>
+          {categories.map((category) => (
+            <div>{category.name}</div>
+          ))}
+        </div>
         <div className="flex justify-end">
           <Switch
             className="flex items-center justify-end gap-2"
