@@ -1,4 +1,11 @@
 definitions:
+  models.Category:
+    properties:
+      count:
+        type: integer
+      name:
+        type: string
+    type: object
   models.Image:
     properties:
       title:
@@ -48,13 +55,6 @@ definitions:
     - ReportTypeIllegal
     - ReportTypeInappropriate
     - ReportTypeOther
-  models.Tag:
-    properties:
-      count:
-        type: integer
-      name:
-        type: string
-    type: object
   service.ErrCode:
     enum:
     - BAD_REQUEST
@@ -108,6 +108,28 @@ definitions:
 info:
   contact: {}
 paths:
+  /v1/categories:
+    get:
+      parameters:
+      - description: lang
+        in: query
+        name: lang
+        type: string
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/models.Category'
+            type: array
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/service.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/service.ErrorResponse'
   /v1/images:
     get:
       parameters:
@@ -146,9 +168,13 @@ paths:
         in: query
         name: random
         type: boolean
-      - description: tag
+      - description: category
         in: query
-        name: tag
+        name: category
+        type: string
+      - description: lang
+        in: query
+        name: lang
         type: string
       responses:
         "200":
@@ -222,28 +248,6 @@ paths:
           description: Created
           schema:
             $ref: '#/definitions/models.Report'
-        "400":
-          description: Bad Request
-          schema:
-            $ref: '#/definitions/service.ErrorResponse'
-        "500":
-          description: Internal Server Error
-          schema:
-            $ref: '#/definitions/service.ErrorResponse'
-  /v1/tags:
-    get:
-      parameters:
-      - description: lang
-        in: query
-        name: lang
-        type: string
-      responses:
-        "200":
-          description: OK
-          schema:
-            items:
-              $ref: '#/definitions/models.Tag'
-            type: array
         "400":
           description: Bad Request
           schema:
