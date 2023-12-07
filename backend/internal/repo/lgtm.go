@@ -194,10 +194,17 @@ func (r *lgtmRepository) listLGTMs(ctx context.Context, o *lgtmListOptions) (mod
 }
 
 func (r *lgtmRepository) listLGTMsRandomly(ctx context.Context, o *lgtmListOptions) (models.LGTMs, error) {
-	resp, err := r.storageClient.ListObjectsV2(ctx, &s3.ListObjectsV2Input{
-		Bucket:  util.Ptr(r.bucket()),
+	ipt := &s3.ListObjectsV2Input{
 		MaxKeys: 500,
-	})
+	}
+	if o.Category == "" {
+		ipt.Bucket = util.Ptr(r.bucket())
+	} else {
+		ipt.Bucket = util.Ptr(fmt.Sprintf("lgtmgen-%s-categorized-keys", env.Vars.Stage))
+		ipt.Prefix = util.Ptr(fmt.Sprintf("%s/%s/", o.Lang, o.Category))
+	}
+
+	resp, err := r.storageClient.ListObjectsV2(ctx, ipt)
 	if err != nil {
 		return nil, errors.Wrap(err, "failed to list objects")
 	}
@@ -208,7 +215,8 @@ func (r *lgtmRepository) listLGTMsRandomly(ctx context.Context, o *lgtmListOptio
 
 	keys := make([]string, limit)
 	for i, obj := range resp.Contents[:limit] {
-		keys[i] = *obj.Key
+		ss := strings.Split(*obj.Key, "/")
+		keys[i] = ss[len(ss)-1]
 	}
 
 	lgtms := make(models.LGTMs, limit)
