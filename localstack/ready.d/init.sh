@@ -32,6 +32,32 @@ awslocal dynamodb create-table \
   --billing-mode PAY_PER_REQUEST
 
 awslocal dynamodb create-table \
+  --table-name ${RESOURCE_PREFIX}-lgtms-categories-ja \
+  --key-schema \
+    AttributeName=id,KeyType=HASH \
+    AttributeName=category,KeyType=RANGE \
+  --attribute-definitions \
+    AttributeName=id,AttributeType=S \
+    AttributeName=category,AttributeType=S \
+    AttributeName=created_at,AttributeType=S \
+  --global-secondary-indexes \
+    IndexName=index_by_category,KeySchema=["{AttributeName=category,KeyType=HASH}","{AttributeName=created_at,KeyType=RANGE}"],Projection="{ProjectionType=ALL}" \
+  --billing-mode PAY_PER_REQUEST
+
+awslocal dynamodb create-table \
+  --table-name ${RESOURCE_PREFIX}-lgtms-categories-en \
+  --key-schema \
+    AttributeName=id,KeyType=HASH \
+    AttributeName=category,KeyType=RANGE \
+  --attribute-definitions \
+    AttributeName=id,AttributeType=S \
+    AttributeName=category,AttributeType=S \
+    AttributeName=created_at,AttributeType=S \
+  --global-secondary-indexes \
+    IndexName=index_by_category,KeySchema=["{AttributeName=category,KeyType=HASH}","{AttributeName=created_at,KeyType=RANGE}"],Projection="{ProjectionType=ALL}" \
+  --billing-mode PAY_PER_REQUEST
+
+awslocal dynamodb create-table \
   --table-name ${RESOURCE_PREFIX}-categories \
   --key-schema \
     AttributeName=name,KeyType=HASH \

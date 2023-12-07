@@ -3,7 +3,7 @@ frameworkVersion: "3"
 
 custom:
   prefix: lgtmgen-${self:provider.stage}
-  tagScheduleEnabled:
+  categorizeScheduleEnabled:
     dev: false
     prd: true
 
@@ -114,15 +114,15 @@ functions:
       - http:
           method: ANY
           path: "/{any+}"
-  tag:
+  categorize:
     image:
       name: api
-      command: [tag, --lambda]
+      command: [categorize, --lambda]
     timeout: 30
     events:
       - schedule:
           rate: rate(5 minutes)
-          enabled: ${self:custom.tagScheduleEnabled.${self:provider.stage}}
+          enabled: ${self:custom.categorizeScheduleEnabled.${self:provider.stage}}
   delete:
     image:
       name: api
@@ -168,10 +168,62 @@ resources:
                 KeyType: RANGE
             Projection:
               ProjectionType: ALL
-    TagsTable:
+    LgtmsCategoriesJaTable:
       Type: AWS::DynamoDB::Table
       Properties:
-        TableName: ${self:custom.prefix}-tags
+        TableName: ${self:custom.prefix}-lgtms-categories-ja
+        BillingMode: PAY_PER_REQUEST
+        AttributeDefinitions:
+          - AttributeName: id
+            AttributeType: S
+          - AttributeName: category
+            AttributeType: S
+          - AttributeName: created_at
+            AttributeType: S
+        KeySchema:
+          - AttributeName: id
+            KeyType: HASH
+          - AttributeName: category
+            KeyType: RANGE
+        GlobalSecondaryIndexes:
+          - IndexName: index_by_category
+            KeySchema:
+              - AttributeName: category
+                KeyType: HASH
+              - AttributeName: created_at
+                KeyType: RANGE
+            Projection:
+              ProjectionType: ALL
+    LgtmsCategoriesEnTable:
+      Type: AWS::DynamoDB::Table
+      Properties:
+        TableName: ${self:custom.prefix}-lgtms-categories-en
+        BillingMode: PAY_PER_REQUEST
+        AttributeDefinitions:
+          - AttributeName: id
+            AttributeType: S
+          - AttributeName: category
+            AttributeType: S
+          - AttributeName: created_at
+            AttributeType: S
+        KeySchema:
+          - AttributeName: id
+            KeyType: HASH
+          - AttributeName: category
+            KeyType: RANGE
+        GlobalSecondaryIndexes:
+          - IndexName: index_by_category
+            KeySchema:
+              - AttributeName: category
+                KeyType: HASH
+              - AttributeName: created_at
+                KeyType: RANGE
+            Projection:
+              ProjectionType: ALL
+    CategoriesTable:
+      Type: AWS::DynamoDB::Table
+      Properties:
+        TableName: ${self:custom.prefix}-categories
         BillingMode: PAY_PER_REQUEST
         AttributeDefinitions:
           - AttributeName: name
