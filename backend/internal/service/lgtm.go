@@ -31,15 +31,15 @@ func newLGTMService(repo *repo.Repository) *lgtmService {
 // @Param		limit	query		int		false	"limit"
 // @Param		after	query		string	false	"after"
 // @Param		random	query		bool	false	"random"
-// @Param		tag		query		string	false	"tag"
+// @Param		category		query		string	false	"category"
 // @Success	200		{array}		models.LGTM
 // @Failure	400		{object}	ErrorResponse
 // @Failure	500		{object}	ErrorResponse
 func (svc *lgtmService) ListLGTMs(ctx *gin.Context) {
 	opts := []repo.LGTMListOption{}
 
-	if tag := ctx.Query("tag"); tag != "" {
-		opts = append(opts, repo.WithLGTMTag(tag))
+	if category := ctx.Query("category"); category != "" {
+		opts = append(opts, repo.WithLGTMCategory(category))
 	}
 
 	qlimit := ctx.DefaultQuery("limit", "20")
@@ -196,31 +196,30 @@ func (svc *lgtmService) DeleteLGTM(ctx context.Context, id string) error {
 	return nil
 }
 
-func (svc *lgtmService) TagLGTM(ctx context.Context) error {
-	lgtm, err := svc.repo.TagLGTM(ctx)
+func (svc *lgtmService) CategorizeLGTM(ctx context.Context) error {
+	lgtm, err := svc.repo.CategorizeLGTM(ctx)
 	if err != nil {
-		return errors.Wrap(err, "failed to tag lgtm")
+		return errors.Wrap(err, "failed to categorize lgtm")
 	}
 
 	if lgtm != nil {
-		log.Info(ctx, "tagged lgtm", "id", lgtm.ID)
+		log.Info(ctx, "categorized lgtm", "id", lgtm.ID)
 
 		for lang, names := range map[string][]string{
-			"ja": lgtm.TagsJa,
-			"en": lgtm.TagsEn,
+			"ja": lgtm.CategoriesJa,
+			"en": lgtm.CategoriesEn,
 		} {
 			for _, name := range names {
-				tag, err := svc.repo.IncrementTagByName(ctx, name, lang)
+				category, err := svc.repo.IncrementCategoryByName(ctx, name, lang)
 				if err != nil {
-					return errors.Wrap(err, "failed to upsert tags")
+					return errors.Wrap(err, "failed to increment category")
 				}
 
-				// TODO: sync to algolia
-				log.Info(ctx, "incremented tag", "tag", tag)
+				log.Info(ctx, "incremented category", "category", category)
 			}
 		}
 	} else {
-		log.Info(ctx, "no lgtm to tag")
+		log.Info(ctx, "no lgtm to categorize")
 	}
 
 	return nil

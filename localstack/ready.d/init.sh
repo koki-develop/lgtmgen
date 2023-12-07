@@ -32,7 +32,7 @@ awslocal dynamodb create-table \
   --billing-mode PAY_PER_REQUEST
 
 awslocal dynamodb create-table \
-  --table-name ${RESOURCE_PREFIX}-tags \
+  --table-name ${RESOURCE_PREFIX}-categories \
   --key-schema \
     AttributeName=name,KeyType=HASH \
     AttributeName=lang,KeyType=RANGE \

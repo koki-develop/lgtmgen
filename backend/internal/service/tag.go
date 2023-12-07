@@ -8,29 +8,29 @@ import (
 	"github.com/koki-develop/lgtmgen/backend/internal/repo"
 )
 
-type tagService struct {
+type categoryService struct {
 	repo *repo.Repository
 }
 
-func newTagService(repo *repo.Repository) *tagService {
-	return &tagService{
+func newCategoryService(repo *repo.Repository) *categoryService {
+	return &categoryService{
 		repo: repo,
 	}
 }
 
-//	@Router		/v1/tags [get]
-//	@Param		lang	query		string	false	"lang"
-//	@Success	200		{array}		models.Tag
-//	@Failure	400		{object}	ErrorResponse
-//	@Failure	500		{object}	ErrorResponse
-func (svc *tagService) ListTags(ctx *gin.Context) {
+// @Router		/v1/categories [get]
+// @Param		lang	query		string	false	"lang"
+// @Success	200		{array}		models.Category
+// @Failure	400		{object}	ErrorResponse
+// @Failure	500		{object}	ErrorResponse
+func (svc *categoryService) ListCategories(ctx *gin.Context) {
 	lang := ctx.DefaultQuery("lang", "ja")
-	tags, err := svc.repo.ListTags(ctx, lang)
+	cs, err := svc.repo.ListCategories(ctx, lang)
 	if err != nil {
-		log.Error(ctx, "failed to list tags", err)
+		log.Error(ctx, "failed to list categories", err)
 		renderError(ctx, http.StatusInternalServerError, ErrCodeInternalServerError)
 		return
 	}
 
-	ctx.JSON(http.StatusOK, tags)
+	ctx.JSON(http.StatusOK, cs)
 }

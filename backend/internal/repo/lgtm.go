@@ -73,17 +73,17 @@ func (r *lgtmRepository) FindLGTM(ctx context.Context, id string) (*models.LGTM,
 }
 
 type lgtmListOptions struct {
-	Tag    string
-	Limit  int
-	After  *models.LGTM
-	Random bool
+	Category string
+	Limit    int
+	After    *models.LGTM
+	Random   bool
 }
 
 type LGTMListOption func(*lgtmListOptions)
 
-func WithLGTMTag(tag string) LGTMListOption {
+func WithLGTMCategory(category string) LGTMListOption {
 	return func(o *lgtmListOptions) {
-		o.Tag = tag
+		o.Category = category
 	}
 }
 
@@ -122,8 +122,8 @@ func (r *lgtmRepository) listLGTMs(ctx context.Context, o *lgtmListOptions) (mod
 	exb := expression.NewBuilder().
 		WithKeyCondition(expression.KeyEqual(expression.Key("status"), expression.Value("ok")))
 
-	if o.Tag != "" {
-		exb = exb.WithFilter(expression.Contains(expression.Name("tags_ja"), o.Tag).Or(expression.Contains(expression.Name("tags_en"), o.Tag)))
+	if o.Category != "" {
+		exb = exb.WithFilter(expression.Contains(expression.Name("categories_ja"), o.Category).Or(expression.Contains(expression.Name("categories_en"), o.Category)))
 	}
 
 	expr, err := exb.Build()
@@ -304,7 +304,7 @@ func (r *lgtmRepository) DeleteLGTM(ctx context.Context, id string) error {
 	return nil
 }
 
-func (r *lgtmRepository) TagLGTM(ctx context.Context) (*models.LGTM, error) {
+func (r *lgtmRepository) CategorizeLGTM(ctx context.Context) (*models.LGTM, error) {
 	resp, err := r.storageClient.ListObjectsV2(ctx, &s3.ListObjectsV2Input{
 		Bucket:  util.Ptr(r.originalBucket()),
 		MaxKeys: 1,
@@ -362,24 +362,24 @@ func (r *lgtmRepository) TagLGTM(ctx context.Context) (*models.LGTM, error) {
 		}
 		defer rslt.Body.Close()
 
-		var tags []string
+		var categories []string
 		for _, tag := range *rslt.Tags {
 			if *tag.Confidence > 0.90 {
 				log.Info(ctx, "tagged", "tag", *tag.Name, "confidence", *tag.Confidence)
-				tags = append(tags, *tag.Name)
+				categories = append(categories, *tag.Name)
 			}
 		}
 		switch lang {
 		case "ja":
-			lgtm.TagsJa = tags
+			lgtm.CategoriesJa = categories
 		case "en":
-			lgtm.TagsEn = tags
+			lgtm.CategoriesEn = categories
 		default:
 			return nil, errors.Errorf("unknown lang: %s", lang)
 		}
 
 		expr, err := expression.NewBuilder().
-			WithUpdate(expression.Set(expression.Name(fmt.Sprintf("tags_%s", lang)), expression.Value(tags))).
+			WithUpdate(expression.Set(expression.Name(fmt.Sprintf("categories_%s", lang)), expression.Value(categories))).
 			Build()
 		if err != nil {
 			return nil, errors.Wrap(err, "failed to build expression")

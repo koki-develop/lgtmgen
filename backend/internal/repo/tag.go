@@ -14,17 +14,17 @@ import (
 	"github.com/koki-develop/lgtmgen/backend/internal/util"
 )
 
-type tagRepository struct {
+type categoryRepository struct {
 	dbClient *dynamodb.Client
 }
 
-func newTagRepository(dbClient *dynamodb.Client) *tagRepository {
-	return &tagRepository{
+func newCategoryRepository(dbClient *dynamodb.Client) *categoryRepository {
+	return &categoryRepository{
 		dbClient: dbClient,
 	}
 }
 
-func (r *tagRepository) ListTags(ctx context.Context, lang string) (models.Tags, error) {
+func (r *categoryRepository) ListCategories(ctx context.Context, lang string) (models.Categories, error) {
 	expr, err := expression.NewBuilder().
 		WithKeyCondition(expression.KeyEqual(expression.Key("lang"), expression.Value(lang))).
 		Build()
@@ -42,18 +42,18 @@ func (r *tagRepository) ListTags(ctx context.Context, lang string) (models.Tags,
 		ScanIndexForward:          util.Ptr(false),
 	})
 	if err != nil {
-		return nil, errors.Wrap(err, "failed to query tags")
+		return nil, errors.Wrap(err, "failed to query categories")
 	}
 
-	var tags models.Tags
-	if err := attributevalue.UnmarshalListOfMaps(res.Items, &tags); err != nil {
-		return nil, errors.Wrap(err, "failed to unmarshal tags")
+	var cs models.Categories
+	if err := attributevalue.UnmarshalListOfMaps(res.Items, &cs); err != nil {
+		return nil, errors.Wrap(err, "failed to unmarshal categories")
 	}
 
-	return tags, nil
+	return cs, nil
 }
 
-func (r *tagRepository) IncrementTagByName(ctx context.Context, name string, lang string) (*models.Tag, error) {
+func (r *categoryRepository) IncrementCategoryByName(ctx context.Context, name string, lang string) (*models.Category, error) {
 	expr, err := expression.NewBuilder().
 		WithUpdate(expression.Add(expression.Name("count"), expression.Value(1))).
 		Build()
@@ -75,17 +75,17 @@ func (r *tagRepository) IncrementTagByName(ctx context.Context, name string, lan
 		ReturnValues:              types.ReturnValueAllNew,
 	})
 	if err != nil {
-		return nil, errors.Wrap(err, "failed to update tag")
+		return nil, errors.Wrap(err, "failed to update category")
 	}
 
-	var tag models.Tag
-	if err := attributevalue.UnmarshalMap(resp.Attributes, &tag); err != nil {
-		return nil, errors.Wrap(err, "failed to unmarshal tag")
+	var c models.Category
+	if err := attributevalue.UnmarshalMap(resp.Attributes, &c); err != nil {
+		return nil, errors.Wrap(err, "failed to unmarshal category")
 	}
 
-	return &tag, nil
+	return &c, nil
 }
 
-func (*tagRepository) table() string {
-	return fmt.Sprintf("lgtmgen-%s-tags", env.Vars.Stage)
+func (*categoryRepository) table() string {
+	return fmt.Sprintf("lgtmgen-%s-categories", env.Vars.Stage)
 }

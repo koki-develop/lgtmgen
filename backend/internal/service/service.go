@@ -8,7 +8,7 @@ import (
 
 type Service struct {
 	*lgtmService
-	*tagService
+	*categoryService
 	*reportService
 	*notificationService
 	*imageService
@@ -19,7 +19,7 @@ type Service struct {
 func New(ctx context.Context, repo *repo.Repository) (*Service, error) {
 	return &Service{
 		lgtmService:         newLGTMService(repo),
-		tagService:          newTagService(repo),
+		categoryService:     newCategoryService(repo),
 		reportService:       newReportService(repo),
 		notificationService: newNotificationService(repo),
 		imageService:        newImageService(repo),

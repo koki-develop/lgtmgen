@@ -10,13 +10,13 @@ import (
 )
 
 var (
-	flagTagLambda bool // --lambda
+	flagCategorizeLambda bool // --lambda
 )
 
-var tagCmd = &cobra.Command{
-	Use: "tag",
+var categorizeCmd = &cobra.Command{
+	Use: "categorize",
 	RunE: func(cmd *cobra.Command, args []string) error {
-		if flagTagLambda {
+		if flagCategorizeLambda {
 			lambda.Start(func(ctx context.Context) error {
 				r, err := repo.New(ctx)
 				if err != nil {
@@ -27,8 +27,8 @@ var tagCmd = &cobra.Command{
 					return errors.Wrap(err, "failed to create service")
 				}
 
-				if err := svc.TagLGTM(ctx); err != nil {
-					return errors.Wrap(err, "failed to tag LGTM")
+				if err := svc.CategorizeLGTM(ctx); err != nil {
+					return errors.Wrap(err, "failed to categorize LGTM")
 				}
 
 				return nil
@@ -45,8 +45,8 @@ var tagCmd = &cobra.Command{
 				return errors.Wrap(err, "failed to create service")
 			}
 
-			if err := svc.TagLGTM(ctx); err != nil {
-				return errors.Wrap(err, "failed to tag LGTM")
+			if err := svc.CategorizeLGTM(ctx); err != nil {
+				return errors.Wrap(err, "failed to categorize LGTM")
 			}
 		}
 
@@ -55,6 +55,6 @@ var tagCmd = &cobra.Command{
 }
 
 func init() {
-	rootCmd.AddCommand(tagCmd)
-	tagCmd.Flags().BoolVarP(&flagTagLambda, "lambda", "l", false, "Tag Lambda functions")
+	rootCmd.AddCommand(categorizeCmd)
+	categorizeCmd.Flags().BoolVarP(&flagCategorizeLambda, "lambda", "l", false, "Run as lambda")
 }
