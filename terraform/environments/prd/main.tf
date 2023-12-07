@@ -14,6 +14,12 @@ module "s3_images" {
   distribution_arn = module.cloudfront_images.this.arn
 }
 
+module "s3_categorized_keys" {
+  source = "../../modules/aws/s3"
+  name   = local.name
+  tier   = "categorized-keys"
+}
+
 module "s3_original_images" {
   source = "../../modules/aws/s3"
   name   = local.name
