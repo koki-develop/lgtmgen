@@ -1,12 +1,12 @@
-import { ModelsImage, ModelsLGTM, ServiceErrCode } from "@/lib/generated/api";
-import { useI18n } from "@/providers/I18nProvider";
-import { useCallback, useState } from "react";
-import { MagnifyingGlassIcon } from "@heroicons/react/24/outline";
 import Form from "@/components/util/Form";
-import LgtmPreview from "./LgtmPreview";
-import { useGenerateLgtm } from "@/lib/models/lgtm/lgtmHooks";
-import ImageCard from "./ImageCard";
+import { ModelsImage, ModelsLGTM } from "@/lib/generated/api";
 import { useSearchImages } from "@/lib/models/image/imageHooks";
+import { useGenerateLgtm } from "@/lib/models/lgtm/lgtmHooks";
+import { useI18n } from "@/providers/I18nProvider";
+import { MagnifyingGlassIcon } from "@heroicons/react/24/outline";
+import { useCallback, useState } from "react";
+import ImageCard from "./ImageCard";
+import LgtmPreview from "./LgtmPreview";
 
 export type SearchImagePanelProps = {
   images: ModelsImage[];

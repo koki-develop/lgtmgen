@@ -1,4 +1,4 @@
-import React, { useCallback, useState } from "react";
+import { useCallback, useState } from "react";
 import LgtmCard, { LgtmCardProps } from "./LgtmCard";
 import ReportForm from "./ReportForm";
 

@@ -1,12 +1,12 @@
+import GoogleAnalytics from "@/components/util/GoogleAnalytics";
 import { i18n } from "@/lib/i18n";
-import "./global.css";
+import Providers from "@/providers/Providers";
 import "@fontsource/archivo-black";
 import type { Metadata } from "next";
 import Link from "next/link";
-import Providers from "@/providers/Providers";
 import { AiOutlineGithub } from "react-icons/ai";
 import Header from "./Header";
-import GoogleAnalytics from "@/components/util/GoogleAnalytics";
+import "./global.css";
 
 export async function generateMetadata({
   params: { locale },

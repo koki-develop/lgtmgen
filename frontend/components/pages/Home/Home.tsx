@@ -1,4 +1,3 @@
-import React from "react";
 import { api } from "@/lib/api";
 import Main from "./Main";
 

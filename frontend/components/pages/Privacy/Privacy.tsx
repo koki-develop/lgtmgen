@@ -1,7 +1,6 @@
 "use client";
 
 import { useI18n } from "@/providers/I18nProvider";
-import React from "react";
 
 export default function Privacy() {
   const { t } = useI18n();

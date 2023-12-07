@@ -1,18 +1,18 @@
-import React, { useCallback, useEffect, useMemo, useState } from "react";
-import clsx from "clsx";
+import { lgtmUrl } from "@/lib/image";
+import { useStorage } from "@/lib/storage";
+import { useToast } from "@/lib/toast";
+import { useI18n } from "@/providers/I18nProvider";
+import { Menu } from "@headlessui/react";
 import {
   CheckIcon,
   DocumentDuplicateIcon,
-  HeartIcon as HeartIconOutline,
   FlagIcon,
+  HeartIcon as HeartIconOutline,
 } from "@heroicons/react/24/outline";
 import { HeartIcon as HeartIconSolid } from "@heroicons/react/24/solid";
-import { Menu } from "@headlessui/react";
+import clsx from "clsx";
 import copy from "copy-to-clipboard";
-import { useToast } from "@/lib/toast";
-import { useI18n } from "@/providers/I18nProvider";
-import { lgtmUrl } from "@/lib/image";
-import { useStorage } from "@/lib/storage";
+import { useCallback, useEffect, useMemo, useState } from "react";
 
 export type ImageCardButtonsProps = {
   lgtmId: string;

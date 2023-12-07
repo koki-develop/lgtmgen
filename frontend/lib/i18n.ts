@@ -1,5 +1,5 @@
-import ja from "@/locale/ja";
 import en from "@/locale/en";
+import ja from "@/locale/ja";
 import React from "react";
 
 export type I18n = {

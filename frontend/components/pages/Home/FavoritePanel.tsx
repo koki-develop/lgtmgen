@@ -1,6 +1,6 @@
-import React, { useState } from "react";
-import LgtmCardList from "./LgtmCardList";
 import { useI18n } from "@/providers/I18nProvider";
+import { useState } from "react";
+import LgtmCardList from "./LgtmCardList";
 
 export type FavoritePanelProps = {
   favorites: string[];

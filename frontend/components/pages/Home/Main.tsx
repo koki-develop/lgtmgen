@@ -1,15 +1,15 @@
 "use client";
 
-import React, { useCallback, useEffect, useState } from "react";
 import { ModelsImage, ModelsLGTM, ModelsNews } from "@/lib/generated/api";
-import LgtmPanel from "./LgtmPanel";
-import SearchImagePanel from "./SearchImagePanel";
-import { Tab } from "@headlessui/react";
 import { i18n } from "@/lib/i18n";
-import clsx from "clsx";
-import { LgtmUploader } from "./LgtmUploader";
 import { useStorage } from "@/lib/storage";
+import { Tab } from "@headlessui/react";
+import clsx from "clsx";
+import { useCallback, useEffect, useState } from "react";
 import FavoritePanel from "./FavoritePanel";
+import LgtmPanel from "./LgtmPanel";
+import { LgtmUploader } from "./LgtmUploader";
+import SearchImagePanel from "./SearchImagePanel";
 
 export type MainProps = {
   locale: string;

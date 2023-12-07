@@ -1,8 +1,8 @@
 "use client";
 
 import React from "react";
-import I18nProvider from "./I18nProvider";
 import { Toaster } from "react-hot-toast";
+import I18nProvider from "./I18nProvider";
 
 export type ProvidersProps = {
   locale: string;

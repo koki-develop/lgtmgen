@@ -2,7 +2,7 @@
 
 import { usePathname, useSearchParams } from "next/navigation";
 import Script from "next/script";
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 
 export default function GoogleAnalytics() {
   const [rendered, setRendered] = useState<boolean>(false);

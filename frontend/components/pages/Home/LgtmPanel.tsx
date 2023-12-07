@@ -1,11 +1,11 @@
-import React, { useCallback, useState } from "react";
 import { ModelsLGTM } from "@/lib/generated/api";
-import clsx from "clsx";
-import { useI18n } from "@/providers/I18nProvider";
 import { useFetchLgtms } from "@/lib/models/lgtm/lgtmHooks";
-import LgtmCardList from "./LgtmCardList";
 import { useStorage } from "@/lib/storage";
+import { useI18n } from "@/providers/I18nProvider";
 import { Switch } from "@headlessui/react";
+import clsx from "clsx";
+import { useCallback } from "react";
+import LgtmCardList from "./LgtmCardList";
 
 export type LgtmPanelProps = {
   perPage: number;

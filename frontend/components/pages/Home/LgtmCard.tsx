@@ -1,11 +1,11 @@
-import React, { useCallback, useEffect, useState } from "react";
+import { lgtmUrl } from "@/lib/image";
+import { useToast } from "@/lib/toast";
+import { useI18n } from "@/providers/I18nProvider";
+import { CheckIcon, DocumentDuplicateIcon } from "@heroicons/react/24/outline";
+import copy from "copy-to-clipboard";
+import { useCallback, useEffect, useState } from "react";
 import ImageCard from "./ImageCard";
 import ImageCardButtons, { ImageCardButtonsProps } from "./ImageCardButtons";
-import { useI18n } from "@/providers/I18nProvider";
-import { useToast } from "@/lib/toast";
-import copy from "copy-to-clipboard";
-import { lgtmUrl } from "@/lib/image";
-import { CheckIcon, DocumentDuplicateIcon } from "@heroicons/react/24/outline";
 
 export type LgtmCardProps = {
   className?: string;

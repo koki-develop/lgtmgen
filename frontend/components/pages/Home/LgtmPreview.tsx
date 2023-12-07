@@ -1,6 +1,5 @@
 import Dialog from "@/components/util/Dialog";
 import { useI18n } from "@/providers/I18nProvider";
-import React from "react";
 
 export type LgtmPreviewProps = {
   src: string | null;

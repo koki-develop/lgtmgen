@@ -1,13 +1,13 @@
-import { lgtmUrl } from "@/lib/image";
 import Dialog from "@/components/util/Dialog";
-import { RadioGroup } from "@headlessui/react";
-import React, { useCallback, useMemo, useState } from "react";
-import clsx from "clsx";
-import { useI18n } from "@/providers/I18nProvider";
-import { useSendReport } from "@/lib/models/report/reportHooks";
 import { ModelsReportType } from "@/lib/generated/api";
+import { lgtmUrl } from "@/lib/image";
+import { useSendReport } from "@/lib/models/report/reportHooks";
+import { useI18n } from "@/providers/I18nProvider";
+import { RadioGroup } from "@headlessui/react";
 import { CheckCircleIcon as CheckCircleIconOutline } from "@heroicons/react/24/outline";
 import { CheckCircleIcon } from "@heroicons/react/24/solid";
+import clsx from "clsx";
+import React, { useCallback, useMemo, useState } from "react";
 
 export type ReportFormProps = {
   lgtmId: string | null;

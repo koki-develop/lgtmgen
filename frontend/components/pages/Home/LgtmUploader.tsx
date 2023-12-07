@@ -1,12 +1,12 @@
 import { ModelsLGTM } from "@/lib/generated/api";
 import { dataUrlToBase64, fileToDataUrl, resizeDataUrl } from "@/lib/image";
-import { useI18n } from "@/providers/I18nProvider";
-import { PlusCircleIcon } from "@heroicons/react/24/solid";
-import React, { useCallback, useRef, useState } from "react";
-import LgtmPreview from "./LgtmPreview";
-import clsx from "clsx";
 import { useGenerateLgtm } from "@/lib/models/lgtm/lgtmHooks";
 import { useToast } from "@/lib/toast";
+import { useI18n } from "@/providers/I18nProvider";
+import { PlusCircleIcon } from "@heroicons/react/24/solid";
+import clsx from "clsx";
+import React, { useCallback, useRef, useState } from "react";
+import LgtmPreview from "./LgtmPreview";
 
 export type LgtmUploaderProps = {
   onUploaded: (lgtm: ModelsLGTM) => void;
