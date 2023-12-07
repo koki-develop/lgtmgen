@@ -373,6 +373,8 @@ func (r *lgtmRepository) CategorizeLGTM(ctx context.Context) (map[string][]strin
 		return nil, errors.Wrap(err, "failed to read image")
 	}
 
+	uploader := manager.NewUploader(r.storageClient)
+
 	cv := computervision.New(env.Vars.AzureEndpoint)
 	cv.Authorizer = autorest.NewCognitiveServicesAuthorizer(env.Vars.AzureAPIKey)
 	for _, lang := range []string{"ja", "en"} {
@@ -419,6 +421,15 @@ func (r *lgtmRepository) CategorizeLGTM(ctx context.Context) (map[string][]strin
 			})
 			if err != nil {
 				return nil, errors.Wrap(err, "failed to update item")
+			}
+
+			_, err = uploader.Upload(ctx, &s3.PutObjectInput{
+				Bucket: util.Ptr(fmt.Sprintf("lgtmgen-%s-categorized-keys", env.Vars.Stage)),
+				Key:    util.Ptr(fmt.Sprintf("%s/%s/%s", lang, category, lgtm.ID)),
+				Body:   strings.NewReader(""),
+			})
+			if err != nil {
+				return nil, errors.Wrap(err, "failed to upload categorized key")
 			}
 		}
 	}
