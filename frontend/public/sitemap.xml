@@ -1,21 +1,30 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-  <!-- Japanese pages -->
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
+  xmlns:xhtml="http://www.w3.org/1999/xhtml">
   <url>
-    <loc>https://www.lgtmgen.org/ja</loc>
-    <lastmod>2023-10-04</lastmod>
+    <loc>https://www.lgtmgen.org</loc>
+    <lastmod>2023-12-07</lastmod>
     <changefreq>weekly</changefreq>
     <priority>1.0</priority>
   </url>
+
+  <!-- Japanese pages -->
+  <url>
+    <loc>https://www.lgtmgen.org/ja</loc>
+    <lastmod>2023-12-07</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.lgtmgen.org/en" />
+  </url>
   <url>
     <loc>https://www.lgtmgen.org/ja/privacy</loc>
-    <lastmod>2023-10-04</lastmod>
+    <lastmod>2023-12-07</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://www.lgtmgen.org/ja/usage-precautions</loc>
-    <lastmod>2023-10-04</lastmod>
+    <lastmod>2023-12-07</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
@@ -23,19 +32,20 @@
   <!-- English pages -->
   <url>
     <loc>https://www.lgtmgen.org/en</loc>
-    <lastmod>2023-10-04</lastmod>
+    <lastmod>2023-12-07</lastmod>
     <changefreq>weekly</changefreq>
-    <priority>1.0</priority>
+    <priority>0.9</priority>
+    <xhtml:link rel="alternate" hreflang="ja" href="https://www.lgtmgen.org/ja" />
   </url>
   <url>
     <loc>https://www.lgtmgen.org/en/privacy</loc>
-    <lastmod>2023-10-04</lastmod>
+    <lastmod>2023-12-07</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://www.lgtmgen.org/en/usage-precautions</loc>
-    <lastmod>2023-10-04</lastmod>
+    <lastmod>2023-12-07</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
