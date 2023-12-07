@@ -66,6 +66,15 @@ provider:
             - Fn::Join:
                 - ""
                 - - "arn:aws:s3:::"
+                  - ${self:custom.prefix}-categorized-keys
+            - Fn::Join:
+                - ""
+                - - "arn:aws:s3:::"
+                  - ${self:custom.prefix}-categorized-keys
+                  - /*
+            - Fn::Join:
+                - ""
+                - - "arn:aws:s3:::"
                   - ${self:custom.prefix}-news
             - Fn::Join:
                 - ""
