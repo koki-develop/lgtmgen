@@ -13,12 +13,14 @@ export type LgtmPanelProps = {
   randomly: boolean;
   lgtms: ModelsLGTM[];
   categories: ModelsCategory[];
+  selectedCategoryName: string | null;
   favorites: string[];
 
   onLoaded: (lgtms: ModelsLGTM[]) => void;
   onClear: () => void;
   onChangeRandomly: (randomly: boolean) => void;
   onChangeFavorites: (favorites: string[]) => void;
+  onChangeCategory: (category: ModelsCategory | null) => void;
 };
 
 export default function LgtmPanel({
@@ -27,12 +29,14 @@ export default function LgtmPanel({
   randomly,
   lgtms,
   categories,
+  selectedCategoryName,
   favorites,
 
   onLoaded,
   onClear,
   onChangeRandomly,
   onChangeFavorites,
+  onChangeCategory,
 }: LgtmPanelProps) {
   const { t } = useI18n();
   const { fetchLgtms, fetching } = useFetchLgtms(perPage);
@@ -40,15 +44,21 @@ export default function LgtmPanel({
 
   const handleClickLoadMore = useCallback(async () => {
     const after = lgtms.slice(-1)[0]?.id;
-    const loadedLgtms = await fetchLgtms({ after });
+    const loadedLgtms = await fetchLgtms({
+      after,
+      category: selectedCategoryName ?? undefined,
+    });
     onLoaded(loadedLgtms);
-  }, [fetchLgtms, lgtms, onLoaded]);
+  }, [fetchLgtms, lgtms, onLoaded, selectedCategoryName]);
 
   const handleClickReload = useCallback(async () => {
     onClear();
-    const loadedLgtms = await fetchLgtms({ random: true });
+    const loadedLgtms = await fetchLgtms({
+      random: true,
+      category: selectedCategoryName ?? undefined,
+    });
     onLoaded(loadedLgtms);
-  }, [fetchLgtms, onLoaded, onClear]);
+  }, [selectedCategoryName, fetchLgtms, onLoaded, onClear]);
 
   const handleChangeRandomly = useCallback(
     async (randomly: boolean) => {
@@ -56,23 +66,63 @@ export default function LgtmPanel({
       saveRandomly(randomly);
       onClear();
 
+      const category = selectedCategoryName ?? undefined;
+
       if (randomly) {
-        const loadedLgtms = await fetchLgtms({ random: true });
+        const loadedLgtms = await fetchLgtms({ random: true, category });
         onLoaded(loadedLgtms);
       } else {
-        const loadedLgtms = await fetchLgtms({});
+        const loadedLgtms = await fetchLgtms({ category });
         onLoaded(loadedLgtms);
       }
     },
-    [onChangeRandomly, saveRandomly, fetchLgtms, onLoaded, onClear],
+    [
+      onChangeRandomly,
+      saveRandomly,
+      fetchLgtms,
+      onLoaded,
+      onClear,
+      selectedCategoryName,
+    ],
+  );
+
+  const handleClickCategory = useCallback(
+    async (category: ModelsCategory) => {
+      onClear();
+
+      if (category.name === selectedCategoryName) {
+        onChangeCategory(null);
+        const loadedLgtms = await fetchLgtms({});
+        onLoaded(loadedLgtms);
+      } else {
+        onChangeCategory(category);
+        const loadedLgtms = await fetchLgtms({ category: category.name });
+        onLoaded(loadedLgtms);
+      }
+    },
+    [onClear, fetchLgtms, onLoaded, onChangeCategory, selectedCategoryName],
   );
 
   return (
     <>
       <div className="flex flex-col gap-4">
-        <div>
+        <div className="flex flex-wrap gap-2">
           {categories.map((category) => (
-            <div>{category.name}</div>
+            <button
+              key={category.name}
+              className={clsx(
+                "rounded-full border border-primary-main px-2 py-1 text-sm",
+                {
+                  "bg-white text-primary-main":
+                    category.name !== selectedCategoryName,
+                  "bg-primary-main text-white":
+                    category.name === selectedCategoryName,
+                },
+              )}
+              onClick={() => handleClickCategory(category)}
+            >
+              {category.name}
+            </button>
           ))}
         </div>
         <div className="flex justify-end">

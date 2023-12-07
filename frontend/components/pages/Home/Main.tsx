@@ -44,6 +44,9 @@ export default function Main({
   const [lgtms, setLgtms] = useState<ModelsLGTM[]>([]);
   const [hasNextPage, setHasNextPage] = useState<boolean>(false);
   const [randomly, setRandomly] = useState<boolean>(false);
+  const [selectedCategoryName, setSelectedCategoryName] = useState<
+    string | null
+  >(null);
 
   const handleLoaded = useCallback(
     (loadedLgtms: ModelsLGTM[]) => {
@@ -64,6 +67,13 @@ export default function Main({
   const handleChangeRandomly = useCallback((randomly: boolean) => {
     setRandomly(randomly);
   }, []);
+
+  const handleChangeCategory = useCallback(
+    (category: ModelsCategory | null) => {
+      setSelectedCategoryName(category?.name ?? null);
+    },
+    [],
+  );
 
   /*
    * SearchImage
@@ -174,6 +184,7 @@ export default function Main({
               <LgtmPanel
                 lgtms={lgtms}
                 categories={categories}
+                selectedCategoryName={selectedCategoryName}
                 randomly={randomly}
                 onChangeRandomly={handleChangeRandomly}
                 favorites={favorites}
@@ -182,6 +193,7 @@ export default function Main({
                 onLoaded={handleLoaded}
                 onClear={handleClear}
                 onChangeFavorites={handleChangeFavorites}
+                onChangeCategory={handleChangeCategory}
               />
             ) : (
               <div className="flex justify-center">

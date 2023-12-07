@@ -5,14 +5,23 @@ import { useI18n } from "@/providers/I18nProvider";
 import { useCallback, useState } from "react";
 
 export const useFetchLgtms = (perPage: number) => {
+  const { locale } = useI18n();
   const [fetching, setFetching] = useState<boolean>(false);
 
   const fetchLgtms = useCallback(
-    async ({ after, random }: { after?: string; random?: boolean }) => {
+    async ({
+      after,
+      random,
+      category,
+    }: {
+      after?: string;
+      random?: boolean;
+      category?: string;
+    }) => {
       setFetching(true);
 
       return await api.v1
-        .lgtmsList({ limit: perPage, after, random })
+        .lgtmsList({ limit: perPage, after, random, category, lang: locale })
         .then((response) => {
           if (!response.ok) throw response.error;
           return response.data;
@@ -21,7 +30,7 @@ export const useFetchLgtms = (perPage: number) => {
           setFetching(false);
         });
     },
-    [perPage],
+    [perPage, locale],
   );
 
   return { fetchLgtms, fetching };
