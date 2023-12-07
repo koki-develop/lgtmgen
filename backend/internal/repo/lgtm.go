@@ -369,7 +369,9 @@ func (r *lgtmRepository) CategorizeLGTM(ctx context.Context) (map[string][]strin
 	}
 	defer obj.Body.Close()
 	buf := new(bytes.Buffer)
-	buf.ReadFrom(obj.Body)
+	if _, err := buf.ReadFrom(obj.Body); err != nil {
+		return nil, errors.Wrap(err, "failed to read image")
+	}
 
 	cv := computervision.New(env.Vars.AzureEndpoint)
 	cv.Authorizer = autorest.NewCognitiveServicesAuthorizer(env.Vars.AzureAPIKey)
