@@ -27,15 +27,15 @@ func newLGTMService(repo *repo.Repository) *lgtmService {
 	}
 }
 
-//	@Router		/v1/lgtms [get]
-//	@Param		limit		query		int		false	"limit"
-//	@Param		after		query		string	false	"after"
-//	@Param		random		query		bool	false	"random"
-//	@Param		category	query		string	false	"category"
-//	@Param		lang		query		string	false	"lang"
-//	@Success	200			{array}		models.LGTM
-//	@Failure	400			{object}	ErrorResponse
-//	@Failure	500			{object}	ErrorResponse
+// @Router		/v1/lgtms [get]
+// @Param		limit		query		int		false	"limit"
+// @Param		after		query		string	false	"after"
+// @Param		random		query		bool	false	"random"
+// @Param		category	query		string	false	"category"
+// @Param		lang		query		string	false	"lang"
+// @Success	200			{array}		models.LGTM
+// @Failure	400			{object}	ErrorResponse
+// @Failure	500			{object}	ErrorResponse
 func (svc *lgtmService) ListLGTMs(ctx *gin.Context) {
 	opts := []repo.LGTMListOption{}
 
@@ -99,13 +99,8 @@ func (svc *lgtmService) ListLGTMs(ctx *gin.Context) {
 }
 
 type createLGTMInput struct {
-	URL     string             `json:"url"`
-	Base64  string             `json:"base64"`
-	Options *createLGTMOptions `json:"options"`
-}
-
-type createLGTMOptions struct {
-	TextColor string `json:"textColor"`
+	URL    string `json:"url"`
+	Base64 string `json:"base64"`
 }
 
 func (ipt *createLGTMInput) Validate() error {
@@ -120,12 +115,12 @@ func (ipt *createLGTMInput) Validate() error {
 	return nil
 }
 
-//	@Router		/v1/lgtms [post]
-//	@Accept		json
-//	@Param		body	body		createLGTMInput	true	"body"
-//	@Success	201		{object}	models.LGTM
-//	@Failure	400		{object}	ErrorResponse
-//	@Failure	500		{object}	ErrorResponse
+// @Router		/v1/lgtms [post]
+// @Accept		json
+// @Param		body	body		createLGTMInput	true	"body"
+// @Success	201		{object}	models.LGTM
+// @Failure	400		{object}	ErrorResponse
+// @Failure	500		{object}	ErrorResponse
 func (svc *lgtmService) CreateLGTM(ctx *gin.Context) {
 	var ipt createLGTMInput
 	if err := ctx.ShouldBindJSON(&ipt); err != nil {
@@ -164,12 +159,7 @@ func (svc *lgtmService) CreateLGTM(ctx *gin.Context) {
 		src = ipt.URL
 	}
 
-	genopts := []lgtmgen.GenerateOption{}
-	if ipt.Options != nil {
-		genopts = append(genopts, lgtmgen.WithTextColor(ipt.Options.TextColor))
-	}
-
-	lgtm, err := svc.repo.CreateLGTM(ctx, data, genopts...)
+	lgtm, err := svc.repo.CreateLGTM(ctx, data, lgtmgen.WithTextColor("#ffffff"))
 	if err != nil {
 		if errors.Is(err, lgtmgen.ErrInvalidOption) {
 			log.Info(ctx, "invalid option", "error", err)
