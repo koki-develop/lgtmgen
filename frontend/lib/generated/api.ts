@@ -9,6 +9,11 @@
  * ---------------------------------------------------------------
  */
 
+export interface ModelsCategory {
+  count?: number;
+  name?: string;
+}
+
 export interface ModelsImage {
   title: string;
   url: string;
@@ -272,6 +277,26 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
     /**
      * No description
      *
+     * @name CategoriesList
+     * @request GET:/v1/categories
+     */
+    categoriesList: (
+      query?: {
+        /** lang */
+        lang?: string;
+      },
+      params: RequestParams = {},
+    ) =>
+      this.request<ModelsCategory[], ServiceErrorResponse>({
+        path: `/v1/categories`,
+        method: "GET",
+        query: query,
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
      * @name ImagesList
      * @request GET:/v1/images
      */
@@ -303,6 +328,10 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
         after?: string;
         /** random */
         random?: boolean;
+        /** category */
+        category?: string;
+        /** lang */
+        lang?: string;
       },
       params: RequestParams = {},
     ) =>

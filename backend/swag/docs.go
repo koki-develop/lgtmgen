@@ -370,18 +370,7 @@ const docTemplate = `{
                 "base64": {
                     "type": "string"
                 },
-                "options": {
-                    "$ref": "#/definitions/service.createLGTMOptions"
-                },
                 "url": {
-                    "type": "string"
-                }
-            }
-        },
-        "service.createLGTMOptions": {
-            "type": "object",
-            "properties": {
-                "textColor": {
                     "type": "string"
                 }
             }
