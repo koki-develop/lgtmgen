@@ -27,19 +27,30 @@ func newLGTMService(repo *repo.Repository) *lgtmService {
 	}
 }
 
-// @Router		/v1/lgtms [get]
-// @Param		limit	query		int		false	"limit"
-// @Param		after	query		string	false	"after"
-// @Param		random	query		bool	false	"random"
-// @Param		category		query		string	false	"category"
-// @Success	200		{array}		models.LGTM
-// @Failure	400		{object}	ErrorResponse
-// @Failure	500		{object}	ErrorResponse
+//	@Router		/v1/lgtms [get]
+//	@Param		limit		query		int		false	"limit"
+//	@Param		after		query		string	false	"after"
+//	@Param		random		query		bool	false	"random"
+//	@Param		category	query		string	false	"category"
+//	@Param		lang		query		string	false	"lang"
+//	@Success	200			{array}		models.LGTM
+//	@Failure	400			{object}	ErrorResponse
+//	@Failure	500			{object}	ErrorResponse
 func (svc *lgtmService) ListLGTMs(ctx *gin.Context) {
 	opts := []repo.LGTMListOption{}
 
 	if category := ctx.Query("category"); category != "" {
-		opts = append(opts, repo.WithLGTMCategory(category))
+		lang := ctx.DefaultQuery("lang", "ja")
+		switch lang {
+		case "ja", "en":
+			break
+		default:
+			log.Info(ctx, "lang is invalid", "lang", lang)
+			renderError(ctx, http.StatusBadRequest, ErrCodeBadRequest)
+			return
+		}
+
+		opts = append(opts, repo.WithLGTMCategory(category, lang))
 	}
 
 	qlimit := ctx.DefaultQuery("limit", "20")
@@ -109,12 +120,12 @@ func (ipt *createLGTMInput) Validate() error {
 	return nil
 }
 
-// @Router		/v1/lgtms [post]
-// @Accept		json
-// @Param		body	body		createLGTMInput	true	"body"
-// @Success	201		{object}	models.LGTM
-// @Failure	400		{object}	ErrorResponse
-// @Failure	500		{object}	ErrorResponse
+//	@Router		/v1/lgtms [post]
+//	@Accept		json
+//	@Param		body	body		createLGTMInput	true	"body"
+//	@Success	201		{object}	models.LGTM
+//	@Failure	400		{object}	ErrorResponse
+//	@Failure	500		{object}	ErrorResponse
 func (svc *lgtmService) CreateLGTM(ctx *gin.Context) {
 	var ipt createLGTMInput
 	if err := ctx.ShouldBindJSON(&ipt); err != nil {
@@ -197,29 +208,20 @@ func (svc *lgtmService) DeleteLGTM(ctx context.Context, id string) error {
 }
 
 func (svc *lgtmService) CategorizeLGTM(ctx context.Context) error {
-	lgtm, err := svc.repo.CategorizeLGTM(ctx)
+	categorieslangs, err := svc.repo.CategorizeLGTM(ctx)
 	if err != nil {
 		return errors.Wrap(err, "failed to categorize lgtm")
 	}
 
-	if lgtm != nil {
-		log.Info(ctx, "categorized lgtm", "id", lgtm.ID)
-
-		for lang, names := range map[string][]string{
-			"ja": lgtm.CategoriesJa,
-			"en": lgtm.CategoriesEn,
-		} {
-			for _, name := range names {
-				category, err := svc.repo.IncrementCategoryByName(ctx, name, lang)
-				if err != nil {
-					return errors.Wrap(err, "failed to increment category")
-				}
-
-				log.Info(ctx, "incremented category", "category", category)
+	for lang, categories := range categorieslangs {
+		for _, category := range categories {
+			category, err := svc.repo.IncrementCategoryByName(ctx, category, lang)
+			if err != nil {
+				return errors.Wrap(err, "failed to increment category")
 			}
+
+			log.Info(ctx, "incremented category", "category", category)
 		}
-	} else {
-		log.Info(ctx, "no lgtm to categorize")
 	}
 
 	return nil

@@ -69,11 +69,16 @@ func (r *lgtmRepository) FindLGTM(ctx context.Context, id string) (*models.LGTM,
 		return nil, errors.Wrap(err, "failed to unmarshal lgtm")
 	}
 
+	if l.Status != models.LGTMStatusOK {
+		return nil, nil
+	}
+
 	return l, nil
 }
 
 type lgtmListOptions struct {
 	Category string
+	Lang     string
 	Limit    int
 	After    *models.LGTM
 	Random   bool
@@ -81,9 +86,10 @@ type lgtmListOptions struct {
 
 type LGTMListOption func(*lgtmListOptions)
 
-func WithLGTMCategory(category string) LGTMListOption {
+func WithLGTMCategory(category, lang string) LGTMListOption {
 	return func(o *lgtmListOptions) {
 		o.Category = category
+		o.Lang = lang
 	}
 }
 
@@ -106,7 +112,7 @@ func WithLGTMRandom() LGTMListOption {
 }
 
 func (r *lgtmRepository) ListLGTMs(ctx context.Context, opts ...LGTMListOption) (models.LGTMs, error) {
-	o := &lgtmListOptions{}
+	o := &lgtmListOptions{Lang: "ja"}
 	for _, opt := range opts {
 		opt(o)
 	}
@@ -119,11 +125,18 @@ func (r *lgtmRepository) ListLGTMs(ctx context.Context, opts ...LGTMListOption) 
 }
 
 func (r *lgtmRepository) listLGTMs(ctx context.Context, o *lgtmListOptions) (models.LGTMs, error) {
-	exb := expression.NewBuilder().
-		WithKeyCondition(expression.KeyEqual(expression.Key("status"), expression.Value("ok")))
+	tbl := ""
+	idx := ""
+	exb := expression.NewBuilder()
 
-	if o.Category != "" {
-		exb = exb.WithFilter(expression.Contains(expression.Name("categories_ja"), o.Category).Or(expression.Contains(expression.Name("categories_en"), o.Category)))
+	if o.Category == "" {
+		tbl = r.table()
+		idx = "index_by_status"
+		exb = exb.WithKeyCondition(expression.KeyEqual(expression.Key("status"), expression.Value("ok")))
+	} else {
+		tbl = fmt.Sprintf("lgtmgen-%s-lgtms-categories-%s", env.Vars.Stage, o.Lang)
+		idx = "index_by_category"
+		exb = exb.WithKeyCondition(expression.KeyEqual(expression.Key("category"), expression.Value(o.Category)))
 	}
 
 	expr, err := exb.Build()
@@ -133,17 +146,28 @@ func (r *lgtmRepository) listLGTMs(ctx context.Context, o *lgtmListOptions) (mod
 
 	var startKey map[string]types.AttributeValue
 	if o.After != nil {
-		startKey, err = attributevalue.MarshalMap(o.After)
-		if err != nil {
-			return nil, errors.Wrap(err, "failed to marshal")
+		if o.Category == "" {
+			startKey, err = attributevalue.MarshalMap(o.After)
+			if err != nil {
+				return nil, errors.Wrap(err, "failed to marshal")
+			}
+		} else {
+			startKey, err = attributevalue.MarshalMap(map[string]interface{}{
+				"id":         o.After.ID,
+				"category":   o.Category,
+				"created_at": o.After.CreatedAt,
+			})
+			if err != nil {
+				return nil, errors.Wrap(err, "failed to marshal")
+			}
 		}
 	}
 
 	resp, err := r.dbClient.Query(
 		ctx,
 		&dynamodb.QueryInput{
-			TableName:                 util.Ptr(r.table()),
-			IndexName:                 util.Ptr("index_by_status"),
+			TableName:                 util.Ptr(tbl),
+			IndexName:                 util.Ptr(idx),
 			FilterExpression:          expr.Filter(),
 			KeyConditionExpression:    expr.KeyCondition(),
 			ExpressionAttributeNames:  expr.Names(),
@@ -304,7 +328,9 @@ func (r *lgtmRepository) DeleteLGTM(ctx context.Context, id string) error {
 	return nil
 }
 
-func (r *lgtmRepository) CategorizeLGTM(ctx context.Context) (*models.LGTM, error) {
+func (r *lgtmRepository) CategorizeLGTM(ctx context.Context) (map[string][]string, error) {
+	rtn := map[string][]string{}
+
 	resp, err := r.storageClient.ListObjectsV2(ctx, &s3.ListObjectsV2Input{
 		Bucket:  util.Ptr(r.originalBucket()),
 		MaxKeys: 1,
@@ -313,7 +339,7 @@ func (r *lgtmRepository) CategorizeLGTM(ctx context.Context) (*models.LGTM, erro
 		return nil, errors.Wrap(err, "failed to list objects")
 	}
 	if len(resp.Contents) == 0 {
-		return nil, nil
+		return rtn, nil
 	}
 
 	id := resp.Contents[0].Key
@@ -331,7 +357,7 @@ func (r *lgtmRepository) CategorizeLGTM(ctx context.Context) (*models.LGTM, erro
 		if err != nil {
 			return nil, errors.Wrap(err, "failed to delete object")
 		}
-		return nil, nil
+		return rtn, nil
 	}
 
 	obj, err := r.storageClient.GetObject(ctx, &s3.GetObjectInput{
@@ -344,11 +370,6 @@ func (r *lgtmRepository) CategorizeLGTM(ctx context.Context) (*models.LGTM, erro
 	defer obj.Body.Close()
 	buf := new(bytes.Buffer)
 	buf.ReadFrom(obj.Body)
-
-	k, err := attributevalue.MarshalMap(map[string]interface{}{"id": lgtm.ID, "created_at": lgtm.CreatedAt})
-	if err != nil {
-		return nil, errors.Wrap(err, "failed to marshal")
-	}
 
 	cv := computervision.New(env.Vars.AzureEndpoint)
 	cv.Authorizer = autorest.NewCognitiveServicesAuthorizer(env.Vars.AzureAPIKey)
@@ -369,31 +390,34 @@ func (r *lgtmRepository) CategorizeLGTM(ctx context.Context) (*models.LGTM, erro
 				categories = append(categories, *tag.Name)
 			}
 		}
-		switch lang {
-		case "ja":
-			lgtm.CategoriesJa = categories
-		case "en":
-			lgtm.CategoriesEn = categories
-		default:
-			return nil, errors.Errorf("unknown lang: %s", lang)
-		}
 
-		expr, err := expression.NewBuilder().
-			WithUpdate(expression.Set(expression.Name(fmt.Sprintf("categories_%s", lang)), expression.Value(categories))).
-			Build()
-		if err != nil {
-			return nil, errors.Wrap(err, "failed to build expression")
-		}
+		rtn[lang] = categories
 
-		_, err = r.dbClient.UpdateItem(ctx, &dynamodb.UpdateItemInput{
-			TableName:                 util.Ptr(r.table()),
-			Key:                       k,
-			UpdateExpression:          expr.Update(),
-			ExpressionAttributeNames:  expr.Names(),
-			ExpressionAttributeValues: expr.Values(),
-		})
-		if err != nil {
-			return nil, errors.Wrap(err, "failed to update item")
+		for _, category := range categories {
+			type Record struct {
+				ID        string    `dynamodbav:"id"`
+				Category  string    `dynamodbav:"category"`
+				CreatedAt time.Time `dynamodbav:"created_at"`
+			}
+
+			record := Record{
+				ID:        lgtm.ID,
+				Category:  category,
+				CreatedAt: lgtm.CreatedAt,
+			}
+
+			item, err := attributevalue.MarshalMap(record)
+			if err != nil {
+				return nil, errors.Wrap(err, "failed to marshal")
+			}
+
+			_, err = r.dbClient.PutItem(ctx, &dynamodb.PutItemInput{
+				TableName: util.Ptr(fmt.Sprintf("lgtmgen-%s-lgtms-categories-%s", env.Vars.Stage, lang)),
+				Item:      item,
+			})
+			if err != nil {
+				return nil, errors.Wrap(err, "failed to update item")
+			}
 		}
 	}
 
@@ -405,7 +429,7 @@ func (r *lgtmRepository) CategorizeLGTM(ctx context.Context) (*models.LGTM, erro
 		return nil, errors.Wrap(err, "failed to delete object")
 	}
 
-	return lgtm, nil
+	return rtn, nil
 }
 
 func (*lgtmRepository) table() string {
