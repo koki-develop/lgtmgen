@@ -68,13 +68,8 @@ export default function LgtmPanel({
 
       const category = selectedCategoryName ?? undefined;
 
-      if (randomly) {
-        const loadedLgtms = await fetchLgtms({ random: true, category });
-        onLoaded(loadedLgtms);
-      } else {
-        const loadedLgtms = await fetchLgtms({ category });
-        onLoaded(loadedLgtms);
-      }
+      const loadedLgtms = await fetchLgtms({ random: randomly, category });
+      onLoaded(loadedLgtms);
     },
     [
       onChangeRandomly,
@@ -92,15 +87,25 @@ export default function LgtmPanel({
 
       if (category.name === selectedCategoryName) {
         onChangeCategory(null);
-        const loadedLgtms = await fetchLgtms({});
+        const loadedLgtms = await fetchLgtms({ random: randomly });
         onLoaded(loadedLgtms);
       } else {
         onChangeCategory(category);
-        const loadedLgtms = await fetchLgtms({ category: category.name });
+        const loadedLgtms = await fetchLgtms({
+          random: randomly,
+          category: category.name,
+        });
         onLoaded(loadedLgtms);
       }
     },
-    [onClear, fetchLgtms, onLoaded, onChangeCategory, selectedCategoryName],
+    [
+      randomly,
+      onClear,
+      fetchLgtms,
+      onLoaded,
+      onChangeCategory,
+      selectedCategoryName,
+    ],
   );
 
   return (
