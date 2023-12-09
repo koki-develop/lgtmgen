@@ -2,14 +2,12 @@ package repo
 
 import (
 	"context"
-	"fmt"
 
 	"github.com/aws/aws-sdk-go-v2/feature/dynamodb/attributevalue"
 	"github.com/aws/aws-sdk-go-v2/feature/dynamodb/expression"
 	"github.com/aws/aws-sdk-go-v2/service/dynamodb"
 	"github.com/aws/aws-sdk-go-v2/service/dynamodb/types"
 	"github.com/cockroachdb/errors"
-	"github.com/koki-develop/lgtmgen/backend/internal/env"
 	"github.com/koki-develop/lgtmgen/backend/internal/models"
 	"github.com/koki-develop/lgtmgen/backend/internal/util"
 )
@@ -26,15 +24,18 @@ func newCategoryRepository(dbClient *dynamodb.Client) *categoryRepository {
 
 func (r *categoryRepository) ListCategories(ctx context.Context, lang string) (models.Categories, error) {
 	expr, err := expression.NewBuilder().
-		WithKeyCondition(expression.KeyEqual(expression.Key("lang"), expression.Value(lang))).
+		WithKeyCondition(expression.KeyEqual(
+			expression.Key(tables.Categories.Indexes.IndexByLang.HashKey),
+			expression.Value(lang),
+		)).
 		Build()
 	if err != nil {
 		return nil, errors.Wrap(err, "failed to build expression")
 	}
 
 	res, err := r.dbClient.Query(ctx, &dynamodb.QueryInput{
-		TableName:                 util.Ptr(r.table()),
-		IndexName:                 util.Ptr("index_by_lang"),
+		TableName:                 util.Ptr(tables.Categories.Name),
+		IndexName:                 util.Ptr(tables.Categories.Indexes.IndexByLang.Name),
 		KeyConditionExpression:    expr.KeyCondition(),
 		ExpressionAttributeNames:  expr.Names(),
 		ExpressionAttributeValues: expr.Values(),
@@ -55,19 +56,25 @@ func (r *categoryRepository) ListCategories(ctx context.Context, lang string) (m
 
 func (r *categoryRepository) IncrementCategoryByName(ctx context.Context, name string, lang string) (*models.Category, error) {
 	expr, err := expression.NewBuilder().
-		WithUpdate(expression.Add(expression.Name("count"), expression.Value(1))).
+		WithUpdate(expression.Add(
+			expression.Name(tables.Categories.Columns.Count),
+			expression.Value(1),
+		)).
 		Build()
 	if err != nil {
 		return nil, errors.Wrap(err, "failed to build expression")
 	}
 
-	k, err := attributevalue.MarshalMap(map[string]interface{}{"name": name, "lang": lang})
+	k, err := attributevalue.MarshalMap(map[string]interface{}{
+		tables.Categories.Columns.Name: name,
+		tables.Categories.Columns.Lang: lang},
+	)
 	if err != nil {
 		return nil, errors.Wrap(err, "failed to marshal key")
 	}
 
 	resp, err := r.dbClient.UpdateItem(ctx, &dynamodb.UpdateItemInput{
-		TableName:                 util.Ptr(r.table()),
+		TableName:                 util.Ptr(tables.Categories.Name),
 		Key:                       k,
 		UpdateExpression:          expr.Update(),
 		ExpressionAttributeNames:  expr.Names(),
@@ -84,8 +91,4 @@ func (r *categoryRepository) IncrementCategoryByName(ctx context.Context, name s
 	}
 
 	return &c, nil
-}
-
-func (*categoryRepository) table() string {
-	return fmt.Sprintf("lgtmgen-%s-categories", env.Vars.Stage)
 }

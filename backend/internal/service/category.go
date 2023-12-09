@@ -25,6 +25,7 @@ func newCategoryService(repo *repo.Repository) *categoryService {
 // @Failure	500		{object}	ErrorResponse
 func (svc *categoryService) ListCategories(ctx *gin.Context) {
 	lang := ctx.DefaultQuery("lang", "ja")
+
 	cs, err := svc.repo.ListCategories(ctx, lang)
 	if err != nil {
 		log.Error(ctx, "failed to list categories", err)
