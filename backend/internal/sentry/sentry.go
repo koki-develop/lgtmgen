@@ -17,11 +17,8 @@ func Setup() error {
 	}
 
 	err := sentry.Init(sentry.ClientOptions{
-		Dsn:                env.Vars.SentryDSN,
-		Environment:        string(env.Vars.Stage),
-		EnableTracing:      true,
-		TracesSampleRate:   1.0,
-		ProfilesSampleRate: 1.0,
+		Dsn:         env.Vars.SentryDSN,
+		Environment: string(env.Vars.Stage),
 	})
 	if err != nil {
 		return errors.Wrap(err, "failed to initialize sentry")
