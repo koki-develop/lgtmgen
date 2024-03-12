@@ -1,14 +1,6 @@
-import { ModelsImage, ModelsLGTM } from "@/lib/generated/api";
 import { useI18n } from "@/providers/I18nProvider";
 
-export type SearchImagePanelProps = {
-  images: ModelsImage[];
-  query: string;
-
-  onChangeQuery: (query: string) => void;
-  onSearched: (images: ModelsImage[]) => void;
-  onGenerated: (lgtm: ModelsLGTM) => void;
-};
+export type SearchImagePanelProps = {};
 
 export default function SearchImagePanel() {
   const { t } = useI18n();

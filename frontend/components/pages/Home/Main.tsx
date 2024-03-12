@@ -1,11 +1,6 @@
 "use client";
 
-import {
-  ModelsCategory,
-  ModelsImage,
-  ModelsLGTM,
-  ModelsNews,
-} from "@/lib/generated/api";
+import { ModelsCategory, ModelsLGTM, ModelsNews } from "@/lib/generated/api";
 import { i18n } from "@/lib/i18n";
 import { useStorage } from "@/lib/storage";
 import { Tab } from "@headlessui/react";
@@ -78,18 +73,6 @@ export default function Main({
   /*
    * SearchImage
    */
-
-  const [images, setImages] = useState<ModelsImage[]>([]);
-  const [query, setQuery] = useState<string>("");
-
-  const handleChangeQuery = useCallback((query: string) => {
-    if (query.length > 255) return;
-    setQuery(query);
-  }, []);
-
-  const handleSearched = useCallback((images: ModelsImage[]) => {
-    setImages(images);
-  }, []);
 
   /*
    * Favorite
@@ -203,13 +186,7 @@ export default function Main({
           </Tab.Panel>
 
           <Tab.Panel>
-            <SearchImagePanel
-              images={images}
-              query={query}
-              onChangeQuery={handleChangeQuery}
-              onSearched={handleSearched}
-              onGenerated={handleGenerated}
-            />
+            <SearchImagePanel />
           </Tab.Panel>
 
           <Tab.Panel>
