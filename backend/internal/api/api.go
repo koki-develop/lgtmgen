@@ -41,7 +41,7 @@ func NewEngine(ctx context.Context) (*gin.Engine, error) {
 
 		v1.POST("/reports", svc.CreateReport)
 
-		v1.GET("/images", rl.Apply("get/images", 30), svc.SearchImages)
+		// v1.GET("/images", rl.Apply("get/images", 30), svc.SearchImages)
 
 		v1.GET("/news", svc.ListNews)
 	}

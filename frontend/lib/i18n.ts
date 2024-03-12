@@ -3,6 +3,8 @@ import ja from "@/locale/ja";
 import React from "react";
 
 export type I18n = {
+  searchImagesNotAvailable: string;
+
   app: string;
   description: string;
 

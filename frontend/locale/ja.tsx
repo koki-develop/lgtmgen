@@ -1,6 +1,7 @@
 import { I18n } from "@/lib/i18n";
 
 const ja: I18n = {
+  searchImagesNotAvailable: "画像検索は利用できません",
   app: "LGTM Generator",
   description:
     "シンプルな LGTM 画像生成サービスです。 LGTM とは「Looks Good To Me」の略で、コードレビューのときなどに用いられるネットスラングの一種です。",
