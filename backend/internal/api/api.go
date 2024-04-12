@@ -28,14 +28,14 @@ func NewEngine(ctx context.Context) (*gin.Engine, error) {
 	e.Use(middleware.NewLogger().Apply())
 	e.Use(gin.Recovery())
 	e.Use(middleware.NewCORS().Apply(env.Vars.FrontendOrigin))
-	rl := middleware.NewRateLimitter(r)
+	// rl := middleware.NewRateLimitter(r)
 
 	e.GET("/h", svc.HealthCheck)
 
 	v1 := e.Group("/v1")
 	{
 		v1.GET("/lgtms", svc.ListLGTMs)
-		v1.POST("/lgtms", rl.Apply("post/lgtms", 100), svc.CreateLGTM)
+		// v1.POST("/lgtms", rl.Apply("post/lgtms", 100), svc.CreateLGTM)
 
 		v1.GET("/categories", svc.ListCategories)
 

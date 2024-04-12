@@ -8,7 +8,6 @@ import clsx from "clsx";
 import { useCallback, useEffect, useState } from "react";
 import FavoritePanel from "./FavoritePanel";
 import LgtmPanel from "./LgtmPanel";
-import { LgtmUploader } from "./LgtmUploader";
 import SearchImagePanel from "./SearchImagePanel";
 
 export type MainProps = {
@@ -53,10 +52,6 @@ export default function Main({
 
   const handleClear = useCallback(() => {
     setLgtms([]);
-  }, []);
-
-  const handleGenerated = useCallback((lgtm: ModelsLGTM) => {
-    setLgtms((prev) => [lgtm, ...prev]);
   }, []);
 
   const handleChangeRandomly = useCallback((randomly: boolean) => {
@@ -161,7 +156,6 @@ export default function Main({
         </Tab.List>
 
         <Tab.Panels>
-          <LgtmUploader onUploaded={handleGenerated} />
           <Tab.Panel>
             {rendered ? (
               <LgtmPanel
