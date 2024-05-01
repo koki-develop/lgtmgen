@@ -34,12 +34,12 @@ func NewEngine(ctx context.Context) (*gin.Engine, error) {
 
 	v1 := e.Group("/v1")
 	{
-		v1.GET("/lgtms", svc.ListLGTMs)
+		// v1.GET("/lgtms", svc.ListLGTMs)
 		// v1.POST("/lgtms", rl.Apply("post/lgtms", 100), svc.CreateLGTM)
 
-		v1.GET("/categories", svc.ListCategories)
+		// v1.GET("/categories", svc.ListCategories)
 
-		v1.POST("/reports", svc.CreateReport)
+		// v1.POST("/reports", svc.CreateReport)
 
 		// v1.GET("/images", rl.Apply("get/images", 30), svc.SearchImages)
 
